@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Bell, ChevronDown, LogOut, Settings, Star } from "lucide-react";
+import { Bell, Bot, Calendar, ChevronDown, Home, LogOut, Settings, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import {
-  Area,
-  AreaChart,
+  Bar,
+  BarChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
+  YAxis,
 } from "recharts";
 
 const generateMockDataForRange = (range: string) => {
@@ -23,11 +25,11 @@ const generateMockDataForRange = (range: string) => {
     switch (range) {
       case "Today":
         return 0.8;
-      case "This Week":
+      case "Last 7 Days":
         return 1;
-      case "This Month":
+      case "Last 30 Days":
         return 1.2;
-      case "This Year":
+      case "Last 90 Days":
         return 1.4;
       default:
         return 1;
@@ -35,271 +37,248 @@ const generateMockDataForRange = (range: string) => {
   };
 
   const multiplier = getMultiplier(range);
-  
-  const generateHourlyData = (baseValue: number) => {
-    return Array.from({ length: 24 }, (_, hour) => ({
-      hour: `${hour}:00`,
-      value: Math.floor((baseValue + Math.random() * 20 - 10) * multiplier),
-    }));
-  };
 
   return {
-    favorites: [
-      { 
-        label: "Utilization",
-        value: "50%",
-        data: generateHourlyData(50),
-        color: "#9b87f5"
+    "Mayo Clinic - Rochester": {
+      "AMR v2.3": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(90 * multiplier)}%`, trend: "up", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(1250 * multiplier)} hrs`, trend: "up", id: "active-time" },
+          { label: "Error Rate", value: `${(0.5 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(95 * multiplier)}%`, trend: "stable", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 100 * multiplier),
+        })),
       },
-      { 
-        label: "Mission Time",
-        value: "90 sec",
-        data: generateHourlyData(90),
-        color: "#0EA5E9"
+      "Surgical Assistant Pro": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(85 * multiplier)}%`, trend: "up", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(980 * multiplier)} hrs`, trend: "up", id: "active-time" },
+          { label: "Error Rate", value: `${(0.8 * (2 - multiplier)).toFixed(1)}%`, trend: "up", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(92 * multiplier)}%`, trend: "down", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 85 * multiplier),
+        })),
       },
-      { 
-        label: "Miles Saved",
-        value: "1,250",
-        data: generateHourlyData(1250),
-        color: "#D946EF"
+    },
+    "Cleveland Clinic": {
+      "Patient Transport Bot": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(75 * multiplier)}%`, trend: "down", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(850 * multiplier)} hrs`, trend: "down", id: "active-time" },
+          { label: "Error Rate", value: `${(0.3 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(98 * multiplier)}%`, trend: "up", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 75 * multiplier),
+        })),
       },
-      { 
-        label: "Hours Saved",
-        value: "500",
-        data: generateHourlyData(500),
-        color: "#F97316"
-      }
-    ],
-    allStats: [
-      { 
-        label: "Utilization",
-        value: "50%",
-        data: generateHourlyData(50),
-        color: "#9b87f5"
+      "Delivery Robot": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(95 * multiplier)}%`, trend: "up", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(1450 * multiplier)} hrs`, trend: "up", id: "active-time" },
+          { label: "Error Rate", value: `${(0.2 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(89 * multiplier)}%`, trend: "down", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 95 * multiplier),
+        })),
       },
-      { 
-        label: "Mission Time",
-        value: "90 sec",
-        data: generateHourlyData(90),
-        color: "#0EA5E9"
-      },
-      { 
-        label: "Downtime",
-        value: "2%",
-        data: generateHourlyData(2),
-        color: "#D946EF"
-      },
-      { 
-        label: "Error Rate",
-        value: "1.6%",
-        data: generateHourlyData(1.6),
-        color: "#F97316"
-      },
-      { 
-        label: "Miles Saved",
-        value: "1,250",
-        data: generateHourlyData(1250),
-        color: "#9b87f5"
-      },
-      { 
-        label: "Hours Saved",
-        value: "500",
-        data: generateHourlyData(500),
-        color: "#0EA5E9"
-      },
-      { 
-        label: "Completed Missions",
-        value: "6 / hour",
-        data: generateHourlyData(6),
-        color: "#D946EF"
-      }
-    ]
+    },
   };
 };
 
-const mockLocations = ["Canavday Building and Davis Building", "Mayo Building", "Hospital"];
-const mockRobotTypes = ["Nurse Bots", "Go-Bots", "Autonomous Hospital Beds", "HAL-PICK"];
+const mockHospitals = ["Mayo Clinic - Rochester", "Cleveland Clinic"];
+const getMockRobotTypes = (hospital: string) => Object.keys(generateMockDataForRange("Last 7 Days")[hospital] || {});
 
 const Index = () => {
-  const [selectedLocation, setSelectedLocation] = useState(mockLocations[0]);
-  const [selectedRobotTypes, setSelectedRobotTypes] = useState([mockRobotTypes[0]]);
-  const [dateRange, setDateRange] = useState("This Week");
-  const [mockData, setMockData] = useState(generateMockDataForRange("This Week"));
-  const [showAllStats, setShowAllStats] = useState(false);
+  const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
+  const [selectedRobotType, setSelectedRobotType] = useState(getMockRobotTypes(mockHospitals[0])[0]);
+  const [dateRange, setDateRange] = useState("Last 7 Days");
+  const [mockData, setMockData] = useState(generateMockDataForRange("Last 7 Days"));
   const navigate = useNavigate();
+
+  const handleHospitalChange = (hospital: string) => {
+    setSelectedHospital(hospital);
+    setSelectedRobotType(getMockRobotTypes(hospital)[0]);
+  };
 
   const handleDateRangeChange = (range: string) => {
     setDateRange(range);
     setMockData(generateMockDataForRange(range));
   };
 
+  const handleMetricClick = (metricId: string) => {
+    navigate(`/metrics/${metricId}`);
+  };
+
+  const currentData = mockData[selectedHospital]?.[selectedRobotType] || {
+    metrics: [],
+    hourlyData: [],
+  };
+
+  const performanceData = currentData.hourlyData.map((item) => ({
+    hour: item.hour,
+    efficiency: Math.min(100, item.value + Math.random() * 10),
+    accuracy: Math.min(100, item.value - Math.random() * 5),
+  }));
+
   return (
-    <div className="min-h-screen bg-[#1A1F2C] text-white">
-      <header className="px-6 py-4 flex justify-between items-center bg-[#403E43]/50">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="px-6 py-4 flex justify-between items-center bg-card">
         <div className="flex items-center space-x-4">
-          <img
-            src="/lovable-uploads/c655a0e6-4cb1-4808-ab99-49b26fbb55ab.png"
-            alt="Mayo Clinic Logo"
-            className="h-8"
-          />
-          <span className="text-sm">Jacksonville, FL</span>
+          <Bot className="h-8 w-8" />
+          <h1 className="text-xl font-semibold">HealthTech Insight</h1>
         </div>
         <div className="flex items-center space-x-4">
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="sm">Settings</Button>
-          <Button variant="ghost" size="sm">Log out</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                <div className="flex h-full w-full items-center justify-center bg-primary/10 rounded-full">
+                  <span className="text-sm font-medium">JD</span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px] bg-popover">
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
       <main className="p-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-[200px]">
-              <label className="text-sm text-gray-400 mb-1 block">Site</label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {selectedLocation} <ChevronDown className="h-4 w-4 ml-2" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-[200px]">
-                  {mockLocations.map((location) => (
-                    <DropdownMenuItem
-                      key={location}
-                      onClick={() => setSelectedLocation(location)}
-                    >
-                      {location}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            <div className="flex-[2] min-w-[300px]">
-              <label className="text-sm text-gray-400 mb-1 block">AMR Type</label>
-              <div className="flex flex-wrap gap-2">
-                {mockRobotTypes.map((type) => (
-                  <Button
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-[200px]">
+                  {selectedHospital} <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[200px] bg-popover">
+                {mockHospitals.map((hospital) => (
+                  <DropdownMenuItem
+                    key={hospital}
+                    onClick={() => handleHospitalChange(hospital)}
+                  >
+                    {hospital}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-[200px]">
+                  {selectedRobotType} <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[200px] bg-popover">
+                {getMockRobotTypes(selectedHospital).map((type) => (
+                  <DropdownMenuItem
                     key={type}
-                    variant={selectedRobotTypes.includes(type) ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      setSelectedRobotTypes((prev) =>
-                        prev.includes(type)
-                          ? prev.filter((t) => t !== type)
-                          : [...prev, type]
-                      );
-                    }}
+                    onClick={() => setSelectedRobotType(type)}
                   >
                     {type}
-                    {selectedRobotTypes.includes(type) && (
-                      <span className="ml-2 text-xs">×</span>
-                    )}
-                  </Button>
+                  </DropdownMenuItem>
                 ))}
-              </div>
-            </div>
-
-            <div className="flex-1 min-w-[200px]">
-              <label className="text-sm text-gray-400 mb-1 block">Date Range</label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {dateRange} <ChevronDown className="h-4 w-4 ml-2" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[200px]">
-                  {["Today", "This Week", "This Month", "This Year"].map((range) => (
-                    <DropdownMenuItem
-                      key={range}
-                      onClick={() => handleDateRangeChange(range)}
-                    >
-                      {range}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center">
+                <Calendar className="mr-2 h-4 w-4" />
+                {dateRange}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px] bg-popover">
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Today")}>
+                Today
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Last 7 Days")}>
+                Last 7 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Last 30 Days")}>
+                Last 30 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Last 90 Days")}>
+                Last 90 Days
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        <div className="space-y-8">
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold flex items-center">
-                <Star className="h-5 w-5 mr-2 text-yellow-500" />
-                Favorites
-              </h2>
-              <Button variant="ghost" size="sm" onClick={() => setShowAllStats(!showAllStats)}>
-                {showAllStats ? "Show Less" : "Show All Stats"}
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {mockData.favorites.map((metric) => (
-                <Card 
-                  key={metric.label}
-                  className="bg-[#403E43]/50 border-0 p-4"
-                >
-                  <div className="flex flex-col">
-                    <span className="text-sm text-gray-400">{metric.label}</span>
-                    <span className="text-2xl font-semibold mt-1">{metric.value}</span>
-                    <div className="h-[60px] mt-2">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={metric.data}>
-                          <XAxis dataKey="hour" hide />
-                          <Tooltip />
-                          <Area
-                            type="monotone"
-                            dataKey="value"
-                            stroke={metric.color}
-                            fill={metric.color}
-                            fillOpacity={0.1}
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </section>
-
-          {showAllStats && (
-            <section>
-              <h2 className="text-lg font-semibold mb-4">All Stats</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {mockData.allStats.map((metric) => (
-                  <Card 
-                    key={metric.label}
-                    className="bg-[#403E43]/50 border-0 p-4"
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-sm text-gray-400">{metric.label}</span>
-                      <span className="text-2xl font-semibold mt-1">{metric.value}</span>
-                      <div className="h-[60px] mt-2">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={metric.data}>
-                            <XAxis dataKey="hour" hide />
-                            <Tooltip />
-                            <Area
-                              type="monotone"
-                              dataKey="value"
-                              stroke={metric.color}
-                              fill={metric.color}
-                              fillOpacity={0.1}
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {currentData.metrics.map((metric) => (
+            <Card 
+              key={metric.label} 
+              className="bg-card p-4 cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => handleMetricClick(metric.id)}
+            >
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-sm">{metric.label}</span>
+                <span className="text-2xl font-semibold mt-1">{metric.value}</span>
               </div>
-            </section>
-          )}
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="bg-card p-6">
+            <h3 className="text-lg font-semibold mb-4">Utilization Trends (24h)</h3>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={currentData.hourlyData}>
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="var(--primary)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+          <Card className="bg-card p-6">
+            <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={performanceData}>
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line 
+                    type="monotone" 
+                    dataKey="efficiency" 
+                    stroke="#0ea5e9" 
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="accuracy" 
+                    stroke="#ef4444" 
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
         </div>
       </main>
     </div>
