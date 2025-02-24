@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Bell, Bot, Calendar, ChevronDown, Home, LogOut, Settings, User } from "lucide-react";
 import {
@@ -13,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import {
   Bar,
   BarChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -84,7 +85,6 @@ const Index = () => {
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
-    // Reset robot type to first available option for new hospital
     setSelectedRobotType(getMockRobotTypes(hospital)[0]);
   };
 
@@ -97,9 +97,14 @@ const Index = () => {
     hourlyData: [],
   };
 
+  const performanceData = currentData.hourlyData.map((item) => ({
+    hour: item.hour,
+    efficiency: Math.min(100, item.value + Math.random() * 10),
+    accuracy: Math.min(100, item.value - Math.random() * 5),
+  }));
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
       <header className="px-6 py-4 flex justify-between items-center bg-card">
         <div className="flex items-center space-x-4">
           <Bot className="h-8 w-8" />
@@ -131,9 +136,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="p-6">
-        {/* Controls */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
           <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
             <DropdownMenu>
@@ -177,7 +180,6 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {currentData.metrics.map((metric) => (
             <Card 
@@ -193,7 +195,6 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="bg-card p-6">
             <h3 className="text-lg font-semibold mb-4">Utilization Trends (24h)</h3>
@@ -210,8 +211,26 @@ const Index = () => {
           </Card>
           <Card className="bg-card p-6">
             <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              Chart Placeholder
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={performanceData}>
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line 
+                    type="monotone" 
+                    dataKey="efficiency" 
+                    stroke="var(--primary)" 
+                    strokeWidth={2} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="accuracy" 
+                    stroke="var(--destructive)" 
+                    strokeWidth={2} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </Card>
         </div>
