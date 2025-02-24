@@ -19,39 +19,82 @@ import {
   YAxis,
 } from "recharts";
 
-const mockHospitals = [
-  "Mayo Clinic - Rochester",
-  "Cleveland Clinic",
-  "Johns Hopkins Hospital",
-  "Massachusetts General Hospital",
-];
+const mockData = {
+  "Mayo Clinic - Rochester": {
+    "AMR v2.3": {
+      metrics: [
+        { label: "Utilization Rate", value: "90%", trend: "up", id: "utilization" },
+        { label: "Active Time", value: "1,250 hrs", trend: "up", id: "active-time" },
+        { label: "Error Rate", value: "0.5%", trend: "down", id: "error-rate" },
+        { label: "Battery Health", value: "95%", trend: "stable", id: "battery" },
+      ],
+      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+        hour: `${hour}:00`,
+        value: Math.floor(Math.random() * 100),
+      })),
+    },
+    "Surgical Assistant Pro": {
+      metrics: [
+        { label: "Utilization Rate", value: "85%", trend: "up", id: "utilization" },
+        { label: "Active Time", value: "980 hrs", trend: "up", id: "active-time" },
+        { label: "Error Rate", value: "0.8%", trend: "up", id: "error-rate" },
+        { label: "Battery Health", value: "92%", trend: "down", id: "battery" },
+      ],
+      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+        hour: `${hour}:00`,
+        value: Math.floor(Math.random() * 85),
+      })),
+    },
+  },
+  "Cleveland Clinic": {
+    "Patient Transport Bot": {
+      metrics: [
+        { label: "Utilization Rate", value: "75%", trend: "down", id: "utilization" },
+        { label: "Active Time", value: "850 hrs", trend: "down", id: "active-time" },
+        { label: "Error Rate", value: "0.3%", trend: "down", id: "error-rate" },
+        { label: "Battery Health", value: "98%", trend: "up", id: "battery" },
+      ],
+      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+        hour: `${hour}:00`,
+        value: Math.floor(Math.random() * 75),
+      })),
+    },
+    "Delivery Robot": {
+      metrics: [
+        { label: "Utilization Rate", value: "95%", trend: "up", id: "utilization" },
+        { label: "Active Time", value: "1,450 hrs", trend: "up", id: "active-time" },
+        { label: "Error Rate", value: "0.2%", trend: "down", id: "error-rate" },
+        { label: "Battery Health", value: "89%", trend: "down", id: "battery" },
+      ],
+      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+        hour: `${hour}:00`,
+        value: Math.floor(Math.random() * 95),
+      })),
+    },
+  },
+};
 
-const mockRobotTypes = [
-  "AMR v2.3",
-  "Surgical Assistant Pro",
-  "Patient Transport Bot",
-  "Delivery Robot",
-];
-
-const mockMetrics = [
-  { label: "Utilization Rate", value: "90%", trend: "up", id: "utilization" },
-  { label: "Active Time", value: "1,250 hrs", trend: "up", id: "active-time" },
-  { label: "Error Rate", value: "0.5%", trend: "down", id: "error-rate" },
-  { label: "Battery Health", value: "95%", trend: "stable", id: "battery" },
-];
-
-const hourlyData = Array.from({ length: 24 }, (_, hour) => ({
-  hour: `${hour}:00`,
-  value: Math.floor(Math.random() * 100),
-}));
+const mockHospitals = Object.keys(mockData);
+const getMockRobotTypes = (hospital: string) => Object.keys(mockData[hospital] || {});
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
-  const [selectedRobotType, setSelectedRobotType] = useState(mockRobotTypes[0]);
+  const [selectedRobotType, setSelectedRobotType] = useState(getMockRobotTypes(mockHospitals[0])[0]);
   const navigate = useNavigate();
+
+  const handleHospitalChange = (hospital: string) => {
+    setSelectedHospital(hospital);
+    // Reset robot type to first available option for new hospital
+    setSelectedRobotType(getMockRobotTypes(hospital)[0]);
+  };
 
   const handleMetricClick = (metricId: string) => {
     navigate(`/metrics/${metricId}`);
+  };
+
+  const currentData = mockData[selectedHospital]?.[selectedRobotType] || {
+    metrics: [],
+    hourlyData: [],
   };
 
   return (
@@ -103,7 +146,7 @@ const Index = () => {
                 {mockHospitals.map((hospital) => (
                   <DropdownMenuItem
                     key={hospital}
-                    onClick={() => setSelectedHospital(hospital)}
+                    onClick={() => handleHospitalChange(hospital)}
                   >
                     {hospital}
                   </DropdownMenuItem>
@@ -117,7 +160,7 @@ const Index = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[200px] bg-popover">
-                {mockRobotTypes.map((type) => (
+                {getMockRobotTypes(selectedHospital).map((type) => (
                   <DropdownMenuItem
                     key={type}
                     onClick={() => setSelectedRobotType(type)}
@@ -136,7 +179,7 @@ const Index = () => {
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {mockMetrics.map((metric) => (
+          {currentData.metrics.map((metric) => (
             <Card 
               key={metric.label} 
               className="bg-card p-4 cursor-pointer hover:bg-accent/50 transition-colors"
@@ -156,7 +199,7 @@ const Index = () => {
             <h3 className="text-lg font-semibold mb-4">Utilization Trends (24h)</h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={hourlyData}>
+                <BarChart data={currentData.hourlyData}>
                   <XAxis dataKey="hour" />
                   <YAxis />
                   <Tooltip />
@@ -178,4 +221,3 @@ const Index = () => {
 };
 
 export default Index;
-
