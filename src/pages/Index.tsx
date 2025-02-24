@@ -9,6 +9,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const mockHospitals = [
   "Mayo Clinic - Rochester",
@@ -25,20 +34,30 @@ const mockRobotTypes = [
 ];
 
 const mockMetrics = [
-  { label: "Utilization Rate", value: "90%", trend: "up" },
-  { label: "Active Time", value: "1,250 hrs", trend: "up" },
-  { label: "Error Rate", value: "0.5%", trend: "down" },
-  { label: "Battery Health", value: "95%", trend: "stable" },
+  { label: "Utilization Rate", value: "90%", trend: "up", id: "utilization" },
+  { label: "Active Time", value: "1,250 hrs", trend: "up", id: "active-time" },
+  { label: "Error Rate", value: "0.5%", trend: "down", id: "error-rate" },
+  { label: "Battery Health", value: "95%", trend: "stable", id: "battery" },
 ];
+
+const hourlyData = Array.from({ length: 24 }, (_, hour) => ({
+  hour: `${hour}:00`,
+  value: Math.floor(Math.random() * 100),
+}));
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
   const [selectedRobotType, setSelectedRobotType] = useState(mockRobotTypes[0]);
+  const navigate = useNavigate();
+
+  const handleMetricClick = (metricId: string) => {
+    navigate(`/metrics/${metricId}`);
+  };
 
   return (
-    <div className="min-h-screen bg-dashboard-background text-dashboard-text">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="px-6 py-4 flex justify-between items-center bg-dashboard-card">
+      <header className="px-6 py-4 flex justify-between items-center bg-card">
         <div className="flex items-center space-x-4">
           <Bot className="h-8 w-8" />
           <h1 className="text-xl font-semibold">HealthTech Insight</h1>
@@ -50,12 +69,12 @@ const Index = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                <div className="flex h-full w-full items-center justify-center bg-dashboard-accent rounded-full">
+                <div className="flex h-full w-full items-center justify-center bg-primary/10 rounded-full">
                   <span className="text-sm font-medium">JD</span>
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-[200px] bg-popover">
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
@@ -80,7 +99,7 @@ const Index = () => {
                   {selectedHospital} <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-[200px] bg-popover">
                 {mockHospitals.map((hospital) => (
                   <DropdownMenuItem
                     key={hospital}
@@ -97,7 +116,7 @@ const Index = () => {
                   {selectedRobotType} <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-[200px] bg-popover">
                 {mockRobotTypes.map((type) => (
                   <DropdownMenuItem
                     key={type}
@@ -118,9 +137,13 @@ const Index = () => {
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {mockMetrics.map((metric) => (
-            <Card key={metric.label} className="bg-dashboard-card p-4">
+            <Card 
+              key={metric.label} 
+              className="bg-card p-4 cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => handleMetricClick(metric.id)}
+            >
               <div className="flex flex-col">
-                <span className="text-dashboard-muted text-sm">{metric.label}</span>
+                <span className="text-muted-foreground text-sm">{metric.label}</span>
                 <span className="text-2xl font-semibold mt-1">{metric.value}</span>
               </div>
             </Card>
@@ -129,15 +152,22 @@ const Index = () => {
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="bg-dashboard-card p-6">
-            <h3 className="text-lg font-semibold mb-4">Utilization Trends</h3>
-            <div className="h-[300px] flex items-center justify-center text-dashboard-muted">
-              Chart Placeholder
+          <Card className="bg-card p-6">
+            <h3 className="text-lg font-semibold mb-4">Utilization Trends (24h)</h3>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={hourlyData}>
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="var(--primary)" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </Card>
-          <Card className="bg-dashboard-card p-6">
+          <Card className="bg-card p-6">
             <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-            <div className="h-[300px] flex items-center justify-center text-dashboard-muted">
+            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
               Chart Placeholder
             </div>
           </Card>
@@ -148,3 +178,4 @@ const Index = () => {
 };
 
 export default Index;
+
