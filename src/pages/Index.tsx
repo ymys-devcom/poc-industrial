@@ -220,14 +220,16 @@ const Index = () => {
                   <Line 
                     type="monotone" 
                     dataKey="efficiency" 
-                    stroke="var(--primary)" 
-                    strokeWidth={2} 
+                    stroke="#0ea5e9" 
+                    strokeWidth={2}
+                    dot={false}
                   />
                   <Line 
                     type="monotone" 
                     dataKey="accuracy" 
-                    stroke="var(--destructive)" 
-                    strokeWidth={2} 
+                    stroke="#ef4444" 
+                    strokeWidth={2}
+                    dot={false}
                   />
                 </LineChart>
               </ResponsiveContainer>
