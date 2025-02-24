@@ -81,11 +81,17 @@ const getMockRobotTypes = (hospital: string) => Object.keys(mockData[hospital] |
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
   const [selectedRobotType, setSelectedRobotType] = useState(getMockRobotTypes(mockHospitals[0])[0]);
+  const [dateRange, setDateRange] = useState("Last 7 Days");
   const navigate = useNavigate();
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
     setSelectedRobotType(getMockRobotTypes(hospital)[0]);
+  };
+
+  const handleDateRangeChange = (range: string) => {
+    setDateRange(range);
+    console.log(`Date range changed to: ${range}`);
   };
 
   const handleMetricClick = (metricId: string) => {
@@ -174,10 +180,28 @@ const Index = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Button variant="outline" className="flex items-center">
-            <Calendar className="mr-2 h-4 w-4" />
-            Last 7 Days
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center">
+                <Calendar className="mr-2 h-4 w-4" />
+                {dateRange}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px] bg-popover">
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Today")}>
+                Today
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Last 7 Days")}>
+                Last 7 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Last 30 Days")}>
+                Last 30 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeChange("Last 90 Days")}>
+                Last 90 Days
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
