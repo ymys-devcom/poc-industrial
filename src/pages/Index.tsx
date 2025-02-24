@@ -20,68 +20,88 @@ import {
   YAxis,
 } from "recharts";
 
-const mockData = {
-  "Mayo Clinic - Rochester": {
-    "AMR v2.3": {
-      metrics: [
-        { label: "Utilization Rate", value: "90%", trend: "up", id: "utilization" },
-        { label: "Active Time", value: "1,250 hrs", trend: "up", id: "active-time" },
-        { label: "Error Rate", value: "0.5%", trend: "down", id: "error-rate" },
-        { label: "Battery Health", value: "95%", trend: "stable", id: "battery" },
-      ],
-      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-        hour: `${hour}:00`,
-        value: Math.floor(Math.random() * 100),
-      })),
+const generateMockDataForRange = (range: string) => {
+  const getMultiplier = (range: string) => {
+    switch (range) {
+      case "Today":
+        return 0.8;
+      case "Last 7 Days":
+        return 1;
+      case "Last 30 Days":
+        return 1.2;
+      case "Last 90 Days":
+        return 1.4;
+      default:
+        return 1;
+    }
+  };
+
+  const multiplier = getMultiplier(range);
+
+  return {
+    "Mayo Clinic - Rochester": {
+      "AMR v2.3": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(90 * multiplier)}%`, trend: "up", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(1250 * multiplier)} hrs`, trend: "up", id: "active-time" },
+          { label: "Error Rate", value: `${(0.5 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(95 * multiplier)}%`, trend: "stable", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 100 * multiplier),
+        })),
+      },
+      "Surgical Assistant Pro": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(85 * multiplier)}%`, trend: "up", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(980 * multiplier)} hrs`, trend: "up", id: "active-time" },
+          { label: "Error Rate", value: `${(0.8 * (2 - multiplier)).toFixed(1)}%`, trend: "up", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(92 * multiplier)}%`, trend: "down", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 85 * multiplier),
+        })),
+      },
     },
-    "Surgical Assistant Pro": {
-      metrics: [
-        { label: "Utilization Rate", value: "85%", trend: "up", id: "utilization" },
-        { label: "Active Time", value: "980 hrs", trend: "up", id: "active-time" },
-        { label: "Error Rate", value: "0.8%", trend: "up", id: "error-rate" },
-        { label: "Battery Health", value: "92%", trend: "down", id: "battery" },
-      ],
-      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-        hour: `${hour}:00`,
-        value: Math.floor(Math.random() * 85),
-      })),
+    "Cleveland Clinic": {
+      "Patient Transport Bot": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(75 * multiplier)}%`, trend: "down", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(850 * multiplier)} hrs`, trend: "down", id: "active-time" },
+          { label: "Error Rate", value: `${(0.3 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(98 * multiplier)}%`, trend: "up", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 75 * multiplier),
+        })),
+      },
+      "Delivery Robot": {
+        metrics: [
+          { label: "Utilization Rate", value: `${Math.round(95 * multiplier)}%`, trend: "up", id: "utilization" },
+          { label: "Active Time", value: `${Math.round(1450 * multiplier)} hrs`, trend: "up", id: "active-time" },
+          { label: "Error Rate", value: `${(0.2 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
+          { label: "Battery Health", value: `${Math.round(89 * multiplier)}%`, trend: "down", id: "battery" },
+        ],
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.floor(Math.random() * 95 * multiplier),
+        })),
+      },
     },
-  },
-  "Cleveland Clinic": {
-    "Patient Transport Bot": {
-      metrics: [
-        { label: "Utilization Rate", value: "75%", trend: "down", id: "utilization" },
-        { label: "Active Time", value: "850 hrs", trend: "down", id: "active-time" },
-        { label: "Error Rate", value: "0.3%", trend: "down", id: "error-rate" },
-        { label: "Battery Health", value: "98%", trend: "up", id: "battery" },
-      ],
-      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-        hour: `${hour}:00`,
-        value: Math.floor(Math.random() * 75),
-      })),
-    },
-    "Delivery Robot": {
-      metrics: [
-        { label: "Utilization Rate", value: "95%", trend: "up", id: "utilization" },
-        { label: "Active Time", value: "1,450 hrs", trend: "up", id: "active-time" },
-        { label: "Error Rate", value: "0.2%", trend: "down", id: "error-rate" },
-        { label: "Battery Health", value: "89%", trend: "down", id: "battery" },
-      ],
-      hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-        hour: `${hour}:00`,
-        value: Math.floor(Math.random() * 95),
-      })),
-    },
-  },
+  };
 };
 
-const mockHospitals = Object.keys(mockData);
-const getMockRobotTypes = (hospital: string) => Object.keys(mockData[hospital] || {});
+const mockHospitals = ["Mayo Clinic - Rochester", "Cleveland Clinic"];
+const getMockRobotTypes = (hospital: string) => Object.keys(generateMockDataForRange("Last 7 Days")[hospital] || {});
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
   const [selectedRobotType, setSelectedRobotType] = useState(getMockRobotTypes(mockHospitals[0])[0]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
+  const [mockData, setMockData] = useState(generateMockDataForRange("Last 7 Days"));
   const navigate = useNavigate();
 
   const handleHospitalChange = (hospital: string) => {
@@ -91,7 +111,7 @@ const Index = () => {
 
   const handleDateRangeChange = (range: string) => {
     setDateRange(range);
-    console.log(`Date range changed to: ${range}`);
+    setMockData(generateMockDataForRange(range));
   };
 
   const handleMetricClick = (metricId: string) => {
