@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Bell, Calendar, ChevronDown, Home, LogOut, Robot, Settings, User } from "lucide-react";
+import { Bell, Bot, Calendar, ChevronDown, Home, LogOut, Settings, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,7 +40,7 @@ const Index = () => {
       {/* Header */}
       <header className="px-6 py-4 flex justify-between items-center bg-dashboard-card">
         <div className="flex items-center space-x-4">
-          <Robot className="h-8 w-8" />
+          <Bot className="h-8 w-8" />
           <h1 className="text-xl font-semibold">HealthTech Insight</h1>
         </div>
         <div className="flex items-center space-x-4">
