@@ -78,10 +78,11 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                   color: "white",
                 }}
                 formatter={(value: number, name: string, props: any) => {
+                  const roundedValue = Math.round(value * 10) / 10;
                   if (metric.id === "error-rate" || metric.id === "downtime") {
-                    return [`${props.payload.value}%`, metric.label];
+                    return [`${roundedValue}%`, metric.label];
                   }
-                  return [yAxisFormatter(value), metric.label];
+                  return [yAxisFormatter(roundedValue), metric.label];
                 }}
               />
               <Bar
@@ -103,3 +104,4 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
+
