@@ -18,8 +18,8 @@ interface MetricCardProps {
 const getMaxValueForMetric = (metric: MetricData) => {
   if (!metric.hourlyData) return 100;
   
-  // Special handling for error rate - cap at 100%
-  if (metric.id === "error-rate") {
+  // Special handling for error rate and downtime - cap at 100%
+  if (metric.id === "error-rate" || metric.id === "downtime") {
     return 100;
   }
   
@@ -68,8 +68,8 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               />
               <Tooltip
                 formatter={(value: number, name: string, props: any) => {
-                  if (metric.id === "error-rate") {
-                    return [`${props.payload.displayValue}%`, "Error Rate"];
+                  if (metric.id === "error-rate" || metric.id === "downtime") {
+                    return [`${props.payload.value}%`, metric.label];
                   }
                   return [yAxisFormatter(value), metric.label];
                 }}
@@ -91,3 +91,4 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
+
