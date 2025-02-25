@@ -43,301 +43,66 @@ const generateMockDataForRange = (range: string) => {
     return Math.min(Math.max(0, value), max);
   };
 
+  const generateMetricsForRobot = (baseUtilization: number, baseActiveTime: number, baseErrorRate: number, baseBatteryHealth: number) => ({
+    metrics: [
+      { 
+        label: "Utilization Rate", 
+        value: `${Math.round(clampValue(baseUtilization * multiplier, 100))}%`,
+        trend: "up", 
+        id: "utilization",
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.round(clampValue((baseUtilization - 20) + Math.random() * 30 * multiplier, 100)),
+        }))
+      },
+      { 
+        label: "Active Time", 
+        value: `${Math.round(baseActiveTime * multiplier)} hrs`,
+        trend: "up", 
+        id: "active-time",
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.round(clampValue((baseActiveTime - 450) + Math.random() * 450 * multiplier, baseActiveTime)),
+        }))
+      },
+      { 
+        label: "Error Rate", 
+        value: `${clampValue((baseErrorRate * (2 - multiplier)), 5).toFixed(1)}%`,
+        trend: "down", 
+        id: "error-rate",
+        hourlyData: Array.from({ length: 24 }, (_, hour) => {
+          const value = Math.round(clampValue(Math.random() * baseErrorRate * multiplier, 5));
+          return {
+            hour: `${hour}:00`,
+            value: value,
+            displayValue: value
+          };
+        })
+      },
+      { 
+        label: "Battery Health", 
+        value: `${Math.round(clampValue(baseBatteryHealth * multiplier, 100))}%`,
+        trend: "stable", 
+        id: "battery",
+        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+          hour: `${hour}:00`,
+          value: Math.round(clampValue((baseBatteryHealth - 15) + Math.random() * 15 * multiplier, 100)),
+        }))
+      },
+    ],
+  });
+
+  const standardRobots = {
+    "Medical Supply Bot": generateMetricsForRobot(88, 1350, 0.3, 94),
+    "Medication Delivery Bot": generateMetricsForRobot(82, 1150, 0.4, 91),
+    "Patient Transport Bot": generateMetricsForRobot(75, 850, 0.3, 98),
+    "Surgical Assistant Pro": generateMetricsForRobot(80, 980, 0.8, 92),
+  };
+
   return {
-    "Mayo Clinic - Rochester": {
-      "AMR v2.3": {
-        metrics: [
-          { 
-            label: "Utilization Rate", 
-            value: `${Math.round(clampValue(85 * multiplier, 100))}%`,
-            trend: "up", 
-            id: "utilization",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(65 + Math.random() * 30 * multiplier, 100)),
-            }))
-          },
-          { 
-            label: "Active Time", 
-            value: `${Math.round(1250 * multiplier)} hrs`,
-            trend: "up", 
-            id: "active-time",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(800 + Math.random() * 450 * multiplier, 1450)),
-            }))
-          },
-          { 
-            label: "Error Rate", 
-            value: `${clampValue((0.5 * (2 - multiplier)), 5).toFixed(1)}%`,
-            trend: "down", 
-            id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => {
-              const value = Math.round(clampValue(Math.random() * 2 * multiplier, 5));
-              return {
-                hour: `${hour}:00`,
-                value: value,
-                displayValue: value
-              };
-            })
-          },
-          { 
-            label: "Battery Health", 
-            value: `${Math.round(clampValue(95 * multiplier, 100))}%`,
-            trend: "stable", 
-            id: "battery",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(85 + Math.random() * 15 * multiplier, 100)),
-            }))
-          },
-        ],
-      },
-      "Surgical Assistant Pro": {
-        metrics: [
-          { 
-            label: "Utilization Rate", 
-            value: `${Math.round(clampValue(80 * multiplier, 100))}%`,
-            trend: "up", 
-            id: "utilization",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(55 + Math.random() * 30 * multiplier, 100)),
-            }))
-          },
-          { 
-            label: "Active Time", 
-            value: `${Math.round(980 * multiplier)} hrs`,
-            trend: "up", 
-            id: "active-time",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(600 + Math.random() * 450 * multiplier, 1200)),
-            }))
-          },
-          { 
-            label: "Error Rate", 
-            value: `${clampValue((0.8 * (2 - multiplier)), 5).toFixed(1)}%`,
-            trend: "up", 
-            id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => {
-              const value = Math.round(clampValue(Math.random() * 3 * multiplier, 5));
-              return {
-                hour: `${hour}:00`,
-                value: value,
-                displayValue: value
-              };
-            })
-          },
-          { 
-            label: "Battery Health", 
-            value: `${Math.round(clampValue(92 * multiplier, 100))}%`,
-            trend: "down", 
-            id: "battery",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(80 + Math.random() * 15 * multiplier, 100)),
-            }))
-          },
-        ],
-      },
-    },
-    "Cleveland Clinic": {
-      "Patient Transport Bot": {
-        metrics: [
-          { 
-            label: "Utilization Rate", 
-            value: `${Math.round(clampValue(75 * multiplier, 100))}%`,
-            trend: "down", 
-            id: "utilization",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(45 + Math.random() * 35 * multiplier, 100)),
-            }))
-          },
-          { 
-            label: "Active Time", 
-            value: `${Math.round(850 * multiplier)} hrs`,
-            trend: "down", 
-            id: "active-time",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(500 + Math.random() * 450 * multiplier, 1000)),
-            }))
-          },
-          { 
-            label: "Error Rate", 
-            value: `${clampValue((0.3 * (2 - multiplier)), 5).toFixed(1)}%`,
-            trend: "down", 
-            id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => {
-              const value = Math.round(clampValue(Math.random() * 1.5 * multiplier, 5));
-              return {
-                hour: `${hour}:00`,
-                value: value,
-                displayValue: value
-              };
-            })
-          },
-          { 
-            label: "Battery Health", 
-            value: `${Math.round(clampValue(98 * multiplier, 100))}%`,
-            trend: "up", 
-            id: "battery",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(90 + Math.random() * 10 * multiplier, 100)),
-            }))
-          },
-        ],
-      },
-      "Delivery Robot": {
-        metrics: [
-          { 
-            label: "Utilization Rate", 
-            value: `${Math.round(clampValue(90 * multiplier, 100))}%`,
-            trend: "up", 
-            id: "utilization",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(75 + Math.random() * 25 * multiplier, 100)),
-            }))
-          },
-          { 
-            label: "Active Time", 
-            value: `${Math.round(1450 * multiplier)} hrs`,
-            trend: "up", 
-            id: "active-time",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(1000 + Math.random() * 450 * multiplier, 1600)),
-            }))
-          },
-          { 
-            label: "Error Rate", 
-            value: `${clampValue((0.2 * (2 - multiplier)), 5).toFixed(1)}%`,
-            trend: "down", 
-            id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => {
-              const value = Math.round(clampValue(Math.random() * 1 * multiplier, 5));
-              return {
-                hour: `${hour}:00`,
-                value: value,
-                displayValue: value
-              };
-            })
-          },
-          { 
-            label: "Battery Health", 
-            value: `${Math.round(clampValue(89 * multiplier, 100))}%`,
-            trend: "down", 
-            id: "battery",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(75 + Math.random() * 15 * multiplier, 100)),
-            }))
-          },
-        ],
-      },
-    },
-    "Johns Hopkins Hospital": {
-      "Medical Supply Bot": {
-        metrics: [
-          { 
-            label: "Utilization Rate", 
-            value: `${Math.round(clampValue(88 * multiplier, 100))}%`,
-            trend: "up", 
-            id: "utilization",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(70 + Math.random() * 25 * multiplier, 100)),
-            }))
-          },
-          { 
-            label: "Active Time", 
-            value: `${Math.round(1350 * multiplier)} hrs`,
-            trend: "up", 
-            id: "active-time",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(900 + Math.random() * 450 * multiplier, 1500)),
-            }))
-          },
-          { 
-            label: "Error Rate", 
-            value: `${clampValue((0.3 * (2 - multiplier)), 5).toFixed(1)}%`,
-            trend: "down", 
-            id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => {
-              const value = Math.round(clampValue(Math.random() * 1.5 * multiplier, 5));
-              return {
-                hour: `${hour}:00`,
-                value: value,
-                displayValue: value
-              };
-            })
-          },
-          { 
-            label: "Battery Health", 
-            value: `${Math.round(clampValue(94 * multiplier, 100))}%`,
-            trend: "up", 
-            id: "battery",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(85 + Math.random() * 15 * multiplier, 100)),
-            }))
-          },
-        ],
-      },
-      "Medication Delivery Bot": {
-        metrics: [
-          { 
-            label: "Utilization Rate", 
-            value: `${Math.round(clampValue(82 * multiplier, 100))}%`,
-            trend: "stable", 
-            id: "utilization",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(60 + Math.random() * 30 * multiplier, 100)),
-            }))
-          },
-          { 
-            label: "Active Time", 
-            value: `${Math.round(1150 * multiplier)} hrs`,
-            trend: "up", 
-            id: "active-time",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(800 + Math.random() * 400 * multiplier, 1300)),
-            }))
-          },
-          { 
-            label: "Error Rate", 
-            value: `${clampValue((0.4 * (2 - multiplier)), 5).toFixed(1)}%`,
-            trend: "down", 
-            id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => {
-              const value = Math.round(clampValue(Math.random() * 2 * multiplier, 5));
-              return {
-                hour: `${hour}:00`,
-                value: value,
-                displayValue: value
-              };
-            })
-          },
-          { 
-            label: "Battery Health", 
-            value: `${Math.round(clampValue(91 * multiplier, 100))}%`,
-            trend: "stable", 
-            id: "battery",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.round(clampValue(80 + Math.random() * 15 * multiplier, 100)),
-            }))
-          },
-        ],
-      },
-    },
+    "Mayo Clinic - Rochester": standardRobots,
+    "Cleveland Clinic": standardRobots,
+    "Johns Hopkins Hospital": standardRobots,
   };
 };
 
