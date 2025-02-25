@@ -84,41 +84,137 @@ const generateMockDataForRange = (range: string) => {
       },
       "Surgical Assistant Pro": {
         metrics: [
-          { label: "Utilization Rate", value: `${Math.round(85 * multiplier)}%`, trend: "up", id: "utilization" },
-          { label: "Active Time", value: `${Math.round(980 * multiplier)} hrs`, trend: "up", id: "active-time" },
-          { label: "Error Rate", value: `${(0.8 * (2 - multiplier)).toFixed(1)}%`, trend: "up", id: "error-rate" },
-          { label: "Battery Health", value: `${Math.round(92 * multiplier)}%`, trend: "down", id: "battery" },
+          { 
+            label: "Utilization Rate", 
+            value: `${Math.round(85 * multiplier)}%`, 
+            trend: "up", 
+            id: "utilization",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(55 + Math.random() * 35 * multiplier),
+            }))
+          },
+          { 
+            label: "Active Time", 
+            value: `${Math.round(980 * multiplier)} hrs`, 
+            trend: "up", 
+            id: "active-time",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(600 + Math.random() * 450 * multiplier),
+            }))
+          },
+          { 
+            label: "Error Rate", 
+            value: `${(0.8 * (2 - multiplier)).toFixed(1)}%`, 
+            trend: "up", 
+            id: "error-rate",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(Math.random() * 3 * multiplier),
+            }))
+          },
+          { 
+            label: "Battery Health", 
+            value: `${Math.round(92 * multiplier)}%`, 
+            trend: "down", 
+            id: "battery",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(80 + Math.random() * 15 * multiplier),
+            }))
+          },
         ],
-        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-          hour: `${hour}:00`,
-          value: Math.floor(Math.random() * 85 * multiplier),
-        })),
       },
     },
     "Cleveland Clinic": {
       "Patient Transport Bot": {
         metrics: [
-          { label: "Utilization Rate", value: `${Math.round(75 * multiplier)}%`, trend: "down", id: "utilization" },
-          { label: "Active Time", value: `${Math.round(850 * multiplier)} hrs`, trend: "down", id: "active-time" },
-          { label: "Error Rate", value: `${(0.3 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
-          { label: "Battery Health", value: `${Math.round(98 * multiplier)}%`, trend: "up", id: "battery" },
+          { 
+            label: "Utilization Rate", 
+            value: `${Math.round(75 * multiplier)}%`, 
+            trend: "down", 
+            id: "utilization",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(45 + Math.random() * 35 * multiplier),
+            }))
+          },
+          { 
+            label: "Active Time", 
+            value: `${Math.round(850 * multiplier)} hrs`, 
+            trend: "down", 
+            id: "active-time",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(500 + Math.random() * 450 * multiplier),
+            }))
+          },
+          { 
+            label: "Error Rate", 
+            value: `${(0.3 * (2 - multiplier)).toFixed(1)}%`, 
+            trend: "down", 
+            id: "error-rate",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(Math.random() * 1.5 * multiplier),
+            }))
+          },
+          { 
+            label: "Battery Health", 
+            value: `${Math.round(98 * multiplier)}%`, 
+            trend: "up", 
+            id: "battery",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(90 + Math.random() * 10 * multiplier),
+            }))
+          },
         ],
-        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-          hour: `${hour}:00`,
-          value: Math.floor(Math.random() * 75 * multiplier),
-        })),
       },
       "Delivery Robot": {
         metrics: [
-          { label: "Utilization Rate", value: `${Math.round(95 * multiplier)}%`, trend: "up", id: "utilization" },
-          { label: "Active Time", value: `${Math.round(1450 * multiplier)} hrs`, trend: "up", id: "active-time" },
-          { label: "Error Rate", value: `${(0.2 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
-          { label: "Battery Health", value: `${Math.round(89 * multiplier)}%`, trend: "down", id: "battery" },
+          { 
+            label: "Utilization Rate", 
+            value: `${Math.round(95 * multiplier)}%`, 
+            trend: "up", 
+            id: "utilization",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(75 + Math.random() * 25 * multiplier),
+            }))
+          },
+          { 
+            label: "Active Time", 
+            value: `${Math.round(1450 * multiplier)} hrs`, 
+            trend: "up", 
+            id: "active-time",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(1000 + Math.random() * 450 * multiplier),
+            }))
+          },
+          { 
+            label: "Error Rate", 
+            value: `${(0.2 * (2 - multiplier)).toFixed(1)}%`, 
+            trend: "down", 
+            id: "error-rate",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(Math.random() * 1 * multiplier),
+            }))
+          },
+          { 
+            label: "Battery Health", 
+            value: `${Math.round(89 * multiplier)}%`, 
+            trend: "down", 
+            id: "battery",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(75 + Math.random() * 15 * multiplier),
+            }))
+          },
         ],
-        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-          hour: `${hour}:00`,
-          value: Math.floor(Math.random() * 95 * multiplier),
-        })),
       },
     },
   };
