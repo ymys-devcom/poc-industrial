@@ -29,7 +29,7 @@ const getMaxValueForMetric = (metric: MetricData) => {
 const getYAxisFormatter = (metricId: string) => {
   switch (metricId) {
     case "mission-time":
-      return (value: number) => `${value}s`;
+      return (value: number) => `${value}h`;
     case "utilization":
     case "downtime":
     case "error-rate":

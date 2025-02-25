@@ -97,10 +97,10 @@ export const generateMockDataForRange = (
       },
       {
         label: "Mission Time",
-        value: `${Math.round(baseMissionTime * multiplier * hospitalMultiplier)} sec`,
+        value: `${(baseMissionTime * multiplier * hospitalMultiplier / 3600).toFixed(1)}h`,
         trend: "down" as const,
         id: "mission-time",
-        hourlyData: generateHourlyPattern(baseMissionTime / 12, hospitalMultiplier, 3000)
+        hourlyData: generateHourlyPattern(baseMissionTime / 3600, hospitalMultiplier, 2)
       },
       {
         label: "Miles Saved",
