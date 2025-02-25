@@ -365,6 +365,7 @@ const Index = () => {
                       />
                       <YAxis 
                         tick={{ fontSize: 12 }}
+                        domain={metric.id === "error-rate" ? [0, 100] : [0, 'auto']}
                       />
                       <Tooltip />
                       <Bar 
