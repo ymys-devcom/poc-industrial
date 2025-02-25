@@ -253,39 +253,47 @@ const Index = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="flex flex-wrap gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    Select Robot Types <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[200px] bg-popover">
-                  {getMockRobotTypes(selectedHospital).map((type) => (
-                    <DropdownMenuItem
-                      key={type}
-                      onClick={() => handleRobotTypeChange(type)}
-                    >
-                      {type}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <div className="flex flex-wrap gap-2">
-                {selectedRobotTypes.map((type) => (
-                  <Button
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="min-w-[200px] flex items-center justify-between gap-2">
+                  <span className="flex-1 text-left truncate">
+                    {selectedRobotTypes.length === 0 
+                      ? "Select Robot Types" 
+                      : selectedRobotTypes.length === 1 
+                      ? selectedRobotTypes[0]
+                      : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {selectedRobotTypes.length > 0 && (
+                      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                        {selectedRobotTypes.length}
+                      </span>
+                    )}
+                    <ChevronDown className="h-4 w-4" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[200px] bg-popover">
+                {getMockRobotTypes(selectedHospital).map((type) => (
+                  <DropdownMenuItem
                     key={type}
-                    variant="secondary"
-                    size="sm"
-                    className="flex items-center gap-1"
-                    onClick={() => removeRobotType(type)}
+                    className="flex items-center justify-between"
+                    onClick={() => handleRobotTypeChange(type)}
                   >
-                    {type}
-                    <X className="h-3 w-3" />
-                  </Button>
+                    <span>{type}</span>
+                    {selectedRobotTypes.includes(type) && (
+                      <X 
+                        className="h-4 w-4 hover:text-destructive" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeRobotType(type);
+                        }}
+                      />
+                    )}
+                  </DropdownMenuItem>
                 ))}
-              </div>
-            </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="flex items-center space-x-2">
             <Popover>
