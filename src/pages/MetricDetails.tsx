@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getMockRobotTypes } from "@/utils/mockDataGenerator";
+import { differenceInDays, eachDayOfInterval, format } from "date-fns";
 
 const MetricDetails = () => {
   const { metricId } = useParams();
@@ -73,13 +74,48 @@ const MetricDetails = () => {
     { type: "Autonomous Hospital Beds", active: 24, total: 25 },
   ];
 
-  // Mock data for the line chart
-  const chartData = Array.from({ length: 24 }, (_, i) => ({
-    hour: `${i}:00`,
-    "Nurse Bots": Math.floor(Math.random() * 40 + 40),
-    "Co-Bots": Math.floor(Math.random() * 30 + 30),
-    "Autonomous Hospital Beds": Math.floor(Math.random() * 35 + 35),
-  }));
+  // Generate chart data based on the selected date range
+  const generateChartData = () => {
+    const now = new Date();
+    let startDate: Date;
+    let endDate = now;
+    
+    // Set dates based on selected range or custom date range
+    if (date.from && date.to) {
+      startDate = date.from;
+      endDate = date.to;
+    } else {
+      switch (dateRange) {
+        case "Today":
+          startDate = now;
+          break;
+        case "Last 7 Days":
+          startDate = new Date(now.setDate(now.getDate() - 7));
+          break;
+        case "Last 30 Days":
+          startDate = new Date(now.setDate(now.getDate() - 30));
+          break;
+        case "Last 90 Days":
+          startDate = new Date(now.setDate(now.getDate() - 90));
+          break;
+        default:
+          startDate = new Date(now.setDate(now.getDate() - 7));
+      }
+    }
+
+    // Generate data points for each day in the range
+    return eachDayOfInterval({ start: startDate, end: endDate }).map(date => {
+      const formattedDate = format(date, 'MMM dd');
+      return {
+        date: formattedDate,
+        "Nurse Bots": Math.floor(Math.random() * 40 + 40),
+        "Co-Bots": Math.floor(Math.random() * 30 + 30),
+        "Autonomous Hospital Beds": Math.floor(Math.random() * 35 + 35),
+      };
+    });
+  };
+
+  const chartData = generateChartData();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#012D5A] to-[#001F3F]">
@@ -142,13 +178,13 @@ const MetricDetails = () => {
             </div>
 
             <div className="bg-white/5 rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-white mb-4">24-Hour Performance</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                     <XAxis 
-                      dataKey="hour" 
+                      dataKey="date" 
                       stroke="rgba(255,255,255,0.5)"
                       tick={{ fill: 'rgba(255,255,255,0.5)' }}
                     />
