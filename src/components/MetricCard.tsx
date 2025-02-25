@@ -20,7 +20,24 @@ const getMaxValueForMetric = (metric: MetricData) => {
   return Math.max(...metric.hourlyData.map((data) => data.value));
 };
 
+const getYAxisFormatter = (metricId: string) => {
+  switch (metricId) {
+    case "mission-time":
+      return (value: number) => `${value}s`;
+    case "utilization":
+    case "downtime":
+    case "error-rate":
+      return (value: number) => `${value}%`;
+    case "completed-missions":
+      return (value: number) => `${value}/h`;
+    default:
+      return (value: number) => value;
+  }
+};
+
 export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
+  const yAxisFormatter = getYAxisFormatter(metric.id);
+
   return (
     <Card
       className="bg-card p-4 cursor-pointer hover:bg-accent/50 transition-colors"
@@ -37,26 +54,23 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               <XAxis dataKey="hour" interval={3} tick={{ fontSize: 12 }} />
               <YAxis
                 tick={{ fontSize: 12 }}
-                domain={[0, metric.id === "active-time" ? getMaxValueForMetric(metric) : 100]}
-                tickFormatter={(value) => `${value}${metric.id === "active-time" ? "" : "%"}`}
+                domain={[0, getMaxValueForMetric(metric)]}
+                tickFormatter={yAxisFormatter}
               />
               <Tooltip
                 formatter={(value: number, name: string, props: any) => {
                   if (metric.id === "error-rate") {
                     return [`${props.payload.displayValue}%`, "Error Rate"];
                   }
-                  if (metric.id === "active-time") {
-                    return [value, "Active Time"];
-                  }
-                  return [value, name];
+                  return [yAxisFormatter(value), metric.label];
                 }}
               />
               <Bar
                 dataKey="value"
                 fill={
-                  metric.id === "error-rate"
+                  metric.trend === "down"
                     ? "#ef4444"
-                    : metric.id === "battery"
+                    : metric.trend === "up"
                     ? "#22c55e"
                     : "#0ea5e9"
                 }
@@ -68,4 +82,3 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
-
