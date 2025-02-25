@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut } from "lucide-react";
+import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -111,7 +111,7 @@ const getMockRobotTypes = (hospital: string) => Object.keys(generateMockDataForR
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
-  const [selectedRobotType, setSelectedRobotType] = useState(getMockRobotTypes(mockHospitals[0])[0]);
+  const [selectedRobotTypes, setSelectedRobotTypes] = useState([getMockRobotTypes(mockHospitals[0])[0]]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [mockData, setMockData] = useState(generateMockDataForRange("Last 7 Days"));
   const [date, setDate] = useState<{
@@ -125,7 +125,20 @@ const Index = () => {
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
-    setSelectedRobotType(getMockRobotTypes(hospital)[0]);
+    setSelectedRobotTypes([getMockRobotTypes(hospital)[0]]);
+  };
+
+  const handleRobotTypeChange = (robotType: string) => {
+    setSelectedRobotTypes((prev) => {
+      if (prev.includes(robotType)) {
+        return prev.filter((type) => type !== robotType);
+      }
+      return [...prev, robotType];
+    });
+  };
+
+  const removeRobotType = (robotType: string) => {
+    setSelectedRobotTypes((prev) => prev.filter((type) => type !== robotType));
   };
 
   const handleDateRangeChange = (range: string) => {
@@ -146,9 +159,46 @@ const Index = () => {
     navigate(`/metrics/${metricId}`);
   };
 
-  const currentData = mockData[selectedHospital]?.[selectedRobotType] || {
-    metrics: [],
+  const aggregateData = () => {
+    if (selectedRobotTypes.length === 0) {
+      return { metrics: [] };
+    }
+
+    const firstRobotData = mockData[selectedHospital]?.[selectedRobotTypes[0]];
+    if (!firstRobotData) return { metrics: [] };
+
+    return {
+      metrics: firstRobotData.metrics.map((metric) => {
+        const aggregatedHourlyData = metric.hourlyData.map((hourData) => {
+          const sum = selectedRobotTypes.reduce((acc, robotType) => {
+            const robotData = mockData[selectedHospital]?.[robotType]?.metrics
+              .find((m) => m.id === metric.id)
+              ?.hourlyData.find((h) => h.hour === hourData.hour)?.value || 0;
+            return acc + robotData;
+          }, 0);
+          const average = sum / selectedRobotTypes.length;
+          return {
+            ...hourData,
+            value: metric.id === "error-rate" ? Math.min(average, 5) : Math.min(average, 100),
+          };
+        });
+
+        const currentValue = selectedRobotTypes.reduce((acc, robotType) => {
+          const robotMetric = mockData[selectedHospital]?.[robotType]?.metrics.find((m) => m.id === metric.id);
+          const value = Number(robotMetric?.value.replace(/[^0-9.]/g, ""));
+          return acc + value;
+        }, 0) / selectedRobotTypes.length;
+
+        return {
+          ...metric,
+          value: `${Math.round(currentValue)}${metric.value.includes("%") ? "%" : " hrs"}`,
+          hourlyData: aggregatedHourlyData,
+        };
+      }),
+    };
   };
+
+  const currentData = aggregateData();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -203,23 +253,39 @@ const Index = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-[200px]">
-                  {selectedRobotType} <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[200px] bg-popover">
-                {getMockRobotTypes(selectedHospital).map((type) => (
-                  <DropdownMenuItem
+            <div className="flex flex-wrap gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    Select Robot Types <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[200px] bg-popover">
+                  {getMockRobotTypes(selectedHospital).map((type) => (
+                    <DropdownMenuItem
+                      key={type}
+                      onClick={() => handleRobotTypeChange(type)}
+                    >
+                      {type}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <div className="flex flex-wrap gap-2">
+                {selectedRobotTypes.map((type) => (
+                  <Button
                     key={type}
-                    onClick={() => setSelectedRobotType(type)}
+                    variant="secondary"
+                    size="sm"
+                    className="flex items-center gap-1"
+                    onClick={() => removeRobotType(type)}
                   >
                     {type}
-                  </DropdownMenuItem>
+                    <X className="h-3 w-3" />
+                  </Button>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <Popover>
