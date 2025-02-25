@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut, CheckCircle } from "lucide-react";
 import {
@@ -20,10 +19,15 @@ import {
 } from "recharts";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 
-const generateMockDataForRange = (range: string) => {
+const generateMockDataForRange = (range: string, customDateRange?: { from: Date | undefined; to: Date | undefined }) => {
   const getMultiplier = (range: string) => {
+    if (customDateRange?.from && customDateRange?.to) {
+      const daysDifference = differenceInDays(customDateRange.to, customDateRange.from);
+      return 0.85 + (Math.sin(daysDifference * 0.1) * 0.15);
+    }
+
     switch (range) {
       case "Today":
         return 0.85;
@@ -172,7 +176,7 @@ const Index = () => {
     setDate(range);
     if (range.from && range.to) {
       setDateRange("Custom Range");
-      setMockData(generateMockDataForRange("Custom Range"));
+      setMockData(generateMockDataForRange("Custom Range", range));
     }
   };
 
