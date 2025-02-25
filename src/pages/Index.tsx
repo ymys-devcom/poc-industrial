@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut, CheckCircle } from "lucide-react";
 import {
@@ -43,35 +44,41 @@ const generateMockDataForRange = (range: string) => {
     return Math.min(Math.max(0, value), max);
   };
 
-  const generateMetricsForRobot = (baseUtilization: number, baseActiveTime: number, baseErrorRate: number, baseBatteryHealth: number) => ({
+  const generateMetricsForRobot = (
+    baseUtilization: number, 
+    baseActiveTime: number, 
+    baseErrorRate: number, 
+    baseBatteryHealth: number,
+    hospitalMultiplier: number
+  ) => ({
     metrics: [
       { 
         label: "Utilization Rate", 
-        value: `${Math.round(clampValue(baseUtilization * multiplier, 100))}%`,
+        value: `${Math.round(clampValue(baseUtilization * multiplier * hospitalMultiplier, 100))}%`,
         trend: "up", 
         id: "utilization",
         hourlyData: Array.from({ length: 24 }, (_, hour) => ({
           hour: `${hour}:00`,
-          value: Math.round(clampValue((baseUtilization - 20) + Math.random() * 30 * multiplier, 100)),
+          value: Math.round(clampValue((baseUtilization - 20) * hospitalMultiplier + Math.random() * 30 * multiplier, 100)),
         }))
       },
       { 
         label: "Active Time", 
-        value: `${Math.round(baseActiveTime * multiplier)} hrs`,
+        value: `${Math.round(baseActiveTime * multiplier * hospitalMultiplier)} hrs`,
         trend: "up", 
         id: "active-time",
         hourlyData: Array.from({ length: 24 }, (_, hour) => ({
           hour: `${hour}:00`,
-          value: Math.round(clampValue((baseActiveTime - 450) + Math.random() * 450 * multiplier, baseActiveTime)),
+          value: Math.round(clampValue((baseActiveTime - 450) * hospitalMultiplier + Math.random() * 450 * multiplier, baseActiveTime)),
         }))
       },
       { 
         label: "Error Rate", 
-        value: `${clampValue((baseErrorRate * (2 - multiplier)), 5).toFixed(1)}%`,
+        value: `${clampValue((baseErrorRate * (2 - multiplier)) / hospitalMultiplier, 5).toFixed(1)}%`,
         trend: "down", 
         id: "error-rate",
         hourlyData: Array.from({ length: 24 }, (_, hour) => {
-          const value = Math.round(clampValue(Math.random() * baseErrorRate * multiplier, 5));
+          const value = Math.round(clampValue(Math.random() * baseErrorRate * multiplier / hospitalMultiplier, 5));
           return {
             hour: `${hour}:00`,
             value: value,
@@ -81,28 +88,28 @@ const generateMockDataForRange = (range: string) => {
       },
       { 
         label: "Battery Health", 
-        value: `${Math.round(clampValue(baseBatteryHealth * multiplier, 100))}%`,
+        value: `${Math.round(clampValue(baseBatteryHealth * multiplier * (hospitalMultiplier * 0.2 + 0.8), 100))}%`,
         trend: "stable", 
         id: "battery",
         hourlyData: Array.from({ length: 24 }, (_, hour) => ({
           hour: `${hour}:00`,
-          value: Math.round(clampValue((baseBatteryHealth - 15) + Math.random() * 15 * multiplier, 100)),
+          value: Math.round(clampValue((baseBatteryHealth - 15) * (hospitalMultiplier * 0.2 + 0.8) + Math.random() * 15 * multiplier, 100)),
         }))
       },
     ],
   });
 
-  const standardRobots = {
-    "Medical Supply Bot": generateMetricsForRobot(88, 1350, 0.3, 94),
-    "Medication Delivery Bot": generateMetricsForRobot(82, 1150, 0.4, 91),
-    "Patient Transport Bot": generateMetricsForRobot(75, 850, 0.3, 98),
-    "Surgical Assistant Pro": generateMetricsForRobot(80, 980, 0.8, 92),
-  };
+  const generateHospitalData = (hospitalMultiplier: number) => ({
+    "Medical Supply Bot": generateMetricsForRobot(88, 1350, 0.3, 94, hospitalMultiplier),
+    "Medication Delivery Bot": generateMetricsForRobot(82, 1150, 0.4, 91, hospitalMultiplier),
+    "Patient Transport Bot": generateMetricsForRobot(75, 850, 0.3, 98, hospitalMultiplier),
+    "Surgical Assistant Pro": generateMetricsForRobot(80, 980, 0.8, 92, hospitalMultiplier),
+  });
 
   return {
-    "Mayo Clinic - Rochester": standardRobots,
-    "Cleveland Clinic": standardRobots,
-    "Johns Hopkins Hospital": standardRobots,
+    "Mayo Clinic - Rochester": generateHospitalData(1.2),
+    "Cleveland Clinic": generateHospitalData(1.0),
+    "Johns Hopkins Hospital": generateHospitalData(0.8),
   };
 };
 
