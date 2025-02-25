@@ -18,12 +18,10 @@ interface MetricCardProps {
 const getMaxValueForMetric = (metric: MetricData) => {
   if (!metric.hourlyData) return 100;
   
-  // Special handling for error rate and downtime - cap at 100%
   if (metric.id === "error-rate" || metric.id === "downtime") {
     return 100;
   }
   
-  // For other metrics, use the actual maximum value rounded up
   const maxValue = Math.max(...metric.hourlyData.map((data) => data.value));
   return Math.ceil(maxValue);
 };
@@ -77,7 +75,9 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               <Bar
                 dataKey="value"
                 fill={
-                  metric.trend === "down"
+                  metric.id === "mission-time"
+                    ? "#22c55e"
+                    : metric.trend === "down"
                     ? "#ef4444"
                     : metric.trend === "up"
                     ? "#22c55e"
@@ -91,4 +91,3 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
-

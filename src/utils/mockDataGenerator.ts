@@ -100,7 +100,7 @@ export const generateMockDataForRange = (
         value: `${Math.round(baseMissionTime * multiplier * hospitalMultiplier)} sec`,
         trend: "down" as const,
         id: "mission-time",
-        hourlyData: generateHourlyPattern(baseMissionTime / 24, hospitalMultiplier, baseMissionTime)
+        hourlyData: generateHourlyPattern(baseMissionTime / 12, hospitalMultiplier, 3000)
       },
       {
         label: "Miles Saved",
@@ -148,10 +148,10 @@ export const generateMockDataForRange = (
   });
 
   const generateHospitalData = (hospitalMultiplier: number) => ({
-    "Medical Supply Bot": generateMetricsForRobot(85, 90, 2, 1.6, 1250, 500, 6, hospitalMultiplier),
-    "Medication Delivery Bot": generateMetricsForRobot(80, 95, 3, 1.8, 1100, 450, 5, hospitalMultiplier),
-    "Patient Transport Bot": generateMetricsForRobot(75, 100, 4, 2.0, 950, 400, 4, hospitalMultiplier),
-    "Surgical Assistant Pro": generateMetricsForRobot(70, 105, 5, 2.2, 800, 350, 3, hospitalMultiplier),
+    "Medical Supply Bot": generateMetricsForRobot(85, 2400, 2, 1.6, 1250, 500, 6, hospitalMultiplier),
+    "Medication Delivery Bot": generateMetricsForRobot(80, 2700, 3, 1.8, 1100, 450, 5, hospitalMultiplier),
+    "Patient Transport Bot": generateMetricsForRobot(75, 2850, 4, 2.0, 950, 400, 4, hospitalMultiplier),
+    "Surgical Assistant Pro": generateMetricsForRobot(70, 3000, 5, 2.2, 800, 350, 3, hospitalMultiplier),
   });
 
   return {
