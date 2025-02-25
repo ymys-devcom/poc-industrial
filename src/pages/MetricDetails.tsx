@@ -28,6 +28,10 @@ const MetricDetails = () => {
         title: "Utilization Rate",
         description: "Detailed analysis of robot utilization patterns and efficiency metrics across different robot types.",
       },
+      "mission-time": {
+        title: "Mission Time",
+        description: "Comprehensive breakdown of mission completion times and duration metrics for each robot type.",
+      },
       "active-time": {
         title: "Active Time",
         description: "Comprehensive breakdown of operational hours and activity periods for each robot category.",
@@ -91,7 +95,7 @@ const MetricDetails = () => {
 
         <Button 
           variant="ghost" 
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="mb-6 text-white hover:bg-white/10"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -177,4 +181,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-
