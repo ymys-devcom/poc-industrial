@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -111,18 +112,25 @@ const Index = () => {
         let totalCurrentValue = 0;
         let valueCount = 0;
 
-        hospitals.forEach(hospital => {
-          robotTypes.forEach(robotType => {
-            const robotMetric = mockData[hospital]?.[robotType]?.metrics.find(m => m.id === metric.id);
-            if (robotMetric) {
-              const value = Number(robotMetric.value.replace(/[^0-9.]/g, ""));
-              if (!isNaN(value)) {
-                totalCurrentValue += value;
-                valueCount++;
+        if (metric.id === "mission-time") {
+          // Sum up all hourly values for mission time
+          const sum = aggregatedHourlyData.reduce((acc, curr) => acc + curr.value, 0);
+          totalCurrentValue = sum;
+          valueCount = 1; // Set to 1 to avoid division later
+        } else {
+          hospitals.forEach(hospital => {
+            robotTypes.forEach(robotType => {
+              const robotMetric = mockData[hospital]?.[robotType]?.metrics.find(m => m.id === metric.id);
+              if (robotMetric) {
+                const value = Number(robotMetric.value.replace(/[^0-9.]/g, ""));
+                if (!isNaN(value)) {
+                  totalCurrentValue += value;
+                  valueCount++;
+                }
               }
-            }
+            });
           });
-        });
+        }
 
         const averageCurrentValue = valueCount > 0 ? totalCurrentValue / valueCount : 0;
 
@@ -134,7 +142,7 @@ const Index = () => {
         } else if (metric.id === "completed-missions") {
           valueString = `${Math.round(averageCurrentValue)} / hour`;
         } else if (metric.id === "mission-time") {
-          valueString = `${Math.round(averageCurrentValue)}s`;
+          valueString = `${Math.round(averageCurrentValue)}h`;
         } else {
           valueString = `${Math.round(averageCurrentValue)} hrs`;
         }
