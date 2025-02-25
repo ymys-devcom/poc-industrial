@@ -43,8 +43,11 @@ export const DashboardFilters = ({
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[200px]">
-              {selectedHospital === "All" ? "All Sites" : selectedHospital} <ChevronDown className="ml-2 h-4 w-4" />
+            <Button variant="outline" className="w-[200px] flex items-center justify-between">
+              <span className="flex-1 text-left truncate">
+                {selectedHospital === "All" ? "All Sites" : selectedHospital}
+              </span>
+              <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-[200px] bg-popover">
