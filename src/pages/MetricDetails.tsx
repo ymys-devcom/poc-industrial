@@ -44,6 +44,22 @@ const MetricDetails = () => {
         title: "Battery Health",
         description: "Detailed battery performance metrics and health indicators for each robot category.",
       },
+      "miles-saved": {
+        title: "Miles Saved",
+        description: "Analysis of distance savings achieved through robotic automation compared to manual operations.",
+      },
+      "hours-saved": {
+        title: "Hours Saved",
+        description: "Measurement of time savings achieved through robotic automation versus traditional methods.",
+      },
+      "completed-missions": {
+        title: "Completed Missions",
+        description: "Detailed statistics of successfully completed tasks and missions across robot types.",
+      },
+      "downtime": {
+        title: "Downtime",
+        description: "Analysis of non-operational periods and maintenance requirements for each robot type.",
+      }
     };
     return metrics[id] || { title: "Unknown Metric", description: "No details available." };
   };
@@ -181,3 +197,4 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
+
