@@ -53,6 +53,35 @@ export const generateMockDataForRange = (
 
   const multiplier = getMultiplier(range);
 
+  const generateHourlyActiveTime = (baseTime: number, hospitalMultiplier: number) => {
+    // Create a more realistic 24-hour pattern
+    return Array.from({ length: 24 }, (_, hour) => {
+      // Low activity during night hours (0-5, 22-23)
+      const isNightHours = hour <= 5 || hour >= 22;
+      // Peak hours during mid-morning and afternoon (9-16)
+      const isPeakHours = hour >= 9 && hour <= 16;
+      // Moderate activity during transition periods
+      const isTransitionHours = (hour > 5 && hour < 9) || (hour > 16 && hour < 22);
+
+      let hourMultiplier;
+      if (isNightHours) {
+        hourMultiplier = 0.2; // 20% activity during night
+      } else if (isPeakHours) {
+        hourMultiplier = 1.0; // 100% activity during peak hours
+      } else if (isTransitionHours) {
+        hourMultiplier = 0.6; // 60% activity during transition periods
+      }
+
+      const randomVariation = (Math.random() * 0.2) - 0.1; // ±10% random variation
+      const value = Math.round(baseTime * hourMultiplier * (1 + randomVariation) * hospitalMultiplier * multiplier);
+
+      return {
+        hour: `${hour}:00`,
+        value: clampValue(value, baseTime),
+      };
+    });
+  };
+
   const generateMetricsForRobot = (
     baseUtilization: number,
     baseActiveTime: number,
@@ -64,7 +93,7 @@ export const generateMockDataForRange = (
       {
         label: "Utilization Rate",
         value: `${Math.round(clampValue(baseUtilization * multiplier * hospitalMultiplier, 100))}%`,
-        trend: "up",
+        trend: "up" as const,
         id: "utilization",
         hourlyData: Array.from({ length: 24 }, (_, hour) => ({
           hour: `${hour}:00`,
@@ -74,17 +103,14 @@ export const generateMockDataForRange = (
       {
         label: "Active Time",
         value: `${Math.round(baseActiveTime * multiplier * hospitalMultiplier)} hrs`,
-        trend: "up",
+        trend: "up" as const,
         id: "active-time",
-        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-          hour: `${hour}:00`,
-          value: Math.round(clampValue((baseActiveTime - 450) * hospitalMultiplier + Math.random() * 450 * multiplier, baseActiveTime)),
-        }))
+        hourlyData: generateHourlyActiveTime(baseActiveTime / 24, hospitalMultiplier)
       },
       {
         label: "Error Rate",
         value: `${clampValue((baseErrorRate * (2 - multiplier)) / hospitalMultiplier, 5).toFixed(1)}%`,
-        trend: "down",
+        trend: "down" as const,
         id: "error-rate",
         hourlyData: Array.from({ length: 24 }, (_, hour) => {
           const value = Math.round(clampValue(Math.random() * baseErrorRate * multiplier / hospitalMultiplier, 5));
@@ -98,7 +124,7 @@ export const generateMockDataForRange = (
       {
         label: "Battery Health",
         value: `${Math.round(clampValue(baseBatteryHealth * multiplier * (hospitalMultiplier * 0.2 + 0.8), 100))}%`,
-        trend: "stable",
+        trend: "stable" as const,
         id: "battery",
         hourlyData: Array.from({ length: 24 }, (_, hour) => ({
           hour: `${hour}:00`,
@@ -128,4 +154,3 @@ export const getMockRobotTypes = (hospital: string) => {
   const robotTypes = Object.keys(generateMockDataForRange("Last 7 Days")[mockHospitals[1]] || {});
   return ["All", ...robotTypes];
 };
-
