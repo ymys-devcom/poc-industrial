@@ -129,6 +129,7 @@ const Index = () => {
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
     setSelectedRobotTypes(["All"]);
+    setMockData(generateMockDataForRange(dateRange));
   };
 
   const handleRobotTypeChange = (robotType: string) => {
