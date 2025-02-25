@@ -2,12 +2,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getMockRobotTypes } from "@/utils/mockDataGenerator";
-import { differenceInDays, eachDayOfInterval, format } from "date-fns";
+import { differenceInDays, eachDayOfInterval, format, addDays, subDays } from "date-fns";
 
 const MetricDetails = () => {
   const { metricId } = useParams();
@@ -67,12 +67,23 @@ const MetricDetails = () => {
 
   const metricDetails = getMetricDetails(metricId || "");
 
-  // Mock data for robot types statistics
-  const robotStats = [
-    { type: "Nurse Bots", active: 90, total: 95 },
-    { type: "Co-Bots", active: 15, total: 15 },
-    { type: "Autonomous Hospital Beds", active: 24, total: 25 },
-  ];
+  // Mock data for robot types statistics with some fluctuation based on the metric
+  const robotStats = useMemo(() => {
+    const baseStats = [
+      { type: "Nurse Bots", active: 90, total: 95 },
+      { type: "Co-Bots", active: 15, total: 15 },
+      { type: "Autonomous Hospital Beds", active: 24, total: 25 },
+    ];
+
+    // Add some variation based on the metric type
+    if (metricId === "downtime" || metricId === "error-rate") {
+      return baseStats.map(stat => ({
+        ...stat,
+        active: Math.max(0, stat.active - Math.floor(Math.random() * 10))
+      }));
+    }
+    return baseStats;
+  }, [metricId]);
 
   // Generate chart data based on the selected date range
   const generateChartData = () => {
@@ -88,34 +99,50 @@ const MetricDetails = () => {
       switch (dateRange) {
         case "Today":
           startDate = now;
+          endDate = now;
           break;
         case "Last 7 Days":
-          startDate = new Date(now.setDate(now.getDate() - 7));
+          startDate = subDays(now, 7);
           break;
         case "Last 30 Days":
-          startDate = new Date(now.setDate(now.getDate() - 30));
+          startDate = subDays(now, 30);
           break;
         case "Last 90 Days":
-          startDate = new Date(now.setDate(now.getDate() - 90));
+          startDate = subDays(now, 90);
           break;
         default:
-          startDate = new Date(now.setDate(now.getDate() - 7));
+          startDate = subDays(now, 7);
       }
     }
 
+    // Create a seed based on the metric type to ensure consistent randomness
+    const metricSeed = metricId?.length || 1;
+
     // Generate data points for each day in the range
-    return eachDayOfInterval({ start: startDate, end: endDate }).map(date => {
-      const formattedDate = format(date, 'MMM dd');
+    const days = eachDayOfInterval({ start: startDate, end: endDate });
+    
+    return days.map((day, index) => {
+      const daysSinceStart = differenceInDays(day, startDate);
+      const formattedDate = format(day, 'MMM dd');
+      
+      // Generate values with trends based on the metric type
+      const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * 0.2;
+      
+      // Base values that change gradually over time
+      const nurseBotBase = metricId === "error-rate" ? 20 : 60;
+      const coBotBase = metricId === "error-rate" ? 15 : 45;
+      const bedBase = metricId === "error-rate" ? 18 : 50;
+
       return {
         date: formattedDate,
-        "Nurse Bots": Math.floor(Math.random() * 40 + 40),
-        "Co-Bots": Math.floor(Math.random() * 30 + 30),
-        "Autonomous Hospital Beds": Math.floor(Math.random() * 35 + 35),
+        "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * (1 + trendFactor) + (Math.random() * 10))),
+        "Co-Bots": Math.max(0, Math.floor(coBotBase * (1 + trendFactor) + (Math.random() * 8))),
+        "Autonomous Hospital Beds": Math.max(0, Math.floor(bedBase * (1 + trendFactor) + (Math.random() * 9))),
       };
     });
   };
 
-  const chartData = generateChartData();
+  const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#012D5A] to-[#001F3F]">
