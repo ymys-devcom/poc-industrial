@@ -1,4 +1,3 @@
-
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -104,27 +103,6 @@ export const generateMockDataForRange = (
         hourlyData: generateHourlyPattern(baseMissionTime / 24, hospitalMultiplier, baseMissionTime)
       },
       {
-        label: "Downtime",
-        value: `${Math.round(clampValue(baseDowntime * multiplier * hospitalMultiplier, 100))}%`,
-        trend: "down" as const,
-        id: "downtime",
-        hourlyData: generateHourlyPattern(baseDowntime, hospitalMultiplier, 100)
-      },
-      {
-        label: "Error Rate",
-        value: `${clampValue((baseErrorRate * (2 - multiplier)) / hospitalMultiplier, 5).toFixed(1)}%`,
-        trend: "down" as const,
-        id: "error-rate",
-        hourlyData: Array.from({ length: 24 }, (_, hour) => {
-          const value = Math.round(clampValue(Math.random() * baseErrorRate * multiplier / hospitalMultiplier, 5));
-          return {
-            hour: `${hour}:00`,
-            value: value,
-            displayValue: value
-          };
-        })
-      },
-      {
         label: "Miles Saved",
         value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier)}`,
         trend: "up" as const,
@@ -144,6 +122,27 @@ export const generateMockDataForRange = (
         trend: "up" as const,
         id: "completed-missions",
         hourlyData: generateHourlyPattern(baseCompletedMissions, hospitalMultiplier, baseCompletedMissions * 2)
+      },
+      {
+        label: "Downtime",
+        value: `${Math.round(clampValue(baseDowntime * multiplier * hospitalMultiplier, 100))}%`,
+        trend: "down" as const,
+        id: "downtime",
+        hourlyData: generateHourlyPattern(baseDowntime, hospitalMultiplier, 100)
+      },
+      {
+        label: "Error Rate",
+        value: `${clampValue((baseErrorRate * (2 - multiplier)) / hospitalMultiplier, 5).toFixed(1)}%`,
+        trend: "down" as const,
+        id: "error-rate",
+        hourlyData: Array.from({ length: 24 }, (_, hour) => {
+          const value = Math.round(clampValue(Math.random() * baseErrorRate * multiplier / hospitalMultiplier, 5));
+          return {
+            hour: `${hour}:00`,
+            value: value,
+            displayValue: value
+          };
+        })
       },
     ],
   });
