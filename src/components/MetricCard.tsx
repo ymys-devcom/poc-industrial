@@ -23,8 +23,9 @@ const getMaxValueForMetric = (metric: MetricData) => {
     return 100;
   }
   
-  // For other metrics, use the actual maximum value
-  return Math.max(...metric.hourlyData.map((data) => data.value));
+  // For other metrics, use the actual maximum value rounded up
+  const maxValue = Math.max(...metric.hourlyData.map((data) => data.value));
+  return Math.ceil(maxValue);
 };
 
 const getYAxisFormatter = (metricId: string) => {
@@ -38,7 +39,7 @@ const getYAxisFormatter = (metricId: string) => {
     case "completed-missions":
       return (value: number) => `${value}/h`;
     default:
-      return (value: number) => `${value}`; // Convert number to string for all other cases
+      return (value: number) => `${value}`;
   }
 };
 
