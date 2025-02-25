@@ -1,3 +1,4 @@
+
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -132,10 +133,9 @@ const generateMetricsForRobot = (
 };
 
 const generateHospitalData = (hospitalMultiplier: number, multiplier: number, timeRangeMultiplier: number = 1) => ({
-  "Medical Supply Bot": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Medication Delivery Bot": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Patient Transport Bot": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Surgical Assistant Pro": generateMetricsForRobot(70, 3.0, 5, 2.2, 800, 350, 3, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Nurse Bots": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Co-Bots": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Autonomous Hospital Beds": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
 });
 
 export const generateMockDataForRange = (
@@ -165,7 +165,7 @@ export const generateMockDataForRange = (
   const getTimeRangeMultiplier = (range: string) => {
     switch (range) {
       case "Today":
-        return 0.3; // Significantly lower volume for today
+        return 0.3;
       case "Last 7 Days":
         return 0.7;
       case "Last 30 Days":
@@ -190,6 +190,5 @@ export const generateMockDataForRange = (
 export const mockHospitals = ["All", "Mayo Clinic - Rochester", "Cleveland Clinic", "Johns Hopkins Hospital"];
 
 export const getMockRobotTypes = (hospital: string) => {
-  const robotTypes = Object.keys(generateMockDataForRange("Last 7 Days")[mockHospitals[1]] || {});
-  return ["All", ...robotTypes];
+  return ["All", "Nurse Bots", "Co-Bots", "Autonomous Hospital Beds"];
 };
