@@ -106,12 +106,15 @@ const generateMockDataForRange = (range: string) => {
   };
 };
 
-const mockHospitals = ["Mayo Clinic - Rochester", "Cleveland Clinic", "Johns Hopkins Hospital"];
-const getMockRobotTypes = (hospital: string) => Object.keys(generateMockDataForRange("Last 7 Days")[hospital] || {});
+const mockHospitals = ["All", "Mayo Clinic - Rochester", "Cleveland Clinic", "Johns Hopkins Hospital"];
+const getMockRobotTypes = (hospital: string) => {
+  const robotTypes = Object.keys(generateMockDataForRange("Last 7 Days")[mockHospitals[1]] || {});
+  return ["All", ...robotTypes];
+};
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
-  const [selectedRobotTypes, setSelectedRobotTypes] = useState([getMockRobotTypes(mockHospitals[0])[0]]);
+  const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [mockData, setMockData] = useState(generateMockDataForRange("Last 7 Days"));
   const [date, setDate] = useState<{
@@ -125,20 +128,30 @@ const Index = () => {
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
-    setSelectedRobotTypes([getMockRobotTypes(hospital)[0]]);
+    setSelectedRobotTypes(["All"]);
   };
 
   const handleRobotTypeChange = (robotType: string) => {
-    setSelectedRobotTypes((prev) => {
-      if (prev.includes(robotType)) {
-        return prev.filter((type) => type !== robotType);
-      }
-      return [...prev, robotType];
-    });
+    if (robotType === "All") {
+      setSelectedRobotTypes(["All"]);
+    } else {
+      setSelectedRobotTypes((prev) => {
+        const newSelection = prev.filter(type => type !== "All");
+        if (prev.includes(robotType)) {
+          const result = newSelection.filter((type) => type !== robotType);
+          return result.length === 0 ? ["All"] : result;
+        }
+        return [...newSelection, robotType];
+      });
+    }
   };
 
   const removeRobotType = (robotType: string) => {
-    setSelectedRobotTypes((prev) => prev.filter((type) => type !== robotType));
+    if (robotType === "All") return;
+    setSelectedRobotTypes((prev) => {
+      const result = prev.filter((type) => type !== robotType);
+      return result.length === 0 ? ["All"] : result;
+    });
   };
 
   const handleDateRangeChange = (range: string) => {
@@ -164,30 +177,35 @@ const Index = () => {
       return { metrics: [] };
     }
 
-    const firstRobotData = mockData[selectedHospital]?.[selectedRobotTypes[0]];
+    const hospital = selectedHospital === "All" ? mockHospitals[1] : selectedHospital;
+    const robotTypes = selectedRobotTypes.includes("All") 
+      ? getMockRobotTypes(hospital).filter(type => type !== "All")
+      : selectedRobotTypes;
+
+    const firstRobotData = mockData[hospital]?.[robotTypes[0]];
     if (!firstRobotData) return { metrics: [] };
 
     return {
       metrics: firstRobotData.metrics.map((metric) => {
         const aggregatedHourlyData = metric.hourlyData.map((hourData) => {
-          const sum = selectedRobotTypes.reduce((acc, robotType) => {
-            const robotData = mockData[selectedHospital]?.[robotType]?.metrics
+          const sum = robotTypes.reduce((acc, robotType) => {
+            const robotData = mockData[hospital]?.[robotType]?.metrics
               .find((m) => m.id === metric.id)
               ?.hourlyData.find((h) => h.hour === hourData.hour)?.value || 0;
             return acc + robotData;
           }, 0);
-          const average = sum / selectedRobotTypes.length;
+          const average = sum / robotTypes.length;
           return {
             ...hourData,
             value: metric.id === "error-rate" ? Math.min(average, 5) : Math.min(average, 100),
           };
         });
 
-        const currentValue = selectedRobotTypes.reduce((acc, robotType) => {
-          const robotMetric = mockData[selectedHospital]?.[robotType]?.metrics.find((m) => m.id === metric.id);
+        const currentValue = robotTypes.reduce((acc, robotType) => {
+          const robotMetric = mockData[hospital]?.[robotType]?.metrics.find((m) => m.id === metric.id);
           const value = Number(robotMetric?.value.replace(/[^0-9.]/g, ""));
           return acc + value;
-        }, 0) / selectedRobotTypes.length;
+        }, 0) / robotTypes.length;
 
         return {
           ...metric,
@@ -257,14 +275,14 @@ const Index = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="min-w-[200px] flex items-center justify-between gap-2">
                   <span className="flex-1 text-left truncate">
-                    {selectedRobotTypes.length === 0 
-                      ? "Select Robot Types" 
+                    {selectedRobotTypes.includes("All") 
+                      ? "All Robot Types" 
                       : selectedRobotTypes.length === 1 
                       ? selectedRobotTypes[0]
                       : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
                   </span>
                   <div className="flex items-center gap-2">
-                    {selectedRobotTypes.length > 0 && (
+                    {selectedRobotTypes.length > 0 && !selectedRobotTypes.includes("All") && (
                       <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-primary/10 text-primary rounded-full">
                         {selectedRobotTypes.length}
                       </span>
