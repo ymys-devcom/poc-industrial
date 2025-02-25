@@ -177,39 +177,64 @@ const Index = () => {
       return { metrics: [] };
     }
 
-    const hospital = selectedHospital === "All" ? mockHospitals[1] : selectedHospital;
+    const hospitals = selectedHospital === "All" 
+      ? mockHospitals.filter(h => h !== "All")
+      : [selectedHospital];
+
     const robotTypes = selectedRobotTypes.includes("All") 
-      ? getMockRobotTypes(hospital).filter(type => type !== "All")
+      ? getMockRobotTypes(hospitals[0]).filter(type => type !== "All")
       : selectedRobotTypes;
 
-    const firstRobotData = mockData[hospital]?.[robotTypes[0]];
-    if (!firstRobotData) return { metrics: [] };
+    const firstHospitalData = mockData[hospitals[0]]?.[robotTypes[0]];
+    if (!firstHospitalData) return { metrics: [] };
 
     return {
-      metrics: firstRobotData.metrics.map((metric) => {
+      metrics: firstHospitalData.metrics.map((metric) => {
         const aggregatedHourlyData = metric.hourlyData.map((hourData) => {
-          const sum = robotTypes.reduce((acc, robotType) => {
-            const robotData = mockData[hospital]?.[robotType]?.metrics
-              .find((m) => m.id === metric.id)
-              ?.hourlyData.find((h) => h.hour === hourData.hour)?.value || 0;
-            return acc + robotData;
-          }, 0);
-          const average = sum / robotTypes.length;
+          let totalValue = 0;
+          let count = 0;
+
+          hospitals.forEach(hospital => {
+            robotTypes.forEach(robotType => {
+              const value = mockData[hospital]?.[robotType]?.metrics
+                .find(m => m.id === metric.id)
+                ?.hourlyData.find(h => h.hour === hourData.hour)?.value;
+              
+              if (typeof value === 'number') {
+                totalValue += value;
+                count++;
+              }
+            });
+          });
+
+          const average = count > 0 ? totalValue / count : 0;
           return {
             ...hourData,
             value: metric.id === "error-rate" ? Math.min(average, 5) : Math.min(average, 100),
           };
         });
 
-        const currentValue = robotTypes.reduce((acc, robotType) => {
-          const robotMetric = mockData[hospital]?.[robotType]?.metrics.find((m) => m.id === metric.id);
-          const value = Number(robotMetric?.value.replace(/[^0-9.]/g, ""));
-          return acc + value;
-        }, 0) / robotTypes.length;
+        let totalCurrentValue = 0;
+        let valueCount = 0;
+
+        hospitals.forEach(hospital => {
+          robotTypes.forEach(robotType => {
+            const robotMetric = mockData[hospital]?.[robotType]?.metrics.find(m => m.id === metric.id);
+            if (robotMetric) {
+              const value = Number(robotMetric.value.replace(/[^0-9.]/g, ""));
+              if (!isNaN(value)) {
+                totalCurrentValue += value;
+                valueCount++;
+              }
+            }
+          });
+        });
+
+        const averageCurrentValue = valueCount > 0 ? totalCurrentValue / valueCount : 0;
 
         return {
           ...metric,
-          value: `${Math.round(currentValue)}${metric.value.includes("%") ? "%" : " hrs"}`,
+          value: `${Math.round(averageCurrentValue)}${metric.value.includes("%") ? "%" : " hrs"}`,
           hourlyData: aggregatedHourlyData,
         };
       }),
