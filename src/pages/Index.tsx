@@ -5,17 +5,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Bar,
   BarChart,
@@ -24,7 +17,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { format } from "date-fns";
 
 const generateMockDataForRange = (range: string) => {
   const getMultiplier = (range: string) => {
@@ -44,6 +36,7 @@ const generateMockDataForRange = (range: string) => {
 
   const multiplier = getMultiplier(range);
 
+  // Helper function to ensure values stay within bounds
   const clampValue = (value: number, max: number): number => {
     return Math.min(Math.max(0, value), max);
   };
@@ -256,7 +249,6 @@ const Index = () => {
   const [selectedRobotType, setSelectedRobotType] = useState(getMockRobotTypes(mockHospitals[0])[0]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [mockData, setMockData] = useState(generateMockDataForRange("Last 7 Days"));
-  const [date, setDate] = useState<Date>();
   const navigate = useNavigate();
 
   const handleHospitalChange = (hospital: string) => {
@@ -267,14 +259,6 @@ const Index = () => {
   const handleDateRangeChange = (range: string) => {
     setDateRange(range);
     setMockData(generateMockDataForRange(range));
-  };
-
-  const handleCustomDateSelect = (newDate: Date | undefined) => {
-    setDate(newDate);
-    if (newDate) {
-      setDateRange(format(newDate, "MMM dd, yyyy"));
-      setMockData(generateMockDataForRange("Today"));
-    }
   };
 
   const handleMetricClick = (metricId: string) => {
@@ -376,22 +360,6 @@ const Index = () => {
               <DropdownMenuItem onClick={() => handleDateRangeChange("Last 90 Days")}>
                 Last 90 Days
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-start">
-                    <Calendar className="mr-2 h-4 w-4" /> Choose Date
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent
-                    mode="single"
-                    selected={date}
-                    onSelect={handleCustomDateSelect}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
