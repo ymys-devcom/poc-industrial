@@ -255,6 +255,11 @@ const Index = () => {
 
   const currentData = aggregateData();
 
+  const getMaxValueForMetric = (metric: any) => {
+    if (!metric.hourlyData) return 100;
+    return Math.max(...metric.hourlyData.map((data: any) => data.value));
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="px-6 py-4 flex justify-between items-center bg-card">
@@ -425,13 +430,16 @@ const Index = () => {
                       />
                       <YAxis 
                         tick={{ fontSize: 12 }}
-                        domain={[0, 100]}
-                        tickFormatter={(value) => `${value}%`}
+                        domain={[0, metric.id === "active-time" ? getMaxValueForMetric(metric) : 100]}
+                        tickFormatter={(value) => `${value}${metric.id === "active-time" ? "" : "%"}`}
                       />
                       <Tooltip 
                         formatter={(value: number, name: string, props: any) => {
                           if (metric.id === "error-rate") {
                             return [`${props.payload.displayValue}%`, "Error Rate"];
+                          }
+                          if (metric.id === "active-time") {
+                            return [value, "Active Time"];
                           }
                           return [value, name];
                         }}
