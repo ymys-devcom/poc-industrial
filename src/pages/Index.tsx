@@ -159,7 +159,7 @@ const Index = () => {
   const currentData = aggregateData();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-gradient-to-br from-mayo-background to-mayo-primary">
       <DashboardHeader />
       <main className="p-6">
         <DashboardFilters

@@ -47,24 +47,36 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
 
   return (
     <Card
-      className="bg-card p-4 cursor-pointer hover:bg-accent/50 transition-colors"
+      className="bg-mayo-card backdrop-blur-md border-white/10 p-4 cursor-pointer hover:bg-mayo-card/80 transition-colors text-white"
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-4">
-          <span className="text-muted-foreground text-sm">{metric.label}</span>
+          <span className="text-white/80 text-sm">{metric.label}</span>
           <span className="text-2xl font-semibold">{metric.value}</span>
         </div>
         <div className="h-[200px] mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={metric.hourlyData}>
-              <XAxis dataKey="hour" interval={3} tick={{ fontSize: 12 }} />
+              <XAxis 
+                dataKey="hour" 
+                interval={3} 
+                tick={{ fontSize: 12, fill: "rgba(255, 255, 255, 0.8)" }}
+                stroke="rgba(255, 255, 255, 0.2)" 
+              />
               <YAxis
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "rgba(255, 255, 255, 0.8)" }}
+                stroke="rgba(255, 255, 255, 0.2)"
                 domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
               />
               <Tooltip
+                contentStyle={{
+                  backgroundColor: "rgba(1, 45, 90, 0.9)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  borderRadius: "8px",
+                  color: "white",
+                }}
                 formatter={(value: number, name: string, props: any) => {
                   if (metric.id === "error-rate" || metric.id === "downtime") {
                     return [`${props.payload.value}%`, metric.label];
@@ -81,7 +93,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                     ? "#ef4444"
                     : metric.trend === "up"
                     ? "#22c55e"
-                    : "#0ea5e9"
+                    : "#0057B8"
                 }
               />
             </BarChart>
