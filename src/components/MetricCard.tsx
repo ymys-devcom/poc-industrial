@@ -17,6 +17,13 @@ interface MetricCardProps {
 
 const getMaxValueForMetric = (metric: MetricData) => {
   if (!metric.hourlyData) return 100;
+  
+  // Special handling for error rate - cap at 100%
+  if (metric.id === "error-rate") {
+    return 100;
+  }
+  
+  // For other metrics, use the actual maximum value
   return Math.max(...metric.hourlyData.map((data) => data.value));
 };
 
@@ -37,6 +44,7 @@ const getYAxisFormatter = (metricId: string) => {
 
 export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const yAxisFormatter = getYAxisFormatter(metric.id);
+  const maxValue = getMaxValueForMetric(metric);
 
   return (
     <Card
@@ -54,7 +62,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               <XAxis dataKey="hour" interval={3} tick={{ fontSize: 12 }} />
               <YAxis
                 tick={{ fontSize: 12 }}
-                domain={[0, getMaxValueForMetric(metric)]}
+                domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
               />
               <Tooltip
