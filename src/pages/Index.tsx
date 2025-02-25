@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut } from "lucide-react";
 import {
@@ -22,19 +23,22 @@ const generateMockDataForRange = (range: string) => {
   const getMultiplier = (range: string) => {
     switch (range) {
       case "Today":
-        return 0.8;
+        return 0.85;
       case "Last 7 Days":
-        return 1;
+        return 0.9;
       case "Last 30 Days":
-        return 1.2;
+        return 0.95;
       case "Last 90 Days":
-        return 1.4;
-      default:
         return 1;
+      default:
+        return 0.9;
     }
   };
 
   const multiplier = getMultiplier(range);
+
+  // Helper function to ensure values stay within bounds
+  const clampValue = (value: number, max: number) => Math.min(Math.max(0, value), max);
 
   return {
     "Mayo Clinic - Rochester": {
@@ -42,12 +46,12 @@ const generateMockDataForRange = (range: string) => {
         metrics: [
           { 
             label: "Utilization Rate", 
-            value: `${Math.round(90 * multiplier)}%`, 
+            value: `${Math.round(clampValue(85 * multiplier, 100))}%`, 
             trend: "up", 
             id: "utilization",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(65 + Math.random() * 35 * multiplier),
+              value: clampValue(Math.floor(65 + Math.random() * 30 * multiplier), 100),
             }))
           },
           { 
@@ -57,28 +61,31 @@ const generateMockDataForRange = (range: string) => {
             id: "active-time",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(800 + Math.random() * 450 * multiplier),
+              value: clampValue(Math.floor(800 + Math.random() * 450 * multiplier), 1450),
             }))
           },
           { 
             label: "Error Rate", 
-            value: `${(0.5 * (2 - multiplier)).toFixed(1)}%`, 
+            value: `${clampValue((0.5 * (2 - multiplier)).toFixed(1), 5)}%`, 
             trend: "down", 
             id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.floor(Math.random() * 2 * multiplier),
-              displayValue: Math.floor(Math.random() * 2 * multiplier)
-            }))
+            hourlyData: Array.from({ length: 24 }, (_, hour) => {
+              const value = clampValue(Math.floor(Math.random() * 2 * multiplier), 5);
+              return {
+                hour: `${hour}:00`,
+                value: value,
+                displayValue: value
+              };
+            })
           },
           { 
             label: "Battery Health", 
-            value: `${Math.round(95 * multiplier)}%`, 
+            value: `${Math.round(clampValue(95 * multiplier, 100))}%`, 
             trend: "stable", 
             id: "battery",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(85 + Math.random() * 15 * multiplier),
+              value: clampValue(Math.floor(85 + Math.random() * 15 * multiplier), 100),
             }))
           },
         ],
@@ -87,12 +94,12 @@ const generateMockDataForRange = (range: string) => {
         metrics: [
           { 
             label: "Utilization Rate", 
-            value: `${Math.round(85 * multiplier)}%`, 
+            value: `${Math.round(clampValue(80 * multiplier, 100))}%`, 
             trend: "up", 
             id: "utilization",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(55 + Math.random() * 35 * multiplier),
+              value: clampValue(Math.floor(55 + Math.random() * 30 * multiplier), 100),
             }))
           },
           { 
@@ -102,27 +109,31 @@ const generateMockDataForRange = (range: string) => {
             id: "active-time",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(600 + Math.random() * 450 * multiplier),
+              value: clampValue(Math.floor(600 + Math.random() * 450 * multiplier), 1200),
             }))
           },
           { 
             label: "Error Rate", 
-            value: `${(0.8 * (2 - multiplier)).toFixed(1)}%`, 
+            value: `${clampValue((0.8 * (2 - multiplier)).toFixed(1), 5)}%`, 
             trend: "up", 
             id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.floor(Math.random() * 3 * multiplier),
-            }))
+            hourlyData: Array.from({ length: 24 }, (_, hour) => {
+              const value = clampValue(Math.floor(Math.random() * 3 * multiplier), 5);
+              return {
+                hour: `${hour}:00`,
+                value: value,
+                displayValue: value
+              };
+            })
           },
           { 
             label: "Battery Health", 
-            value: `${Math.round(92 * multiplier)}%`, 
+            value: `${Math.round(clampValue(92 * multiplier, 100))}%`, 
             trend: "down", 
             id: "battery",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(80 + Math.random() * 15 * multiplier),
+              value: clampValue(Math.floor(80 + Math.random() * 15 * multiplier), 100),
             }))
           },
         ],
@@ -133,12 +144,12 @@ const generateMockDataForRange = (range: string) => {
         metrics: [
           { 
             label: "Utilization Rate", 
-            value: `${Math.round(75 * multiplier)}%`, 
+            value: `${Math.round(clampValue(75 * multiplier, 100))}%`, 
             trend: "down", 
             id: "utilization",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(45 + Math.random() * 35 * multiplier),
+              value: clampValue(Math.floor(45 + Math.random() * 35 * multiplier), 100),
             }))
           },
           { 
@@ -148,27 +159,31 @@ const generateMockDataForRange = (range: string) => {
             id: "active-time",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(500 + Math.random() * 450 * multiplier),
+              value: clampValue(Math.floor(500 + Math.random() * 450 * multiplier), 1000),
             }))
           },
           { 
             label: "Error Rate", 
-            value: `${(0.3 * (2 - multiplier)).toFixed(1)}%`, 
+            value: `${clampValue((0.3 * (2 - multiplier)).toFixed(1), 5)}%`, 
             trend: "down", 
             id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.floor(Math.random() * 1.5 * multiplier),
-            }))
+            hourlyData: Array.from({ length: 24 }, (_, hour) => {
+              const value = clampValue(Math.floor(Math.random() * 1.5 * multiplier), 5);
+              return {
+                hour: `${hour}:00`,
+                value: value,
+                displayValue: value
+              };
+            })
           },
           { 
             label: "Battery Health", 
-            value: `${Math.round(98 * multiplier)}%`, 
+            value: `${Math.round(clampValue(98 * multiplier, 100))}%`, 
             trend: "up", 
             id: "battery",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(90 + Math.random() * 10 * multiplier),
+              value: clampValue(Math.floor(90 + Math.random() * 10 * multiplier), 100),
             }))
           },
         ],
@@ -177,12 +192,12 @@ const generateMockDataForRange = (range: string) => {
         metrics: [
           { 
             label: "Utilization Rate", 
-            value: `${Math.round(95 * multiplier)}%`, 
+            value: `${Math.round(clampValue(90 * multiplier, 100))}%`, 
             trend: "up", 
             id: "utilization",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(75 + Math.random() * 25 * multiplier),
+              value: clampValue(Math.floor(75 + Math.random() * 25 * multiplier), 100),
             }))
           },
           { 
@@ -192,27 +207,31 @@ const generateMockDataForRange = (range: string) => {
             id: "active-time",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(1000 + Math.random() * 450 * multiplier),
+              value: clampValue(Math.floor(1000 + Math.random() * 450 * multiplier), 1600),
             }))
           },
           { 
             label: "Error Rate", 
-            value: `${(0.2 * (2 - multiplier)).toFixed(1)}%`, 
+            value: `${clampValue((0.2 * (2 - multiplier)).toFixed(1), 5)}%`, 
             trend: "down", 
             id: "error-rate",
-            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-              hour: `${hour}:00`,
-              value: Math.floor(Math.random() * 1 * multiplier),
-            }))
+            hourlyData: Array.from({ length: 24 }, (_, hour) => {
+              const value = clampValue(Math.floor(Math.random() * 1 * multiplier), 5);
+              return {
+                hour: `${hour}:00`,
+                value: value,
+                displayValue: value
+              };
+            })
           },
           { 
             label: "Battery Health", 
-            value: `${Math.round(89 * multiplier)}%`, 
+            value: `${Math.round(clampValue(89 * multiplier, 100))}%`, 
             trend: "down", 
             id: "battery",
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
-              value: Math.floor(75 + Math.random() * 15 * multiplier),
+              value: clampValue(Math.floor(75 + Math.random() * 15 * multiplier), 100),
             }))
           },
         ],
