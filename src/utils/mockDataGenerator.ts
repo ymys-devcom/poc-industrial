@@ -1,4 +1,3 @@
-
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -27,7 +26,7 @@ const clampValue = (value: number, max: number): number => {
   return Math.min(Math.max(0, value), max);
 };
 
-const generateHourlyPattern = (baseValue: number, hospitalMultiplier: number, maxValue: number) => {
+const generateHourlyPattern = (baseValue: number, hospitalMultiplier: number, maxValue: number, timeRangeMultiplier: number = 1) => {
   return Array.from({ length: 24 }, (_, hour) => {
     const isNightHours = hour <= 5 || hour >= 22;
     const isPeakHours = hour >= 9 && hour <= 16;
@@ -43,7 +42,7 @@ const generateHourlyPattern = (baseValue: number, hospitalMultiplier: number, ma
     }
 
     const randomVariation = (Math.random() * 0.2) - 0.1;
-    const value = Math.round(baseValue * hourMultiplier * (1 + randomVariation) * hospitalMultiplier);
+    const value = Math.round(baseValue * hourMultiplier * (1 + randomVariation) * hospitalMultiplier * timeRangeMultiplier);
 
     return {
       hour: `${hour}:00`,
@@ -61,10 +60,11 @@ const generateMetricsForRobot = (
   baseHoursSaved: number,
   baseCompletedMissions: number,
   hospitalMultiplier: number,
-  multiplier: number
+  multiplier: number,
+  timeRangeMultiplier: number = 1
 ) => {
   // Generate hourly data for mission time (in hours)
-  const missionTimeHourlyData = generateHourlyPattern(baseMissionTime, hospitalMultiplier, baseMissionTime * 2);
+  const missionTimeHourlyData = generateHourlyPattern(baseMissionTime, hospitalMultiplier, baseMissionTime * 2, timeRangeMultiplier);
   
   // Calculate average mission time in hours
   const averageMissionTime = missionTimeHourlyData.reduce((sum, hour) => sum + hour.value, 0) / 24;
@@ -73,10 +73,10 @@ const generateMetricsForRobot = (
     metrics: [
       {
         label: "Utilization",
-        value: `${Math.round(clampValue(baseUtilization * multiplier * hospitalMultiplier, 100))}%`,
+        value: `${Math.round(clampValue(baseUtilization * multiplier * hospitalMultiplier * timeRangeMultiplier, 100))}%`,
         trend: "up" as const,
         id: "utilization",
-        hourlyData: generateHourlyPattern(baseUtilization, hospitalMultiplier, 100)
+        hourlyData: generateHourlyPattern(baseUtilization, hospitalMultiplier, 100, timeRangeMultiplier)
       },
       {
         label: "Mission Time",
@@ -87,31 +87,31 @@ const generateMetricsForRobot = (
       },
       {
         label: "Miles Saved",
-        value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier)} miles`,
+        value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier * timeRangeMultiplier)} miles`,
         trend: "up" as const,
         id: "miles-saved",
-        hourlyData: generateHourlyPattern(baseMilesSaved / 24, hospitalMultiplier, baseMilesSaved)
+        hourlyData: generateHourlyPattern(baseMilesSaved / 24, hospitalMultiplier, baseMilesSaved, timeRangeMultiplier)
       },
       {
         label: "Hours Saved",
-        value: `${Math.round(baseHoursSaved * multiplier * hospitalMultiplier)}h`,
+        value: `${Math.round(baseHoursSaved * multiplier * hospitalMultiplier * timeRangeMultiplier)}h`,
         trend: "up" as const,
         id: "hours-saved",
-        hourlyData: generateHourlyPattern(baseHoursSaved / 24, hospitalMultiplier, baseHoursSaved)
+        hourlyData: generateHourlyPattern(baseHoursSaved / 24, hospitalMultiplier, baseHoursSaved, timeRangeMultiplier)
       },
       {
         label: "Completed Missions",
-        value: `${Math.round(baseCompletedMissions * multiplier * hospitalMultiplier)} / hour`,
+        value: `${Math.round(baseCompletedMissions * multiplier * hospitalMultiplier * timeRangeMultiplier)} / hour`,
         trend: "up" as const,
         id: "completed-missions",
-        hourlyData: generateHourlyPattern(baseCompletedMissions, hospitalMultiplier, baseCompletedMissions * 2)
+        hourlyData: generateHourlyPattern(baseCompletedMissions, hospitalMultiplier, baseCompletedMissions * 2, timeRangeMultiplier)
       },
       {
         label: "Downtime",
-        value: `${Math.round(clampValue(baseDowntime * multiplier * hospitalMultiplier, 100))}%`,
+        value: `${Math.round(clampValue(baseDowntime * multiplier * hospitalMultiplier * timeRangeMultiplier, 100))}%`,
         trend: "down" as const,
         id: "downtime",
-        hourlyData: generateHourlyPattern(baseDowntime, hospitalMultiplier, 100)
+        hourlyData: generateHourlyPattern(baseDowntime, hospitalMultiplier, 100, timeRangeMultiplier)
       },
       {
         label: "Error Rate",
@@ -131,11 +131,11 @@ const generateMetricsForRobot = (
   };
 };
 
-const generateHospitalData = (hospitalMultiplier: number, multiplier: number) => ({
-  "Medical Supply Bot": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier),
-  "Medication Delivery Bot": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier),
-  "Patient Transport Bot": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier),
-  "Surgical Assistant Pro": generateMetricsForRobot(70, 3.0, 5, 2.2, 800, 350, 3, hospitalMultiplier, multiplier),
+const generateHospitalData = (hospitalMultiplier: number, multiplier: number, timeRangeMultiplier: number = 1) => ({
+  "Medical Supply Bot": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Medication Delivery Bot": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Patient Transport Bot": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Surgical Assistant Pro": generateMetricsForRobot(70, 3.0, 5, 2.2, 800, 350, 3, hospitalMultiplier, multiplier, timeRangeMultiplier),
 });
 
 export const generateMockDataForRange = (
@@ -162,12 +162,28 @@ export const generateMockDataForRange = (
     }
   };
 
+  const getTimeRangeMultiplier = (range: string) => {
+    switch (range) {
+      case "Today":
+        return 0.3; // Significantly lower volume for today
+      case "Last 7 Days":
+        return 0.7;
+      case "Last 30 Days":
+        return 0.9;
+      case "Last 90 Days":
+        return 1;
+      default:
+        return 0.7;
+    }
+  };
+
   const multiplier = getMultiplier(range);
+  const timeRangeMultiplier = getTimeRangeMultiplier(range);
 
   return {
-    "Mayo Clinic - Rochester": generateHospitalData(1.2, multiplier),
-    "Cleveland Clinic": generateHospitalData(1.0, multiplier),
-    "Johns Hopkins Hospital": generateHospitalData(0.8, multiplier),
+    "Mayo Clinic - Rochester": generateHospitalData(1.2, multiplier, timeRangeMultiplier),
+    "Cleveland Clinic": generateHospitalData(1.0, multiplier, timeRangeMultiplier),
+    "Johns Hopkins Hospital": generateHospitalData(0.8, multiplier, timeRangeMultiplier),
   };
 };
 
