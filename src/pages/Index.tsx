@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Bot, Calendar, ChevronDown, Home, LogOut, Settings, User } from "lucide-react";
+import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +12,6 @@ import { useNavigate } from "react-router-dom";
 import {
   Bar,
   BarChart,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -42,15 +40,47 @@ const generateMockDataForRange = (range: string) => {
     "Mayo Clinic - Rochester": {
       "AMR v2.3": {
         metrics: [
-          { label: "Utilization Rate", value: `${Math.round(90 * multiplier)}%`, trend: "up", id: "utilization" },
-          { label: "Active Time", value: `${Math.round(1250 * multiplier)} hrs`, trend: "up", id: "active-time" },
-          { label: "Error Rate", value: `${(0.5 * (2 - multiplier)).toFixed(1)}%`, trend: "down", id: "error-rate" },
-          { label: "Battery Health", value: `${Math.round(95 * multiplier)}%`, trend: "stable", id: "battery" },
+          { 
+            label: "Utilization Rate", 
+            value: `${Math.round(90 * multiplier)}%`, 
+            trend: "up", 
+            id: "utilization",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(65 + Math.random() * 35 * multiplier),
+            }))
+          },
+          { 
+            label: "Active Time", 
+            value: `${Math.round(1250 * multiplier)} hrs`, 
+            trend: "up", 
+            id: "active-time",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(800 + Math.random() * 450 * multiplier),
+            }))
+          },
+          { 
+            label: "Error Rate", 
+            value: `${(0.5 * (2 - multiplier)).toFixed(1)}%`, 
+            trend: "down", 
+            id: "error-rate",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(Math.random() * 2 * multiplier),
+            }))
+          },
+          { 
+            label: "Battery Health", 
+            value: `${Math.round(95 * multiplier)}%`, 
+            trend: "stable", 
+            id: "battery",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.floor(85 + Math.random() * 15 * multiplier),
+            }))
+          },
         ],
-        hourlyData: Array.from({ length: 24 }, (_, hour) => ({
-          hour: `${hour}:00`,
-          value: Math.floor(Math.random() * 100 * multiplier),
-        })),
       },
       "Surgical Assistant Pro": {
         metrics: [
@@ -120,14 +150,7 @@ const Index = () => {
 
   const currentData = mockData[selectedHospital]?.[selectedRobotType] || {
     metrics: [],
-    hourlyData: [],
   };
-
-  const performanceData = currentData.hourlyData.map((item) => ({
-    hour: item.hour,
-    efficiency: Math.min(100, item.value + Math.random() * 10),
-    accuracy: Math.min(100, item.value - Math.random() * 5),
-  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -224,61 +247,46 @@ const Index = () => {
           </DropdownMenu>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {currentData.metrics.map((metric) => (
             <Card 
-              key={metric.label} 
+              key={metric.id} 
               className="bg-card p-4 cursor-pointer hover:bg-accent/50 transition-colors"
               onClick={() => handleMetricClick(metric.id)}
             >
               <div className="flex flex-col">
-                <span className="text-muted-foreground text-sm">{metric.label}</span>
-                <span className="text-2xl font-semibold mt-1">{metric.value}</span>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-muted-foreground text-sm">{metric.label}</span>
+                  <span className="text-2xl font-semibold">{metric.value}</span>
+                </div>
+                <div className="h-[200px] mt-2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={metric.hourlyData}>
+                      <XAxis 
+                        dataKey="hour" 
+                        interval={3}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <YAxis 
+                        tick={{ fontSize: 12 }}
+                      />
+                      <Tooltip />
+                      <Bar 
+                        dataKey="value" 
+                        fill={
+                          metric.id === "error-rate" 
+                            ? "#ef4444" 
+                            : metric.id === "battery" 
+                            ? "#22c55e"
+                            : "#0ea5e9"
+                        }
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </Card>
           ))}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="bg-card p-6">
-            <h3 className="text-lg font-semibold mb-4">Utilization Trends (24h)</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={currentData.hourlyData}>
-                  <XAxis dataKey="hour" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="var(--primary)" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-          <Card className="bg-card p-6">
-            <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={performanceData}>
-                  <XAxis dataKey="hour" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line 
-                    type="monotone" 
-                    dataKey="efficiency" 
-                    stroke="#0ea5e9" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="accuracy" 
-                    stroke="#ef4444" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
         </div>
       </main>
     </div>
