@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getMockRobotTypes } from "@/utils/mockDataGenerator";
-import { differenceInDays, eachDayOfInterval, format, addDays, subDays } from "date-fns";
+import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
 
 const MetricDetails = () => {
   const { metricId } = useParams();
@@ -118,17 +118,42 @@ const MetricDetails = () => {
     // Create a seed based on the metric type to ensure consistent randomness
     const metricSeed = metricId?.length || 1;
 
-    // Generate data points for each day in the range
+    // For "Today" view, show hourly data
+    if (dateRange === "Today") {
+      return Array.from({ length: 24 }, (_, hour) => {
+        const currentHour = setMinutes(setHours(now, hour), 0);
+        const hourString = format(currentHour, 'HH:00');
+        
+        // Generate values with hourly patterns
+        const timeOfDayFactor = hour >= 9 && hour <= 17 ? 1.2 : // Peak hours
+                               (hour >= 6 && hour <= 20 ? 1.0 : 0.6); // Normal hours vs night hours
+        
+        // Base values adjusted for the metric type and time of day
+        const nurseBotBase = metricId === "error-rate" ? 20 : 60;
+        const coBotBase = metricId === "error-rate" ? 15 : 45;
+        const bedBase = metricId === "error-rate" ? 18 : 50;
+
+        // Add some random variation while maintaining a general pattern
+        const variation = Math.sin(hour * 0.3 + metricSeed) * 0.2;
+
+        return {
+          date: hourString,
+          "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * timeOfDayFactor * (1 + variation))),
+          "Co-Bots": Math.max(0, Math.floor(coBotBase * timeOfDayFactor * (1 + variation))),
+          "Autonomous Hospital Beds": Math.max(0, Math.floor(bedBase * timeOfDayFactor * (1 + variation))),
+        };
+      });
+    }
+
+    // For other date ranges, show daily data
     const days = eachDayOfInterval({ start: startDate, end: endDate });
     
     return days.map((day, index) => {
       const daysSinceStart = differenceInDays(day, startDate);
       const formattedDate = format(day, 'MMM dd');
       
-      // Generate values with trends based on the metric type
       const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * 0.2;
       
-      // Base values that change gradually over time
       const nurseBotBase = metricId === "error-rate" ? 20 : 60;
       const coBotBase = metricId === "error-rate" ? 15 : 45;
       const bedBase = metricId === "error-rate" ? 18 : 50;
