@@ -1,5 +1,5 @@
 
-import { Bell, Bot, Settings, LogOut } from "lucide-react";
+import { Bot, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,9 +16,6 @@ export const DashboardHeader = () => {
         <h1 className="text-xl font-semibold">HealthTech Insight</h1>
       </div>
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="icon">
-          <Bell className="h-5 w-5" />
-        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 w-9 rounded-full">
@@ -42,4 +39,3 @@ export const DashboardHeader = () => {
     </header>
   );
 };
-
