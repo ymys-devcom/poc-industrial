@@ -88,11 +88,11 @@ export const generateMockDataForRange = (
     baseCompletedMissions: number,
     hospitalMultiplier: number
   ) => {
-    // Generate hourly data for mission time
-    const missionTimeHourlyData = generateHourlyPattern(baseMissionTime / 3600, hospitalMultiplier, 2);
+    // Generate hourly data for mission time (in hours)
+    const missionTimeHourlyData = generateHourlyPattern(baseMissionTime, hospitalMultiplier, baseMissionTime * 2);
     
-    // Calculate total mission time by summing up hourly values
-    const totalMissionTime = missionTimeHourlyData.reduce((sum, hour) => sum + hour.value, 0) / 24;
+    // Calculate average mission time in hours
+    const averageMissionTime = missionTimeHourlyData.reduce((sum, hour) => sum + hour.value, 0) / 24;
 
     return {
       metrics: [
@@ -105,21 +105,21 @@ export const generateMockDataForRange = (
         },
         {
           label: "Mission Time",
-          value: `${totalMissionTime.toFixed(1)}h`,
+          value: `${averageMissionTime.toFixed(1)}h`,
           trend: "down" as const,
           id: "mission-time",
           hourlyData: missionTimeHourlyData
         },
         {
           label: "Miles Saved",
-          value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier)}`,
+          value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier)} miles`,
           trend: "up" as const,
           id: "miles-saved",
           hourlyData: generateHourlyPattern(baseMilesSaved / 24, hospitalMultiplier, baseMilesSaved)
         },
         {
           label: "Hours Saved",
-          value: `${Math.round(baseHoursSaved * multiplier * hospitalMultiplier)}`,
+          value: `${Math.round(baseHoursSaved * multiplier * hospitalMultiplier)}h`,
           trend: "up" as const,
           id: "hours-saved",
           hourlyData: generateHourlyPattern(baseHoursSaved / 24, hospitalMultiplier, baseHoursSaved)
@@ -156,19 +156,19 @@ export const generateMockDataForRange = (
     }
   };
 
-  const generateHospitalData = (hospitalMultiplier: number) => ({
-    "Medical Supply Bot": generateMetricsForRobot(85, 2400, 2, 1.6, 1250, 500, 6, hospitalMultiplier),
-    "Medication Delivery Bot": generateMetricsForRobot(80, 2700, 3, 1.8, 1100, 450, 5, hospitalMultiplier),
-    "Patient Transport Bot": generateMetricsForRobot(75, 2850, 4, 2.0, 950, 400, 4, hospitalMultiplier),
-    "Surgical Assistant Pro": generateMetricsForRobot(70, 3000, 5, 2.2, 800, 350, 3, hospitalMultiplier),
-  });
-
   return {
     "Mayo Clinic - Rochester": generateHospitalData(1.2),
     "Cleveland Clinic": generateHospitalData(1.0),
     "Johns Hopkins Hospital": generateHospitalData(0.8),
   };
 };
+
+const generateHospitalData = (hospitalMultiplier: number) => ({
+  "Medical Supply Bot": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier),
+  "Medication Delivery Bot": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier),
+  "Patient Transport Bot": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier),
+  "Surgical Assistant Pro": generateMetricsForRobot(70, 3.0, 5, 2.2, 800, 350, 3, hospitalMultiplier),
+});
 
 export const mockHospitals = ["All", "Mayo Clinic - Rochester", "Cleveland Clinic", "Johns Hopkins Hospital"];
 
