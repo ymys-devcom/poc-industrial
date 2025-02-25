@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut, X } from "lucide-react";
+import { Bell, Bot, Calendar, ChevronDown, Settings, LogOut, CheckCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -282,8 +282,8 @@ const Index = () => {
                   >
                     <span>{type}</span>
                     {selectedRobotTypes.includes(type) && (
-                      <X 
-                        className="h-4 w-4 hover:text-destructive" 
+                      <CheckCircle 
+                        className="h-4 w-4 text-primary" 
                         onClick={(e) => {
                           e.stopPropagation();
                           removeRobotType(type);
