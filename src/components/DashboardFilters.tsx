@@ -44,7 +44,7 @@ export const DashboardFilters = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[200px]">
-              {selectedHospital} <ChevronDown className="ml-2 h-4 w-4" />
+              {selectedHospital === "All" ? "All Sites" : selectedHospital} <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-[200px] bg-popover">
@@ -53,7 +53,7 @@ export const DashboardFilters = ({
                 key={hospital}
                 onClick={() => onHospitalChange(hospital)}
               >
-                {hospital}
+                {hospital === "All" ? "All Sites" : hospital}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -63,7 +63,7 @@ export const DashboardFilters = ({
             <Button variant="outline" className="min-w-[200px] flex items-center justify-between gap-2">
               <span className="flex-1 text-left truncate">
                 {selectedRobotTypes.includes("All")
-                  ? "All Robot Types"
+                  ? "All AMR Types"
                   : selectedRobotTypes.length === 1
                   ? selectedRobotTypes[0]
                   : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
@@ -85,7 +85,7 @@ export const DashboardFilters = ({
                 className="flex items-center justify-between"
                 onClick={() => onRobotTypeChange(type)}
               >
-                <span>{type}</span>
+                <span>{type === "All" ? "All AMR Types" : type}</span>
                 {selectedRobotTypes.includes(type) && (
                   <CheckCircle
                     className="h-4 w-4 text-primary"
