@@ -31,7 +31,7 @@ const getYAxisFormatter = (metricId: string) => {
     case "completed-missions":
       return (value: number) => `${value}/h`;
     default:
-      return (value: number) => value;
+      return (value: number) => `${value}`; // Convert number to string for all other cases
   }
 };
 
