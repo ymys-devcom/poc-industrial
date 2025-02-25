@@ -68,6 +68,7 @@ const generateMockDataForRange = (range: string) => {
             hourlyData: Array.from({ length: 24 }, (_, hour) => ({
               hour: `${hour}:00`,
               value: Math.floor(Math.random() * 2 * multiplier),
+              displayValue: Math.floor(Math.random() * 2 * multiplier)
             }))
           },
           { 
@@ -365,9 +366,17 @@ const Index = () => {
                       />
                       <YAxis 
                         tick={{ fontSize: 12 }}
-                        domain={metric.id === "error-rate" ? [0, 100] : [0, 'auto']}
+                        domain={[0, 100]}
+                        tickFormatter={(value) => `${value}%`}
                       />
-                      <Tooltip />
+                      <Tooltip 
+                        formatter={(value: number, name: string, props: any) => {
+                          if (metric.id === "error-rate") {
+                            return [`${props.payload.displayValue}%`, "Error Rate"];
+                          }
+                          return [value, name];
+                        }}
+                      />
                       <Bar 
                         dataKey="value" 
                         fill={
