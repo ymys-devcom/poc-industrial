@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -127,9 +126,22 @@ const Index = () => {
 
         const averageCurrentValue = valueCount > 0 ? totalCurrentValue / valueCount : 0;
 
+        let valueString;
+        if (metric.id === "miles-saved") {
+          valueString = `${Math.round(averageCurrentValue)} miles`;
+        } else if (metric.value.includes("%")) {
+          valueString = `${Math.round(averageCurrentValue)}%`;
+        } else if (metric.id === "completed-missions") {
+          valueString = `${Math.round(averageCurrentValue)} / hour`;
+        } else if (metric.id === "mission-time") {
+          valueString = `${Math.round(averageCurrentValue)}s`;
+        } else {
+          valueString = `${Math.round(averageCurrentValue)} hrs`;
+        }
+
         return {
           ...metric,
-          value: `${Math.round(averageCurrentValue)}${metric.value.includes("%") ? "%" : " hrs"}`,
+          value: valueString,
           hourlyData: aggregatedHourlyData,
         };
       }),
@@ -168,4 +180,3 @@ const Index = () => {
 };
 
 export default Index;
-
