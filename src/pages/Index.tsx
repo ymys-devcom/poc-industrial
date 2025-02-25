@@ -240,10 +240,108 @@ const generateMockDataForRange = (range: string) => {
         ],
       },
     },
+    "Johns Hopkins Hospital": {
+      "Medical Supply Bot": {
+        metrics: [
+          { 
+            label: "Utilization Rate", 
+            value: `${Math.round(clampValue(88 * multiplier, 100))}%`,
+            trend: "up", 
+            id: "utilization",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.round(clampValue(70 + Math.random() * 25 * multiplier, 100)),
+            }))
+          },
+          { 
+            label: "Active Time", 
+            value: `${Math.round(1350 * multiplier)} hrs`,
+            trend: "up", 
+            id: "active-time",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.round(clampValue(900 + Math.random() * 450 * multiplier, 1500)),
+            }))
+          },
+          { 
+            label: "Error Rate", 
+            value: `${clampValue((0.3 * (2 - multiplier)), 5).toFixed(1)}%`,
+            trend: "down", 
+            id: "error-rate",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => {
+              const value = Math.round(clampValue(Math.random() * 1.5 * multiplier, 5));
+              return {
+                hour: `${hour}:00`,
+                value: value,
+                displayValue: value
+              };
+            })
+          },
+          { 
+            label: "Battery Health", 
+            value: `${Math.round(clampValue(94 * multiplier, 100))}%`,
+            trend: "up", 
+            id: "battery",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.round(clampValue(85 + Math.random() * 15 * multiplier, 100)),
+            }))
+          },
+        ],
+      },
+      "Medication Delivery Bot": {
+        metrics: [
+          { 
+            label: "Utilization Rate", 
+            value: `${Math.round(clampValue(82 * multiplier, 100))}%`,
+            trend: "stable", 
+            id: "utilization",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.round(clampValue(60 + Math.random() * 30 * multiplier, 100)),
+            }))
+          },
+          { 
+            label: "Active Time", 
+            value: `${Math.round(1150 * multiplier)} hrs`,
+            trend: "up", 
+            id: "active-time",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.round(clampValue(800 + Math.random() * 400 * multiplier, 1300)),
+            }))
+          },
+          { 
+            label: "Error Rate", 
+            value: `${clampValue((0.4 * (2 - multiplier)), 5).toFixed(1)}%`,
+            trend: "down", 
+            id: "error-rate",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => {
+              const value = Math.round(clampValue(Math.random() * 2 * multiplier, 5));
+              return {
+                hour: `${hour}:00`,
+                value: value,
+                displayValue: value
+              };
+            })
+          },
+          { 
+            label: "Battery Health", 
+            value: `${Math.round(clampValue(91 * multiplier, 100))}%`,
+            trend: "stable", 
+            id: "battery",
+            hourlyData: Array.from({ length: 24 }, (_, hour) => ({
+              hour: `${hour}:00`,
+              value: Math.round(clampValue(80 + Math.random() * 15 * multiplier, 100)),
+            }))
+          },
+        ],
+      },
+    },
   };
 };
 
-const mockHospitals = ["Mayo Clinic - Rochester", "Cleveland Clinic"];
+const mockHospitals = ["Mayo Clinic - Rochester", "Cleveland Clinic", "Johns Hopkins Hospital"];
 const getMockRobotTypes = (hospital: string) => Object.keys(generateMockDataForRange("Last 7 Days")[hospital] || {});
 
 const Index = () => {
