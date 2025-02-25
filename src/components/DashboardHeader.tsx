@@ -14,9 +14,8 @@ export const DashboardHeader = () => {
       <div className="flex items-center space-x-3">
         <div className="w-8 h-8 flex items-center justify-center">
           <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <path d="M7 8.5h26M7 31.5h26M13.5 8.5v23M26.5 8.5v23M16.5 8.5L20 31.5M23.5 8.5L20 31.5" stroke="white" strokeWidth="2"/>
-            <path d="M7 8.5C7 8.5 10 15.5 20 15.5C30 15.5 33 8.5 33 8.5" stroke="white" strokeWidth="2"/>
-            <path d="M7 31.5C7 31.5 10 24.5 20 24.5C30 24.5 33 31.5 33 31.5" stroke="white" strokeWidth="2"/>
+            <path d="M20 0C8.95 0 0 8.95 0 20C0 31.05 8.95 40 20 40C31.05 40 40 31.05 40 20C40 8.95 31.05 0 20 0ZM20 36C11.18 36 4 28.82 4 20C4 11.18 11.18 4 20 4C28.82 4 36 11.18 36 20C36 28.82 28.82 36 20 36Z" fill="white"/>
+            <path d="M20 8C13.37 8 8 13.37 8 20C8 26.63 13.37 32 20 32C26.63 32 32 26.63 32 20C32 13.37 26.63 8 20 8ZM20 28C15.58 28 12 24.42 12 20C12 15.58 15.58 12 20 12C24.42 12 28 15.58 28 20C28 24.42 24.42 28 20 28Z" fill="white"/>
           </svg>
         </div>
         <div className="text-left">
