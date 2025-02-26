@@ -161,22 +161,19 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
-      <h1 className="text-white text-2xl font-semibold px-6 mt-4 mb-3">Dashboard</h1>
-      <main>
-        <div className="mt-3">
-          <DashboardFilters
-            selectedHospital={selectedHospital}
-            selectedRobotTypes={selectedRobotTypes}
-            dateRange={dateRange}
-            date={date}
-            onHospitalChange={handleHospitalChange}
-            onRobotTypeChange={handleRobotTypeChange}
-            onRemoveRobotType={removeRobotType}
-            onDateRangeChange={handleDateRangeChange}
-            onCustomDateChange={handleCustomDateChange}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6 mt-3">
+      <main className="p-6">
+        <DashboardFilters
+          selectedHospital={selectedHospital}
+          selectedRobotTypes={selectedRobotTypes}
+          dateRange={dateRange}
+          date={date}
+          onHospitalChange={handleHospitalChange}
+          onRobotTypeChange={handleRobotTypeChange}
+          onRemoveRobotType={removeRobotType}
+          onDateRangeChange={handleDateRangeChange}
+          onCustomDateChange={handleCustomDateChange}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {currentData.metrics.map((metric) => (
             <MetricCard
               key={metric.id}
@@ -191,4 +188,3 @@ const Index = () => {
 };
 
 export default Index;
-
