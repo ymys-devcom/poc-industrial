@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -104,4 +103,3 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
-
