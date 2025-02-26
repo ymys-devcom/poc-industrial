@@ -52,7 +52,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     >
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-white/80 text-sm">{metric.label}</span>
+          <span className="text-white/80 text-[1.17rem]">{metric.label}</span>
           <span className="text-2xl font-semibold">{metric.value}</span>
         </div>
         <div className="h-[140px] mt-1">
