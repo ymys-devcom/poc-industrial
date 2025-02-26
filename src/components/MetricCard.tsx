@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -46,7 +47,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
 
   return (
     <Card
-      className="bg-mayo-card backdrop-blur-md border-white/10 p-4 cursor-pointer hover:bg-mayo-card/80 transition-colors text-white"
+      className="bg-mayo-card backdrop-blur-md border-white/10 p-4 cursor-pointer hover:bg-[#14294B] transition-colors text-white"
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
@@ -103,3 +104,4 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
+
