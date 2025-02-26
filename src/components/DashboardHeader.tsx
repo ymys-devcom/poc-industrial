@@ -26,9 +26,9 @@ export const DashboardHeader = () => {
       <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 hover:bg-transparent">
-              <div className="flex h-full w-full items-center justify-center rounded-full" style={{ backgroundColor: '#F8963A' }}>
-                <span className="text-sm font-medium" style={{ color: '#012D5A' }}>JD</span>
+            <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:ring-0">
+              <div className="flex h-full w-full items-center justify-center rounded-full bg-[#F8963A]">
+                <span className="text-sm font-medium text-[#012D5A]">JD</span>
               </div>
             </Button>
           </DropdownMenuTrigger>
@@ -47,4 +47,3 @@ export const DashboardHeader = () => {
     </header>
   );
 };
-
