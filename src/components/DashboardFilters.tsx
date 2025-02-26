@@ -1,4 +1,3 @@
-
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -122,30 +121,6 @@ export const DashboardFilters = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
-            <div className="flex flex-col border-b border-border p-3">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {dateRange}
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[200px]">
-                  <DropdownMenuItem onClick={() => onDateRangeChange("Today")}>
-                    Today
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDateRangeChange("Last 7 Days")}>
-                    Last 7 Days
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDateRangeChange("Last 30 Days")}>
-                    Last 30 Days
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDateRangeChange("Last 90 Days")}>
-                    Last 90 Days
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
             <CalendarComponent
               initialFocus
               mode="range"
@@ -156,8 +131,26 @@ export const DashboardFilters = ({
             />
           </PopoverContent>
         </Popover>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">{dateRange}</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-[200px] bg-popover">
+            <DropdownMenuItem onClick={() => onDateRangeChange("Today")}>
+              Today
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDateRangeChange("Last 7 Days")}>
+              Last 7 Days
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDateRangeChange("Last 30 Days")}>
+              Last 30 Days
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDateRangeChange("Last 90 Days")}>
+              Last 90 Days
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
 };
-
