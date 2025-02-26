@@ -10,7 +10,7 @@ import {
 
 export const DashboardHeader = () => {
   return (
-    <header className="px-6 py-4 flex justify-between items-center bg-[#14294B]">
+    <header className="px-6 h-[73px] flex justify-between items-center bg-[#14294B]">
       <div className="flex items-center space-x-3">
         <img 
           src="/lovable-uploads/9c9cf929-efe0-4eae-8878-4f85be2b59dd.png" 
