@@ -57,7 +57,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
         </div>
         <div className="h-[140px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metric.hourlyData} margin={{ left: -16, right: 8, top: 8, bottom: 0 }}>
+            <BarChart data={metric.hourlyData} margin={{ left: -8, right: 8, top: 8, bottom: 0 }}>
               <XAxis 
                 dataKey="hour" 
                 interval={3} 
@@ -69,7 +69,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                 stroke="rgba(255, 255, 255, 0.2)"
                 domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
-                width={35}
+                width={40}
               />
               <Tooltip
                 contentStyle={{
