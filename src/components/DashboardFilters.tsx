@@ -1,3 +1,4 @@
+
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -133,7 +134,10 @@ export const DashboardFilters = ({
         </Popover>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">{dateRange}</Button>
+            <Button variant="outline" className="min-w-[120px] flex items-center justify-between">
+              <span>{dateRange}</span>
+              <ChevronDown className="h-4 w-4" />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-[200px] bg-popover">
             <DropdownMenuItem onClick={() => onDateRangeChange("Today")}>
