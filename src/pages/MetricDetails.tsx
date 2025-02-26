@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -147,6 +148,8 @@ const MetricDetails = () => {
 
   const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId]);
 
+  const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric" };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
@@ -186,7 +189,7 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-6">
-            <h1 className="text-2xl font-bold mb-6 text-white">{metricDetails.title}</h1>
+            <h1 className="text-2xl font-bold mb-6 text-white">{currentMetricDetails.title}</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {robotStats.map((stat) => (
