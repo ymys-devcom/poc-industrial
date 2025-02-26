@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -24,50 +23,38 @@ const MetricDetails = () => {
   });
 
   const getMetricDetails = (id: string) => {
-    const metrics: Record<string, { title: string; description: string }> = {
+    const metrics: Record<string, { title: string }> = {
       "utilization": {
-        title: "Utilization Rate",
-        description: "Detailed analysis of robot utilization patterns and efficiency metrics across different robot types.",
+        title: "Utilization Rate"
       },
       "mission-time": {
-        title: "Mission Time",
-        description: "Comprehensive breakdown of mission completion times and duration metrics for each robot type.",
+        title: "Mission Time"
       },
       "active-time": {
-        title: "Active Time",
-        description: "Comprehensive breakdown of operational hours and activity periods for each robot category.",
+        title: "Active Time"
       },
       "error-rate": {
-        title: "Error Rate",
-        description: "In-depth analysis of system errors and their frequency across different robot types.",
+        title: "Error Rate"
       },
       "battery": {
-        title: "Battery Health",
-        description: "Detailed battery performance metrics and health indicators for each robot category.",
+        title: "Battery Health"
       },
       "miles-saved": {
-        title: "Miles Saved",
-        description: "Analysis of distance savings achieved through robotic automation compared to manual operations.",
+        title: "Miles Saved"
       },
       "hours-saved": {
-        title: "Hours Saved",
-        description: "Measurement of time savings achieved through robotic automation versus traditional methods.",
+        title: "Hours Saved"
       },
       "completed-missions": {
-        title: "Completed Missions",
-        description: "Detailed statistics of successfully completed tasks and missions across robot types.",
+        title: "Completed Missions"
       },
       "downtime": {
-        title: "Downtime",
-        description: "Analysis of non-operational periods and maintenance requirements for each robot type.",
+        title: "Downtime"
       }
     };
-    return metrics[id] || { title: "Unknown Metric", description: "No details available." };
+    return metrics[id] || { title: "Unknown Metric" };
   };
 
-  const metricDetails = getMetricDetails(metricId || "");
-
-  // Mock data for robot types statistics with some fluctuation based on the metric
   const robotStats = useMemo(() => {
     const baseStats = [
       { type: "Nurse Bots", active: 90, total: 95 },
@@ -75,7 +62,6 @@ const MetricDetails = () => {
       { type: "Autonomous Hospital Beds", active: 24, total: 25 },
     ];
 
-    // Add some variation based on the metric type
     if (metricId === "downtime" || metricId === "error-rate") {
       return baseStats.map(stat => ({
         ...stat,
@@ -85,13 +71,11 @@ const MetricDetails = () => {
     return baseStats;
   }, [metricId]);
 
-  // Generate chart data based on the selected date range
   const generateChartData = () => {
     const now = new Date();
     let startDate: Date;
     let endDate = now;
     
-    // Set dates based on selected range or custom date range
     if (date.from && date.to) {
       startDate = date.from;
       endDate = date.to;
@@ -115,25 +99,20 @@ const MetricDetails = () => {
       }
     }
 
-    // Create a seed based on the metric type to ensure consistent randomness
     const metricSeed = metricId?.length || 1;
 
-    // For "Today" view, show hourly data
     if (dateRange === "Today") {
       return Array.from({ length: 24 }, (_, hour) => {
         const currentHour = setMinutes(setHours(now, hour), 0);
         const hourString = format(currentHour, 'HH:00');
         
-        // Generate values with hourly patterns
-        const timeOfDayFactor = hour >= 9 && hour <= 17 ? 1.2 : // Peak hours
-                               (hour >= 6 && hour <= 20 ? 1.0 : 0.6); // Normal hours vs night hours
+        const timeOfDayFactor = hour >= 9 && hour <= 17 ? 1.2 : 
+                               (hour >= 6 && hour <= 20 ? 1.0 : 0.6);
         
-        // Base values adjusted for the metric type and time of day
         const nurseBotBase = metricId === "error-rate" ? 20 : 60;
         const coBotBase = metricId === "error-rate" ? 15 : 45;
         const bedBase = metricId === "error-rate" ? 18 : 50;
 
-        // Add some random variation while maintaining a general pattern
         const variation = Math.sin(hour * 0.3 + metricSeed) * 0.2;
 
         return {
@@ -145,7 +124,6 @@ const MetricDetails = () => {
       });
     }
 
-    // For other date ranges, show daily data
     const days = eachDayOfInterval({ start: startDate, end: endDate });
     
     return days.map((day, index) => {
@@ -208,8 +186,7 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-6">
-            <h1 className="text-2xl font-bold mb-2 text-white">{metricDetails.title}</h1>
-            <p className="text-white/80 mb-6">{metricDetails.description}</p>
+            <h1 className="text-2xl font-bold mb-6 text-white">{metricDetails.title}</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {robotStats.map((stat) => (
@@ -285,4 +262,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-
