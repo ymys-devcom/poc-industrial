@@ -1,4 +1,3 @@
-
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -181,13 +180,13 @@ export const generateMockDataForRange = (
   const timeRangeMultiplier = getTimeRangeMultiplier(range);
 
   return {
-    "Mayo Clinic - Rochester": generateHospitalData(1.2, multiplier, timeRangeMultiplier),
-    "Cleveland Clinic": generateHospitalData(1.0, multiplier, timeRangeMultiplier),
-    "Johns Hopkins Hospital": generateHospitalData(0.8, multiplier, timeRangeMultiplier),
+    "Cannaday building": generateHospitalData(1.2, multiplier, timeRangeMultiplier),
+    "Mayo building and hospital": generateHospitalData(1.0, multiplier, timeRangeMultiplier),
+    "Mangurian building": generateHospitalData(0.8, multiplier, timeRangeMultiplier),
   };
 };
 
-export const mockHospitals = ["All", "Mayo Clinic - Rochester", "Cleveland Clinic", "Johns Hopkins Hospital"];
+export const mockHospitals = ["All", "Cannaday building", "Mayo building and hospital", "Mangurian building"];
 
 export const getMockRobotTypes = (hospital: string) => {
   return ["All", "Nurse Bots", "Co-Bots", "Autonomous Hospital Beds"];
