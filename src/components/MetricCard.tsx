@@ -41,9 +41,31 @@ const getYAxisFormatter = (metricId: string) => {
   }
 };
 
+const getMetricColor = (metricId: string) => {
+  switch (metricId) {
+    case "utilization":
+      return "#F9A251";
+    case "mission-time":
+      return "#B9C6EA";
+    case "miles-saved":
+      return "#51D7F9";
+    case "hours-saved":
+      return "#2FD96D";
+    case "completed-missions":
+      return "#D789FB";
+    case "downtime":
+      return "#F9CF51";
+    case "error-rate":
+      return "#F96751";
+    default:
+      return "#0057B8";
+  }
+};
+
 export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const yAxisFormatter = getYAxisFormatter(metric.id);
   const maxValue = getMaxValueForMetric(metric);
+  const metricColor = getMetricColor(metric.id);
 
   return (
     <Card
@@ -53,7 +75,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-2">
           <span className="text-white/80 text-[1.17rem]">{metric.label}</span>
-          <span className="text-2xl font-semibold">{metric.value}</span>
+          <span className="text-2xl font-semibold" style={{ color: metricColor }}>{metric.value}</span>
         </div>
         <div className="h-[140px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
@@ -88,15 +110,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               />
               <Bar
                 dataKey="value"
-                fill={
-                  metric.id === "mission-time"
-                    ? "#22c55e"
-                    : metric.trend === "down"
-                    ? "#ef4444"
-                    : metric.trend === "up"
-                    ? "#22c55e"
-                    : "#0057B8"
-                }
+                fill={metricColor}
               />
             </BarChart>
           </ResponsiveContainer>
