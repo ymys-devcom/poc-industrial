@@ -17,7 +17,6 @@ export const DashboardHeader = () => {
           alt="Mayo Clinic Logo" 
           className="h-[3.6rem]"
         />
-        <h1 className="text-white text-2xl font-semibold">Dashboard</h1>
       </div>
       <div className="flex items-center space-x-4">
         <DropdownMenu>
@@ -43,4 +42,3 @@ export const DashboardHeader = () => {
     </header>
   );
 };
-

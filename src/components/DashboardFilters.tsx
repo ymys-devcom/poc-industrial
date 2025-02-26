@@ -1,4 +1,3 @@
-
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,153 +38,156 @@ export const DashboardFilters = ({
   onCustomDateChange,
 }: DashboardFiltersProps) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
-      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
-            >
-              <span className="flex-1 text-left truncate">
-                {selectedHospital === "All" ? "All Sites" : selectedHospital}
-              </span>
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
-            {mockHospitals.map((hospital) => (
-              <DropdownMenuItem
-                key={hospital}
-                onClick={() => onHospitalChange(hospital)}
+    <div className="space-y-6">
+      <h1 className="text-white text-2xl font-semibold px-6">Dashboard</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+              >
+                <span className="flex-1 text-left truncate">
+                  {selectedHospital === "All" ? "All Sites" : selectedHospital}
+                </span>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
+              {mockHospitals.map((hospital) => (
+                <DropdownMenuItem
+                  key={hospital}
+                  onClick={() => onHospitalChange(hospital)}
+                  className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                >
+                  {hospital === "All" ? "All Sites" : hospital}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+              >
+                <span className="flex-1 text-left truncate">
+                  {selectedRobotTypes.includes("All")
+                    ? "All AMR Types"
+                    : selectedRobotTypes.length === 1
+                    ? selectedRobotTypes[0]
+                    : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
+                </span>
+                <div className="flex items-center gap-2">
+                  {selectedRobotTypes.length > 0 && !selectedRobotTypes.includes("All") && (
+                    <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-white/20 text-white rounded-full">
+                      {selectedRobotTypes.length}
+                    </span>
+                  )}
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
+              {getMockRobotTypes(selectedHospital).map((type) => (
+                <DropdownMenuItem
+                  key={type}
+                  className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  onClick={() => onRobotTypeChange(type)}
+                >
+                  <span>{type === "All" ? "All AMR Types" : type}</span>
+                  {selectedRobotTypes.includes(type) && (
+                    <CheckCircle
+                      className="h-4 w-4 text-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveRobotType(type);
+                      }}
+                    />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+              >
+                <Calendar className="mr-2 h-4 w-4" />
+                {date.from ? (
+                  date.to ? (
+                    <>
+                      {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(date.from, "LLL dd, y")
+                  )
+                ) : (
+                  "Pick a date range"
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 bg-[#526189] border border-white text-white" align="start">
+              <CalendarComponent
+                initialFocus
+                mode="range"
+                defaultMonth={date.from}
+                selected={{ from: date.from, to: date.to }}
+                onSelect={onCustomDateChange}
+                numberOfMonths={2}
+                className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
+              />
+            </PopoverContent>
+          </Popover>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+              >
+                <span>{dateRange}</span>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-[120px] bg-[#526189] border border-white">
+              <DropdownMenuItem 
+                onClick={() => onDateRangeChange("Today")}
                 className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
               >
-                {hospital === "All" ? "All Sites" : hospital}
+                Today
               </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
-            >
-              <span className="flex-1 text-left truncate">
-                {selectedRobotTypes.includes("All")
-                  ? "All AMR Types"
-                  : selectedRobotTypes.length === 1
-                  ? selectedRobotTypes[0]
-                  : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
-              </span>
-              <div className="flex items-center gap-2">
-                {selectedRobotTypes.length > 0 && !selectedRobotTypes.includes("All") && (
-                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-white/20 text-white rounded-full">
-                    {selectedRobotTypes.length}
-                  </span>
-                )}
-                <ChevronDown className="h-4 w-4" />
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
-            {getMockRobotTypes(selectedHospital).map((type) => (
-              <DropdownMenuItem
-                key={type}
-                className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-                onClick={() => onRobotTypeChange(type)}
+              <DropdownMenuItem 
+                onClick={() => onDateRangeChange("Last 7 Days")}
+                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
               >
-                <span>{type === "All" ? "All AMR Types" : type}</span>
-                {selectedRobotTypes.includes(type) && (
-                  <CheckCircle
-                    className="h-4 w-4 text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemoveRobotType(type);
-                    }}
-                  />
-                )}
+                Last 7 Days
               </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="flex items-center space-x-2">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
-            >
-              <Calendar className="mr-2 h-4 w-4" />
-              {date.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                  </>
-                ) : (
-                  format(date.from, "LLL dd, y")
-                )
-              ) : (
-                "Pick a date range"
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 bg-[#526189] border border-white text-white" align="start">
-            <CalendarComponent
-              initialFocus
-              mode="range"
-              defaultMonth={date.from}
-              selected={{ from: date.from, to: date.to }}
-              onSelect={onCustomDateChange}
-              numberOfMonths={2}
-              className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
-            />
-          </PopoverContent>
-        </Popover>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
-            >
-              <span>{dateRange}</span>
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="min-w-[120px] bg-[#526189] border border-white">
-            <DropdownMenuItem 
-              onClick={() => onDateRangeChange("Today")}
-              className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-            >
-              Today
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => onDateRangeChange("Last 7 Days")}
-              className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-            >
-              Last 7 Days
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => onDateRangeChange("Last 30 Days")}
-              className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-            >
-              Last 30 Days
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => onDateRangeChange("Last 90 Days")}
-              className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-            >
-              Last 90 Days
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => onDateRangeChange("Last 180 Days")}
-              className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-            >
-              Last 180 Days
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem 
+                onClick={() => onDateRangeChange("Last 30 Days")}
+                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+              >
+                Last 30 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onDateRangeChange("Last 90 Days")}
+                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+              >
+                Last 90 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onDateRangeChange("Last 180 Days")}
+                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+              >
+                Last 180 Days
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );
