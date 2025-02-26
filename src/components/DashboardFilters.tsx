@@ -1,3 +1,4 @@
+
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,9 +39,8 @@ export const DashboardFilters = ({
   onCustomDateChange,
 }: DashboardFiltersProps) => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-white text-2xl font-semibold px-6">Dashboard</h1>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 space-y-4 md:space-y-0">
+    <div className="px-6 py-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -192,3 +192,4 @@ export const DashboardFilters = ({
     </div>
   );
 };
+

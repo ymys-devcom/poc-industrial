@@ -161,7 +161,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
-      <main className="p-6">
+      <h1 className="text-white text-2xl font-semibold px-6 mt-6 mb-2">Dashboard</h1>
+      <main>
         <DashboardFilters
           selectedHospital={selectedHospital}
           selectedRobotTypes={selectedRobotTypes}
@@ -173,7 +174,7 @@ const Index = () => {
           onDateRangeChange={handleDateRangeChange}
           onCustomDateChange={handleCustomDateChange}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
           {currentData.metrics.map((metric) => (
             <MetricCard
               key={metric.id}
@@ -188,3 +189,4 @@ const Index = () => {
 };
 
 export default Index;
+
