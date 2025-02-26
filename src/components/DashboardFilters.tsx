@@ -152,6 +152,9 @@ export const DashboardFilters = ({
             <DropdownMenuItem onClick={() => onDateRangeChange("Last 90 Days")}>
               Last 90 Days
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDateRangeChange("Last 180 Days")}>
+              Last 180 Days
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

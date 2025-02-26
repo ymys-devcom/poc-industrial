@@ -156,6 +156,8 @@ export const generateMockDataForRange = (
         return 0.95;
       case "Last 90 Days":
         return 1;
+      case "Last 180 Days":
+        return 1.05;
       default:
         return 0.9;
     }
@@ -171,6 +173,8 @@ export const generateMockDataForRange = (
         return 0.9;
       case "Last 90 Days":
         return 1;
+      case "Last 180 Days":
+        return 1.1;
       default:
         return 0.7;
     }
