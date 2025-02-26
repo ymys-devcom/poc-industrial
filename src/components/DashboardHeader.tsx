@@ -15,7 +15,7 @@ export const DashboardHeader = () => {
         <img 
           src="/lovable-uploads/9c9cf929-efe0-4eae-8878-4f85be2b59dd.png" 
           alt="Mayo Clinic Logo" 
-          className="h-12"
+          className="h-[3.6rem]"
         />
       </div>
       <div className="flex items-center space-x-4">
