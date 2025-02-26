@@ -43,18 +43,22 @@ export const DashboardFilters = ({
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[200px] flex items-center justify-between">
+            <Button 
+              variant="outline" 
+              className="w-[200px] flex items-center justify-between bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+            >
               <span className="flex-1 text-left truncate">
                 {selectedHospital === "All" ? "All Sites" : selectedHospital}
               </span>
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-popover">
+          <DropdownMenuContent className="w-[200px] bg-[#3E4F7C] border border-white">
             {mockHospitals.map((hospital) => (
               <DropdownMenuItem
                 key={hospital}
                 onClick={() => onHospitalChange(hospital)}
+                className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
               >
                 {hospital === "All" ? "All Sites" : hospital}
               </DropdownMenuItem>
@@ -63,7 +67,10 @@ export const DashboardFilters = ({
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="min-w-[200px] flex items-center justify-between gap-2">
+            <Button 
+              variant="outline" 
+              className="min-w-[200px] flex items-center justify-between gap-2 bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+            >
               <span className="flex-1 text-left truncate">
                 {selectedRobotTypes.includes("All")
                   ? "All AMR Types"
@@ -73,7 +80,7 @@ export const DashboardFilters = ({
               </span>
               <div className="flex items-center gap-2">
                 {selectedRobotTypes.length > 0 && !selectedRobotTypes.includes("All") && (
-                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-white/20 text-white rounded-full">
                     {selectedRobotTypes.length}
                   </span>
                 )}
@@ -81,17 +88,17 @@ export const DashboardFilters = ({
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-popover">
+          <DropdownMenuContent className="w-[200px] bg-[#3E4F7C] border border-white">
             {getMockRobotTypes(selectedHospital).map((type) => (
               <DropdownMenuItem
                 key={type}
-                className="flex items-center justify-between"
+                className="flex items-center justify-between text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
                 onClick={() => onRobotTypeChange(type)}
               >
                 <span>{type === "All" ? "All AMR Types" : type}</span>
                 {selectedRobotTypes.includes(type) && (
                   <CheckCircle
-                    className="h-4 w-4 text-primary"
+                    className="h-4 w-4 text-white"
                     onClick={(e) => {
                       e.stopPropagation();
                       onRemoveRobotType(type);
@@ -106,7 +113,10 @@ export const DashboardFilters = ({
       <div className="flex items-center space-x-2">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="justify-start text-left font-normal">
+            <Button 
+              variant="outline" 
+              className="justify-start text-left font-normal bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+            >
               <Calendar className="mr-2 h-4 w-4" />
               {date.from ? (
                 date.to ? (
@@ -121,7 +131,7 @@ export const DashboardFilters = ({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+          <PopoverContent className="w-auto p-0 bg-[#3E4F7C] border border-white text-white" align="start">
             <CalendarComponent
               initialFocus
               mode="range"
@@ -129,30 +139,49 @@ export const DashboardFilters = ({
               selected={{ from: date.from, to: date.to }}
               onSelect={onCustomDateChange}
               numberOfMonths={2}
+              className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-white/20 [&_.rdp-day_button:focus]:bg-white/20"
             />
           </PopoverContent>
         </Popover>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="min-w-[120px] flex items-center justify-between">
+            <Button 
+              variant="outline" 
+              className="min-w-[120px] flex items-center justify-between bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+            >
               <span>{dateRange}</span>
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="min-w-[120px] bg-popover">
-            <DropdownMenuItem onClick={() => onDateRangeChange("Today")}>
+          <DropdownMenuContent className="min-w-[120px] bg-[#3E4F7C] border border-white">
+            <DropdownMenuItem 
+              onClick={() => onDateRangeChange("Today")}
+              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+            >
               Today
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDateRangeChange("Last 7 Days")}>
+            <DropdownMenuItem 
+              onClick={() => onDateRangeChange("Last 7 Days")}
+              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+            >
               Last 7 Days
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDateRangeChange("Last 30 Days")}>
+            <DropdownMenuItem 
+              onClick={() => onDateRangeChange("Last 30 Days")}
+              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+            >
               Last 30 Days
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDateRangeChange("Last 90 Days")}>
+            <DropdownMenuItem 
+              onClick={() => onDateRangeChange("Last 90 Days")}
+              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+            >
               Last 90 Days
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDateRangeChange("Last 180 Days")}>
+            <DropdownMenuItem 
+              onClick={() => onDateRangeChange("Last 180 Days")}
+              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+            >
               Last 180 Days
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -161,3 +190,4 @@ export const DashboardFilters = ({
     </div>
   );
 };
+
