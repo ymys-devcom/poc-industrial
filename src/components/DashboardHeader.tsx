@@ -26,7 +26,7 @@ export const DashboardHeader = () => {
       <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0">
+            <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 hover:bg-transparent">
               <div className="flex h-full w-full items-center justify-center rounded-full" style={{ backgroundColor: '#F8963A' }}>
                 <span className="text-sm font-medium" style={{ color: '#012D5A' }}>JD</span>
               </div>
@@ -47,3 +47,4 @@ export const DashboardHeader = () => {
     </header>
   );
 };
+
