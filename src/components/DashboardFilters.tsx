@@ -45,7 +45,7 @@ export const DashboardFilters = ({
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
-              className="w-[200px] flex items-center justify-between bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+              className="w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#526189]/90"
             >
               <span className="flex-1 text-left truncate">
                 {selectedHospital === "All" ? "All Sites" : selectedHospital}
@@ -53,12 +53,12 @@ export const DashboardFilters = ({
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-[#3E4F7C] border border-white">
+          <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
             {mockHospitals.map((hospital) => (
               <DropdownMenuItem
                 key={hospital}
                 onClick={() => onHospitalChange(hospital)}
-                className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+                className="text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
               >
                 {hospital === "All" ? "All Sites" : hospital}
               </DropdownMenuItem>
@@ -69,7 +69,7 @@ export const DashboardFilters = ({
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
-              className="min-w-[200px] flex items-center justify-between gap-2 bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+              className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#526189]/90"
             >
               <span className="flex-1 text-left truncate">
                 {selectedRobotTypes.includes("All")
@@ -88,11 +88,11 @@ export const DashboardFilters = ({
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-[#3E4F7C] border border-white">
+          <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
             {getMockRobotTypes(selectedHospital).map((type) => (
               <DropdownMenuItem
                 key={type}
-                className="flex items-center justify-between text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+                className="flex items-center justify-between text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
                 onClick={() => onRobotTypeChange(type)}
               >
                 <span>{type === "All" ? "All AMR Types" : type}</span>
@@ -115,7 +115,7 @@ export const DashboardFilters = ({
           <PopoverTrigger asChild>
             <Button 
               variant="outline" 
-              className="justify-start text-left font-normal bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+              className="justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#526189]/90"
             >
               <Calendar className="mr-2 h-4 w-4" />
               {date.from ? (
@@ -131,7 +131,7 @@ export const DashboardFilters = ({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 bg-[#3E4F7C] border border-white text-white" align="start">
+          <PopoverContent className="w-auto p-0 bg-[#526189] border border-white text-white" align="start">
             <CalendarComponent
               initialFocus
               mode="range"
@@ -147,40 +147,40 @@ export const DashboardFilters = ({
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
-              className="min-w-[120px] flex items-center justify-between bg-[#3E4F7C] text-white border-white hover:bg-[#3E4F7C]/90"
+              className="min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#526189]/90"
             >
               <span>{dateRange}</span>
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="min-w-[120px] bg-[#3E4F7C] border border-white">
+          <DropdownMenuContent className="min-w-[120px] bg-[#526189] border border-white">
             <DropdownMenuItem 
               onClick={() => onDateRangeChange("Today")}
-              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+              className="text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
             >
               Today
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => onDateRangeChange("Last 7 Days")}
-              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+              className="text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
             >
               Last 7 Days
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => onDateRangeChange("Last 30 Days")}
-              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+              className="text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
             >
               Last 30 Days
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => onDateRangeChange("Last 90 Days")}
-              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+              className="text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
             >
               Last 90 Days
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => onDateRangeChange("Last 180 Days")}
-              className="text-white hover:bg-[#3E4F7C]/90 focus:bg-[#3E4F7C]/90 focus:text-white"
+              className="text-white hover:bg-[#526189]/90 focus:bg-[#526189]/90 focus:text-white"
             >
               Last 180 Days
             </DropdownMenuItem>
