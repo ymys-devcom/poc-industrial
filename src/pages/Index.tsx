@@ -159,7 +159,7 @@ const Index = () => {
   const currentData = aggregateData();
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#1F3366] to-[rgba(31,51,102,0.5)]">
+    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       <main className="p-6">
         <DashboardFilters
