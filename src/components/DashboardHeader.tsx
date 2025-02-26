@@ -26,9 +26,9 @@ export const DashboardHeader = () => {
       <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full" style={{ border: '2px solid #F8963A' }}>
-              <div className="flex h-full w-full items-center justify-center bg-white rounded-full">
-                <span className="text-sm font-medium" style={{ color: '#F8963A' }}>JD</span>
+            <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full">
+              <div className="flex h-full w-full items-center justify-center rounded-full" style={{ backgroundColor: '#F8963A' }}>
+                <span className="text-sm font-medium" style={{ color: '#012D5A' }}>JD</span>
               </div>
             </Button>
           </DropdownMenuTrigger>
