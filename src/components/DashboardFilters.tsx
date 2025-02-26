@@ -139,7 +139,7 @@ export const DashboardFilters = ({
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-popover">
+          <DropdownMenuContent className="min-w-[120px] bg-popover">
             <DropdownMenuItem onClick={() => onDateRangeChange("Today")}>
               Today
             </DropdownMenuItem>
