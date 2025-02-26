@@ -51,11 +51,11 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-2">
           <span className="text-white/80 text-sm">{metric.label}</span>
           <span className="text-2xl font-semibold">{metric.value}</span>
         </div>
-        <div className="h-[200px] mt-2">
+        <div className="h-[140px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={metric.hourlyData}>
               <XAxis 
