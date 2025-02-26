@@ -13,10 +13,9 @@ export const DashboardHeader = () => {
     <header className="px-6 py-4 flex justify-between items-center bg-[#012D5A]">
       <div className="flex items-center space-x-3">
         <div className="w-8 h-8 flex items-center justify-center">
-          <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 3L7 12V28L20 37L33 28V12L20 3ZM20 6.5L30 13.75V26.25L20 33.5L10 26.25V13.75L20 6.5Z" fill="white"/>
-            <path d="M13 14V25L20 29.5L27 25V14L20 9.5L13 14ZM16 16.5L20 14L24 16.5V22.5L20 25L16 22.5V16.5Z" fill="white"/>
-            <path d="M28.5 18.5V22.5L33 20.5L28.5 18.5ZM11.5 18.5L7 20.5L11.5 22.5V18.5Z" fill="white"/>
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <path d="M20 0C8.95 0 0 8.95 0 20C0 31.05 8.95 40 20 40C31.05 40 40 31.05 40 20C40 8.95 31.05 0 20 0ZM20 36C11.18 36 4 28.82 4 20C4 11.18 11.18 4 20 4C28.82 4 36 11.18 36 20C36 28.82 28.82 36 20 36Z" fill="white"/>
+            <path d="M20 8C13.37 8 8 13.37 8 20C8 26.63 13.37 32 20 32C26.63 32 32 26.63 32 20C32 13.37 26.63 8 20 8ZM20 28C15.58 28 12 24.42 12 20C12 15.58 15.58 12 20 12C24.42 12 28 15.58 28 20C28 24.42 24.42 28 20 28Z" fill="white"/>
           </svg>
         </div>
         <div className="text-left">
