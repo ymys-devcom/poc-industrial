@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -170,7 +169,7 @@ const MetricDetails = () => {
   const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#012D5A] to-[#001F3F]">
+    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       <main className="p-6">
         <DashboardFilters
@@ -285,4 +284,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-
