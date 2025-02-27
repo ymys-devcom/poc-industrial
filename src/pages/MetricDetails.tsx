@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -72,7 +71,6 @@ const MetricDetails = () => {
   };
 
   const robotStats = useMemo(() => {
-    // Data for each hospital
     const hospitalRobotStats = {
       "Cannaday building": [
         { type: "Nurse Bots", active: 90, total: 95 },
@@ -96,10 +94,12 @@ const MetricDetails = () => {
       ]
     };
 
-    // Get stats for selected hospital or "All"
     let stats = hospitalRobotStats[selectedHospital] || hospitalRobotStats["All"];
 
-    // Apply random variation for downtime and error rate metrics
+    if (!selectedRobotTypes.includes("All")) {
+      stats = stats.filter(stat => selectedRobotTypes.includes(stat.type));
+    }
+
     if (metricId === "downtime" || metricId === "error-rate") {
       const isAll = selectedHospital === "All";
       return stats.map(stat => ({
@@ -109,7 +109,7 @@ const MetricDetails = () => {
     }
     
     return stats;
-  }, [metricId, selectedHospital]);
+  }, [metricId, selectedHospital, selectedRobotTypes]);
 
   const generateChartData = () => {
     const now = new Date();
@@ -141,7 +141,6 @@ const MetricDetails = () => {
 
     const metricSeed = metricId?.length || 1;
     
-    // Define different base values for each hospital and robot type
     const baseValues = {
       "Cannaday building": {
         "Nurse Bots": { base: 75, variation: 15 },
@@ -165,7 +164,6 @@ const MetricDetails = () => {
       }
     };
 
-    // Error rate values should be low
     const errorRateValues = {
       "Cannaday building": {
         "Nurse Bots": { base: 3, variation: 1.5 },
@@ -189,59 +187,56 @@ const MetricDetails = () => {
       }
     };
     
-    // Use the selected hospital's values or "All" if selected
     const hospitalKey = selectedHospital;
     const values = metricId === "error-rate" ? errorRateValues[hospitalKey] : baseValues[hospitalKey];
 
     if (dateRange === "Today") {
-      return Array.from({ length: 24 }, (_, hour) => {
-        const currentHour = setMinutes(setHours(now, hour), 0);
+      const data = Array.from({ length: 24 }, (_, hour) => {
+        const currentHour = setMinutes(setHours(new Date(), hour), 0);
         const hourString = format(currentHour, 'HH:00');
         
         const timeOfDayFactor = hour >= 9 && hour <= 17 ? 1.2 : 
                                (hour >= 6 && hour <= 20 ? 1.0 : 0.6);
         
-        // Generate different data for each robot type
-        const data = {
+        const data: Record<string, any> = {
           date: hourString
         };
         
-        // Add data for each robot type
-        for (const robotType in values) {
-          const { base, variation } = values[robotType];
-          const hourVariation = Math.sin(hour * 0.3 + metricSeed) * (variation * 0.02);
-          data[robotType] = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
-        }
+        Object.entries(values).forEach(([robotType, { base, variation }]) => {
+          if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
+            const hourVariation = Math.sin(hour * 0.3 + metricSeed) * (variation * 0.02);
+            data[robotType] = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
+          }
+        });
         
         return data;
       });
+      return data;
     }
 
-    // For date ranges other than "Today"
     const days = eachDayOfInterval({ start: startDate, end: endDate });
     
-    return days.map((day, index) => {
+    return days.map((day) => {
       const daysSinceStart = differenceInDays(day, startDate);
       const formattedDate = format(day, 'MMM dd');
       
-      // Generate different data for each robot type
-      const data = {
+      const data: Record<string, any> = {
         date: formattedDate
       };
       
-      // Add data for each robot type
-      for (const robotType in values) {
-        const { base, variation } = values[robotType];
-        const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * (variation * 0.01);
-        const randomVariation = (Math.random() - 0.5) * variation * 0.1;
-        data[robotType] = Math.max(0, Math.floor(base * (1 + trendFactor + randomVariation)));
-      }
+      Object.entries(values).forEach(([robotType, { base, variation }]) => {
+        if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
+          const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * (variation * 0.01);
+          const randomVariation = (Math.random() - 0.5) * variation * 0.1;
+          data[robotType] = Math.max(0, Math.floor(base * (1 + trendFactor + randomVariation)));
+        }
+      });
       
       return data;
     });
   };
 
-  const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId, selectedHospital]);
+  const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId, selectedHospital, selectedRobotTypes]);
 
   const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric" };
 
@@ -341,14 +336,16 @@ const MetricDetails = () => {
                     <Legend 
                       wrapperStyle={{ color: 'white' }}
                     />
-                    {availableRobotTypes.map((type, index) => (
-                      <Line 
-                        key={type}
-                        type="monotone" 
-                        dataKey={type} 
-                        stroke={index === 0 ? "#4CAF50" : index === 1 ? "#2196F3" : "#FFC107"} 
-                        strokeWidth={2}
-                      />
+                    {availableRobotTypes
+                      .filter(type => selectedRobotTypes.includes("All") || selectedRobotTypes.includes(type))
+                      .map((type, index) => (
+                        <Line 
+                          key={type}
+                          type="monotone" 
+                          dataKey={type} 
+                          stroke={index === 0 ? "#4CAF50" : index === 1 ? "#2196F3" : "#FFC107"} 
+                          strokeWidth={2}
+                        />
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
