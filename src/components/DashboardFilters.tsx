@@ -1,4 +1,5 @@
 
+
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,7 +54,7 @@ export const DashboardFilters = ({
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
+          <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
             {mockHospitals.map((hospital) => (
               <DropdownMenuItem
                 key={hospital}
@@ -88,7 +89,7 @@ export const DashboardFilters = ({
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] bg-[#526189] border border-white">
+          <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
             {getMockRobotTypes(selectedHospital).map((type) => (
               <DropdownMenuItem
                 key={type}
@@ -131,7 +132,7 @@ export const DashboardFilters = ({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 bg-[#526189] border border-white text-white" align="start">
+          <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
             <CalendarComponent
               initialFocus
               mode="range"
@@ -153,7 +154,7 @@ export const DashboardFilters = ({
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="min-w-[120px] bg-[#526189] border border-white">
+          <DropdownMenuContent className="min-w-[120px] bg-[#526189] text-white">
             <DropdownMenuItem 
               onClick={() => onDateRangeChange("Today")}
               className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
