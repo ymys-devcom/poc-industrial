@@ -188,10 +188,10 @@ const MetricDetails = () => {
         </Button>
 
         <div className="space-y-6">
-          <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-6">
-            <h1 className="text-2xl font-bold mb-6 text-white">{currentMetricDetails.title}</h1>
+          <div className="backdrop-blur-md border-white/10 rounded-lg">
+            <h1 className="text-2xl font-bold mb-6 text-white p-6 pb-0">{currentMetricDetails.title}</h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 px-6">
               {robotStats.map((stat) => (
                 <div key={stat.type} className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg">
                   <h3 className="text-lg font-semibold text-white mb-2">{stat.type}</h3>
@@ -209,7 +209,7 @@ const MetricDetails = () => {
               ))}
             </div>
 
-            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4">
+            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mx-6 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
