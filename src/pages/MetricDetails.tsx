@@ -181,7 +181,7 @@ const MetricDetails = () => {
         <Button 
           variant="ghost" 
           onClick={() => navigate("/")}
-          className="mb-4 text-white hover:bg-white/10"
+          className="mb-3 text-white hover:bg-white/10"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Dashboard
