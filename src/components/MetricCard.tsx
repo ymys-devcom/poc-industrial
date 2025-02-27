@@ -79,7 +79,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
         </div>
         <div className="h-[140px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metric.hourlyData} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
+            <BarChart data={metric.hourlyData} margin={{ left: -3, right: 8, top: 8, bottom: 0 }}>
               <XAxis 
                 dataKey="hour" 
                 interval={3} 
@@ -119,4 +119,3 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     </Card>
   );
 };
-
