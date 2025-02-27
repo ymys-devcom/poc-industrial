@@ -47,7 +47,7 @@ export const DashboardFilters = ({
   return (
     <div className="flex flex-col md:flex-col space-y-4 md:space-y-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
