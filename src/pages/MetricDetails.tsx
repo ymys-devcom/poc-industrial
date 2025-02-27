@@ -230,7 +230,7 @@ const MetricDetails = () => {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'rgba(1, 45, 90, 0.7)', 
+                        backgroundColor: 'rgba(1, 60, 120, 0.8)', 
                         border: 'none',
                         borderRadius: '4px',
                         color: 'white' 
