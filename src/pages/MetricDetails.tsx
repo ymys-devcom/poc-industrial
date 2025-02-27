@@ -12,7 +12,7 @@ import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours
 const MetricDetails = () => {
   const { metricId } = useParams();
   const navigate = useNavigate();
-  const [selectedHospital, setSelectedHospital] = useState("Mayo Clinic");
+  const [selectedHospital, setSelectedHospital] = useState("Mayo building and hospital");
   const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [date, setDate] = useState<{
@@ -269,3 +269,4 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
+
