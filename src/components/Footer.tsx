@@ -23,19 +23,19 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#012D5A] text-white py-3 px-6 mt-auto flex justify-between items-center">
+    <footer className="bg-[#1F3366] text-white h-[34px] px-6 mt-auto flex justify-between items-center">
       <div className="flex items-center">
         <img 
           src="/lovable-uploads/036be44f-66bd-4ac5-8b63-f64bf8579ff2.png" 
           alt="Powered By CHANG ROBOTICS" 
-          className="h-6" 
+          className="h-5" 
         />
       </div>
       <div className="flex space-x-4">
         {/* About Dialog */}
         <Dialog open={openDialog === "about"} onOpenChange={(open) => handleOpenChange(open, "about")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs h-[34px] py-0">
               <Info className="h-3.5 w-3.5" />
               About
             </Button>
@@ -70,7 +70,7 @@ export const Footer = () => {
         {/* Terms Dialog */}
         <Dialog open={openDialog === "terms"} onOpenChange={(open) => handleOpenChange(open, "terms")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs h-[34px] py-0">
               <FileText className="h-3.5 w-3.5" />
               Terms & Conditions
             </Button>
@@ -105,7 +105,7 @@ export const Footer = () => {
         {/* Contacts Dialog */}
         <Dialog open={openDialog === "contacts"} onOpenChange={(open) => handleOpenChange(open, "contacts")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs h-[34px] py-0">
               <MessageSquare className="h-3.5 w-3.5" />
               Contacts
             </Button>
@@ -144,7 +144,7 @@ export const Footer = () => {
         {/* Support Dialog */}
         <Dialog open={openDialog === "support"} onOpenChange={(open) => handleOpenChange(open, "support")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs h-[34px] py-0">
               <HelpCircle className="h-3.5 w-3.5" />
               Support
             </Button>
