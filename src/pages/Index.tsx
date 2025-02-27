@@ -5,6 +5,15 @@ import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
 import { MetricCard } from "@/components/MetricCard";
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals, type MockData } from "@/utils/mockDataGenerator";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuCheckboxItem, 
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator 
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
@@ -18,6 +27,7 @@ const Index = () => {
     from: undefined,
     to: undefined,
   });
+  const [visibleMetrics, setVisibleMetrics] = useState<string[]>(["all"]);
   const navigate = useNavigate();
 
   const handleHospitalChange = (hospital: string) => {
@@ -66,6 +76,29 @@ const Index = () => {
   const handleMetricClick = (metricId: string) => {
     // Add the selected hospital as a query parameter in the URL
     navigate(`/metrics/${metricId}?hospital=${selectedHospital}`);
+  };
+
+  const handleMetricToggle = (metricId: string) => {
+    setVisibleMetrics((prev) => {
+      if (metricId === "all") {
+        return ["all"];
+      }
+      
+      // Remove "all" from the selection
+      const withoutAll = prev.filter(id => id !== "all");
+      
+      // Toggle the selected metric
+      const newSelection = prev.includes(metricId)
+        ? withoutAll.filter(id => id !== metricId)
+        : [...withoutAll, metricId];
+      
+      // If nothing is selected, select "all"
+      if (newSelection.length === 0) {
+        return ["all"];
+      }
+      
+      return newSelection;
+    });
   };
 
   const aggregateData = () => {
@@ -158,24 +191,64 @@ const Index = () => {
   };
 
   const currentData = aggregateData();
+  
+  // Filter the metrics based on the visible metrics selection
+  const filteredMetrics = visibleMetrics.includes("all") 
+    ? currentData.metrics 
+    : currentData.metrics.filter(metric => visibleMetrics.includes(metric.id));
+
+  // Metric names for dropdown
+  const metricOptions = [
+    { id: "all", label: "All Metrics" },
+    { id: "utilization", label: "Utilization" },
+    { id: "mission-time", label: "Mission Time" },
+    { id: "miles-saved", label: "Miles Saved" },
+    { id: "hours-saved", label: "Hours Saved" },
+    { id: "completed-missions", label: "Completed Missions" },
+    { id: "downtime", label: "Downtime" },
+    { id: "error-rate", label: "Error Rate" },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       <main className="p-6">
-        <DashboardFilters
-          selectedHospital={selectedHospital}
-          selectedRobotTypes={selectedRobotTypes}
-          dateRange={dateRange}
-          date={date}
-          onHospitalChange={handleHospitalChange}
-          onRobotTypeChange={handleRobotTypeChange}
-          onRemoveRobotType={removeRobotType}
-          onDateRangeChange={handleDateRangeChange}
-          onCustomDateChange={handleCustomDateChange}
-        />
+        <div className="flex justify-between items-center mb-4">
+          <DashboardFilters
+            selectedHospital={selectedHospital}
+            selectedRobotTypes={selectedRobotTypes}
+            dateRange={dateRange}
+            date={date}
+            onHospitalChange={handleHospitalChange}
+            onRobotTypeChange={handleRobotTypeChange}
+            onRemoveRobotType={removeRobotType}
+            onDateRangeChange={handleDateRangeChange}
+            onCustomDateChange={handleCustomDateChange}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="bg-mayo-primary text-white border-white/20 hover:bg-mayo-secondary">
+                Display Metrics
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48 bg-mayo-primary border border-white/20 text-white">
+              <DropdownMenuLabel>Choose metrics to display</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-white/20" />
+              {metricOptions.map((option) => (
+                <DropdownMenuCheckboxItem
+                  key={option.id}
+                  checked={visibleMetrics.includes(option.id) || (option.id === "all" && visibleMetrics.includes("all"))}
+                  onCheckedChange={() => handleMetricToggle(option.id)}
+                  className="text-white hover:bg-mayo-secondary focus:bg-mayo-secondary"
+                >
+                  {option.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {currentData.metrics.map((metric) => (
+          {filteredMetrics.map((metric) => (
             <MetricCard
               key={metric.id}
               metric={metric}
