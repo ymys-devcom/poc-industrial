@@ -60,7 +60,7 @@ const MetricDetails = () => {
     const baseStats = [
       { type: "Nurse Bots", active: 90, total: 95 },
       { type: "Co-Bots", active: 15, total: 15 },
-      { type: "Autonomous Hospital Beds", active: 24, total: 25 },
+      { type: "Autonomous Beds", active: 24, total: 25 },
     ];
 
     if (metricId === "downtime" || metricId === "error-rate") {
@@ -120,7 +120,7 @@ const MetricDetails = () => {
           date: hourString,
           "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * timeOfDayFactor * (1 + variation))),
           "Co-Bots": Math.max(0, Math.floor(coBotBase * timeOfDayFactor * (1 + variation))),
-          "Autonomous Hospital Beds": Math.max(0, Math.floor(bedBase * timeOfDayFactor * (1 + variation))),
+          "Autonomous Beds": Math.max(0, Math.floor(bedBase * timeOfDayFactor * (1 + variation))),
         };
       });
     }
@@ -141,7 +141,7 @@ const MetricDetails = () => {
         date: formattedDate,
         "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * (1 + trendFactor) + (Math.random() * 10))),
         "Co-Bots": Math.max(0, Math.floor(coBotBase * (1 + trendFactor) + (Math.random() * 8))),
-        "Autonomous Hospital Beds": Math.max(0, Math.floor(bedBase * (1 + trendFactor) + (Math.random() * 9))),
+        "Autonomous Beds": Math.max(0, Math.floor(bedBase * (1 + trendFactor) + (Math.random() * 9))),
       };
     });
   };
@@ -253,7 +253,7 @@ const MetricDetails = () => {
                     />
                     <Line 
                       type="monotone" 
-                      dataKey="Autonomous Hospital Beds" 
+                      dataKey="Autonomous Beds" 
                       stroke="#FFC107" 
                       strokeWidth={2}
                     />

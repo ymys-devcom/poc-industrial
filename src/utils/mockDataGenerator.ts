@@ -1,3 +1,4 @@
+
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -134,7 +135,7 @@ const generateMetricsForRobot = (
 const generateHospitalData = (hospitalMultiplier: number, multiplier: number, timeRangeMultiplier: number = 1) => ({
   "Nurse Bots": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
   "Co-Bots": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Autonomous Hospital Beds": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Autonomous Beds": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
 });
 
 export const generateMockDataForRange = (
@@ -193,5 +194,5 @@ export const generateMockDataForRange = (
 export const mockHospitals = ["All", "Cannaday building", "Mayo building and hospital", "Mangurian building"];
 
 export const getMockRobotTypes = (hospital: string) => {
-  return ["All", "Nurse Bots", "Co-Bots", "Autonomous Hospital Beds"];
+  return ["All", "Nurse Bots", "Co-Bots", "Autonomous Beds"];
 };
