@@ -25,7 +25,11 @@ export const Footer = () => {
   return (
     <footer className="bg-[#012D5A] text-white py-3 px-6 mt-auto flex justify-between items-center">
       <div className="flex items-center">
-        <span className="text-sm">Powered by CHANG ROBOTICS</span>
+        <img 
+          src="/lovable-uploads/036be44f-66bd-4ac5-8b63-f64bf8579ff2.png" 
+          alt="Powered By CHANG ROBOTICS" 
+          className="h-6" 
+        />
       </div>
       <div className="flex space-x-4">
         {/* About Dialog */}
