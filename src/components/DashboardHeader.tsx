@@ -27,12 +27,12 @@ export const DashboardHeader = () => {
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[200px] bg-popover">
-            <DropdownMenuItem className="focus:bg-accent hover:bg-accent">
+          <DropdownMenuContent align="end" className="w-[200px] bg-[#526189] text-white border border-white">
+            <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="focus:bg-accent hover:bg-accent">
+            <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
