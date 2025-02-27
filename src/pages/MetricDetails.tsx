@@ -181,7 +181,7 @@ const MetricDetails = () => {
         <Button 
           variant="ghost" 
           onClick={() => navigate("/")}
-          className="mb-6 text-white hover:bg-white/10"
+          className="mb-4 text-white hover:bg-white/10"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Dashboard
@@ -195,7 +195,7 @@ const MetricDetails = () => {
               {robotStats.map((stat) => (
                 <div 
                   key={stat.type} 
-                  className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-full md:w-auto md:max-w-[200px] md:flex-1"
+                  className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-full md:w-auto md:max-w-[240px] md:flex-1"
                   style={{ minWidth: '150px' }}
                 >
                   <h3 className="text-lg font-semibold text-white mb-2">{stat.type}</h3>
@@ -269,4 +269,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-
