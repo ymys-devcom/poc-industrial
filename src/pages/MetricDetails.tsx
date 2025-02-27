@@ -6,7 +6,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
+import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
 
 const MetricDetails = () => {
@@ -74,22 +74,43 @@ const MetricDetails = () => {
   };
 
   const robotStats = useMemo(() => {
-    // Determine if we're showing "All" hospitals
-    const isAllHospitals = selectedHospital === "All";
+    // Data for each hospital
+    const hospitalRobotStats = {
+      "Cannaday building": [
+        { type: "Nurse Bots", active: 90, total: 95 },
+        { type: "Co-Bots", active: 12, total: 15 },
+        { type: "Autonomous Beds", active: 24, total: 25 },
+      ],
+      "Mayo building and hospital": [
+        { type: "Nurse Bots", active: 75, total: 80 },
+        { type: "Co-Bots", active: 8, total: 10 },
+        { type: "Autonomous Beds", active: 18, total: 20 },
+      ],
+      "Mangurian building": [
+        { type: "Nurse Bots", active: 62, total: 65 },
+        { type: "Co-Bots", active: 8, total: 9 },
+        { type: "Autonomous Beds", active: 12, total: 15 },
+      ],
+      "All": [
+        { type: "Nurse Bots", active: 227, total: 240 },
+        { type: "Co-Bots", active: 28, total: 34 },
+        { type: "Autonomous Beds", active: 54, total: 60 },
+      ]
+    };
 
-    const baseStats = [
-      { type: "Nurse Bots", active: isAllHospitals ? 185 : 90, total: isAllHospitals ? 195 : 95 },
-      { type: "Co-Bots", active: isAllHospitals ? 28 : 15, total: isAllHospitals ? 30 : 15 },
-      { type: "Autonomous Beds", active: isAllHospitals ? 48 : 24, total: isAllHospitals ? 50 : 25 },
-    ];
+    // Get stats for selected hospital or "All"
+    let stats = hospitalRobotStats[selectedHospital] || hospitalRobotStats["All"];
 
+    // Apply random variation for downtime and error rate metrics
     if (metricId === "downtime" || metricId === "error-rate") {
-      return baseStats.map(stat => ({
+      const isAll = selectedHospital === "All";
+      return stats.map(stat => ({
         ...stat,
-        active: Math.max(0, stat.active - Math.floor(Math.random() * (isAllHospitals ? 20 : 10)))
+        active: Math.max(0, stat.active - Math.floor(Math.random() * (isAll ? stat.active * 0.1 : stat.active * 0.2)))
       }));
     }
-    return baseStats;
+    
+    return stats;
   }, [metricId, selectedHospital]);
 
   const generateChartData = () => {
@@ -121,9 +142,58 @@ const MetricDetails = () => {
     }
 
     const metricSeed = metricId?.length || 1;
-    const isAllHospitals = selectedHospital === "All";
-    // Scale factor for "All" hospitals mode
-    const scaleFactor = isAllHospitals ? 2.1 : 1.0;
+    
+    // Define different base values for each hospital and robot type
+    const baseValues = {
+      "Cannaday building": {
+        "Nurse Bots": { base: 75, variation: 15 },
+        "Co-Bots": { base: 60, variation: 12 },
+        "Autonomous Beds": { base: 45, variation: 10 }
+      },
+      "Mayo building and hospital": {
+        "Nurse Bots": { base: 65, variation: 12 },
+        "Co-Bots": { base: 50, variation: 10 },
+        "Autonomous Beds": { base: 35, variation: 8 }
+      },
+      "Mangurian building": {
+        "Nurse Bots": { base: 55, variation: 10 },
+        "Co-Bots": { base: 40, variation: 8 },
+        "Autonomous Beds": { base: 25, variation: 6 }
+      },
+      "All": {
+        "Nurse Bots": { base: 85, variation: 15 },
+        "Co-Bots": { base: 70, variation: 12 },
+        "Autonomous Beds": { base: 55, variation: 10 }
+      }
+    };
+
+    // Error rate values should be low
+    const errorRateValues = {
+      "Cannaday building": {
+        "Nurse Bots": { base: 3, variation: 1.5 },
+        "Co-Bots": { base: 4, variation: 2 },
+        "Autonomous Beds": { base: 4.5, variation: 2.5 }
+      },
+      "Mayo building and hospital": {
+        "Nurse Bots": { base: 2.5, variation: 1.2 },
+        "Co-Bots": { base: 3.5, variation: 1.8 },
+        "Autonomous Beds": { base: 4, variation: 2 }
+      },
+      "Mangurian building": {
+        "Nurse Bots": { base: 2, variation: 1 },
+        "Co-Bots": { base: 3, variation: 1.5 },
+        "Autonomous Beds": { base: 3.5, variation: 1.8 }
+      },
+      "All": {
+        "Nurse Bots": { base: 2.5, variation: 1.2 },
+        "Co-Bots": { base: 3.5, variation: 1.8 },
+        "Autonomous Beds": { base: 4, variation: 2 }
+      }
+    };
+    
+    // Use the selected hospital's values or "All" if selected
+    const hospitalKey = selectedHospital;
+    const values = metricId === "error-rate" ? errorRateValues[hospitalKey] : baseValues[hospitalKey];
 
     if (dateRange === "Today") {
       return Array.from({ length: 24 }, (_, hour) => {
@@ -133,39 +203,43 @@ const MetricDetails = () => {
         const timeOfDayFactor = hour >= 9 && hour <= 17 ? 1.2 : 
                                (hour >= 6 && hour <= 20 ? 1.0 : 0.6);
         
-        const nurseBotBase = metricId === "error-rate" ? 20 : 60;
-        const coBotBase = metricId === "error-rate" ? 15 : 45;
-        const bedBase = metricId === "error-rate" ? 18 : 50;
-
-        const variation = Math.sin(hour * 0.3 + metricSeed) * 0.2;
-
-        return {
-          date: hourString,
-          "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * timeOfDayFactor * (1 + variation) * scaleFactor)),
-          "Co-Bots": Math.max(0, Math.floor(coBotBase * timeOfDayFactor * (1 + variation) * scaleFactor)),
-          "Autonomous Beds": Math.max(0, Math.floor(bedBase * timeOfDayFactor * (1 + variation) * scaleFactor)),
+        // Generate different data for each robot type
+        const data = {
+          date: hourString
         };
+        
+        // Add data for each robot type
+        for (const robotType in values) {
+          const { base, variation } = values[robotType];
+          const hourVariation = Math.sin(hour * 0.3 + metricSeed) * (variation * 0.02);
+          data[robotType] = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
+        }
+        
+        return data;
       });
     }
 
+    // For date ranges other than "Today"
     const days = eachDayOfInterval({ start: startDate, end: endDate });
     
     return days.map((day, index) => {
       const daysSinceStart = differenceInDays(day, startDate);
       const formattedDate = format(day, 'MMM dd');
       
-      const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * 0.2;
-      
-      const nurseBotBase = metricId === "error-rate" ? 20 : 60;
-      const coBotBase = metricId === "error-rate" ? 15 : 45;
-      const bedBase = metricId === "error-rate" ? 18 : 50;
-
-      return {
-        date: formattedDate,
-        "Nurse Bots": Math.max(0, Math.floor((nurseBotBase * (1 + trendFactor) + (Math.random() * 10)) * scaleFactor)),
-        "Co-Bots": Math.max(0, Math.floor((coBotBase * (1 + trendFactor) + (Math.random() * 8)) * scaleFactor)),
-        "Autonomous Beds": Math.max(0, Math.floor((bedBase * (1 + trendFactor) + (Math.random() * 9)) * scaleFactor)),
+      // Generate different data for each robot type
+      const data = {
+        date: formattedDate
       };
+      
+      // Add data for each robot type
+      for (const robotType in values) {
+        const { base, variation } = values[robotType];
+        const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * (variation * 0.01);
+        const randomVariation = (Math.random() - 0.5) * variation * 0.1;
+        data[robotType] = Math.max(0, Math.floor(base * (1 + trendFactor + randomVariation)));
+      }
+      
+      return data;
     });
   };
 
