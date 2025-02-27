@@ -289,7 +289,7 @@ const MetricDetails = () => {
             <div className="flex items-center justify-between p-6 pt-0">
               <h1 className="text-2xl font-bold text-white">
                 {currentMetricDetails.title}
-                {selectedHospital === "All" && " (All Hospitals)"}
+                {selectedHospital === "All" && " (All Sites)"}
               </h1>
             </div>
 
