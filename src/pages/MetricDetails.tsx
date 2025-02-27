@@ -1,18 +1,28 @@
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getMockRobotTypes } from "@/utils/mockDataGenerator";
+import { getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
 
 const MetricDetails = () => {
   const { metricId } = useParams();
   const navigate = useNavigate();
-  const [selectedHospital, setSelectedHospital] = useState("Mayo building and hospital");
+  const location = useLocation();
+  
+  // Parse the query parameters from the URL
+  const queryParams = new URLSearchParams(location.search);
+  const hospitalFromUrl = queryParams.get('hospital');
+  
+  const [selectedHospital, setSelectedHospital] = useState(
+    // Use the hospital from URL if available, otherwise use the first hospital in the list
+    hospitalFromUrl || mockHospitals[0] === "All" ? mockHospitals[1] : mockHospitals[0]
+  );
+  
   const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [date, setDate] = useState<{
@@ -22,6 +32,13 @@ const MetricDetails = () => {
     from: undefined,
     to: undefined,
   });
+
+  // Effect to update selected hospital when URL changes
+  useEffect(() => {
+    if (hospitalFromUrl && mockHospitals.includes(hospitalFromUrl)) {
+      setSelectedHospital(hospitalFromUrl);
+    }
+  }, [hospitalFromUrl]);
 
   const getMetricDetails = (id: string) => {
     const metrics: Record<string, { title: string }> = {
@@ -269,4 +286,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-

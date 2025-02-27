@@ -64,7 +64,8 @@ const Index = () => {
   };
 
   const handleMetricClick = (metricId: string) => {
-    navigate(`/metrics/${metricId}`);
+    // Add the selected hospital as a query parameter in the URL
+    navigate(`/metrics/${metricId}?hospital=${selectedHospital}`);
   };
 
   const aggregateData = () => {
