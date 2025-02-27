@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ChevronDown, CheckCircle } from "lucide-react";
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
@@ -213,7 +214,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       <main className="p-6">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-col space-y-4 md:space-y-4">
           <DashboardFilters
             selectedHospital={selectedHospital}
             selectedRobotTypes={selectedRobotTypes}
@@ -225,29 +226,51 @@ const Index = () => {
             onDateRangeChange={handleDateRangeChange}
             onCustomDateChange={handleCustomDateChange}
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="bg-mayo-primary text-white border-white/20 hover:bg-mayo-secondary">
-                Display Metrics
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 bg-mayo-primary border border-white/20 text-white">
-              <DropdownMenuLabel>Choose metrics to display</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/20" />
-              {metricOptions.map((option) => (
-                <DropdownMenuCheckboxItem
-                  key={option.id}
-                  checked={visibleMetrics.includes(option.id) || (option.id === "all" && visibleMetrics.includes("all"))}
-                  onCheckedChange={() => handleMetricToggle(option.id)}
-                  className="text-white hover:bg-mayo-secondary focus:bg-mayo-secondary"
+          
+          <div className="flex space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
                 >
-                  {option.label}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <span className="flex-1 text-left truncate">
+                    {visibleMetrics.includes("all") 
+                      ? "All Metrics" 
+                      : `${visibleMetrics.length} Selected`}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {visibleMetrics.length > 0 && !visibleMetrics.includes("all") && (
+                      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-white/20 text-white rounded-full">
+                        {visibleMetrics.length}
+                      </span>
+                    )}
+                    <ChevronDown className="h-4 w-4" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
+                <DropdownMenuLabel className="text-white">Display Metrics</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-white/20" />
+                {metricOptions.map((option) => (
+                  <DropdownMenuCheckboxItem
+                    key={option.id}
+                    checked={visibleMetrics.includes(option.id) || (option.id === "all" && visibleMetrics.includes("all"))}
+                    onSelect={(e) => e.preventDefault()}
+                    onCheckedChange={() => handleMetricToggle(option.id)}
+                    className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    <span>{option.label}</span>
+                    {visibleMetrics.includes(option.id) && (
+                      <CheckCircle className="h-4 w-4 text-white" />
+                    )}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
           {filteredMetrics.map((metric) => (
             <MetricCard
               key={metric.id}
