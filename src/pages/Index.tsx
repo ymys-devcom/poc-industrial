@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
 import { MetricCard } from "@/components/MetricCard";
+import { Footer } from "@/components/Footer";
+import { ContentModal } from "@/components/ContentModal";
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals, type MockData } from "@/utils/mockDataGenerator";
 
 const Index = () => {
@@ -20,6 +22,10 @@ const Index = () => {
   });
   const [visibleMetrics, setVisibleMetrics] = useState<string[]>(["all"]);
   const navigate = useNavigate();
+  
+  // Add state for modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContentType, setModalContentType] = useState("");
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
@@ -90,6 +96,12 @@ const Index = () => {
       
       return newSelection;
     });
+  };
+  
+  // Handle footer button clicks
+  const handleFooterButtonClick = (contentType: string) => {
+    setModalContentType(contentType);
+    setIsModalOpen(true);
   };
 
   const aggregateData = () => {
@@ -201,9 +213,9 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
+    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)] flex flex-col">
       <DashboardHeader />
-      <main className="p-6">
+      <main className="p-6 flex-grow">
         <DashboardFilters
           selectedHospital={selectedHospital}
           selectedRobotTypes={selectedRobotTypes}
@@ -228,6 +240,14 @@ const Index = () => {
           ))}
         </div>
       </main>
+      
+      <Footer onButtonClick={handleFooterButtonClick} />
+      
+      <ContentModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        contentType={modalContentType}
+      />
     </div>
   );
 };
