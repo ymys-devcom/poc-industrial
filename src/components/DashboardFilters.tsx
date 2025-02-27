@@ -25,6 +25,9 @@ interface DashboardFiltersProps {
   onRemoveRobotType: (robotType: string) => void;
   onDateRangeChange: (range: string) => void;
   onCustomDateChange: (range: { from: Date | undefined; to: Date | undefined }) => void;
+  visibleMetrics?: string[];
+  onMetricToggle?: (metricId: string) => void;
+  metricOptions?: { id: string; label: string }[];
 }
 
 export const DashboardFilters = ({
@@ -37,6 +40,9 @@ export const DashboardFilters = ({
   onRemoveRobotType,
   onDateRangeChange,
   onCustomDateChange,
+  visibleMetrics = [],
+  onMetricToggle,
+  metricOptions = [],
 }: DashboardFiltersProps) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
@@ -109,6 +115,47 @@ export const DashboardFilters = ({
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+        
+        {metricOptions && metricOptions.length > 0 && onMetricToggle && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+              >
+                <span className="flex-1 text-left truncate">
+                  {visibleMetrics.includes("all") 
+                    ? "All Metrics" 
+                    : `${visibleMetrics.length} Selected`}
+                </span>
+                <div className="flex items-center gap-2">
+                  {visibleMetrics.length > 0 && !visibleMetrics.includes("all") && (
+                    <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-white/20 text-white rounded-full">
+                      {visibleMetrics.length}
+                    </span>
+                  )}
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
+              {metricOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.id}
+                  className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  onClick={() => onMetricToggle(option.id)}
+                >
+                  <span>{option.label}</span>
+                  {visibleMetrics.includes(option.id) && (
+                    <CheckCircle
+                      className="h-4 w-4 text-white"
+                    />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <div className="flex items-center space-x-2">
         <Popover>
