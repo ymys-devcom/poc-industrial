@@ -4,26 +4,31 @@ import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const MetricDetails = () => {
   const { metricId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Parse the query parameters from the URL
   const queryParams = new URLSearchParams(location.search);
   const hospitalFromUrl = queryParams.get('hospital');
   
-  // Set the selected hospital from URL parameter, preserving the "All" selection
   const [selectedHospital, setSelectedHospital] = useState(
     hospitalFromUrl || mockHospitals[0]
   );
   
   const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
+  const [selectedCharts, setSelectedCharts] = useState(["All"]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [date, setDate] = useState<{
     from: Date | undefined;
@@ -247,6 +252,8 @@ const MetricDetails = () => {
 
   const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric" };
 
+  const availableRobotTypes = ["Nurse Bots", "Co-Bots", "Autonomous Beds"];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
@@ -286,10 +293,60 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
-            <h1 className="text-2xl font-bold text-white p-6 pt-0">
-              {currentMetricDetails.title}
-              {selectedHospital === "All" && " (All Hospitals)"}
-            </h1>
+            <div className="flex items-center justify-between p-6 pt-0">
+              <h1 className="text-2xl font-bold text-white">
+                {currentMetricDetails.title}
+                {selectedHospital === "All" && " (All Hospitals)"}
+              </h1>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  >
+                    <span>
+                      {selectedCharts.includes("All") 
+                        ? "All Charts" 
+                        : `${selectedCharts.length} Selected`}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="w-[200px] bg-[#526189] text-white"
+                >
+                  <DropdownMenuCheckboxItem
+                    checked={selectedCharts.includes("All")}
+                    onSelect={(e) => e.preventDefault()}
+                    onCheckedChange={() => {
+                      setSelectedCharts(["All"]);
+                    }}
+                    className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    All Charts
+                  </DropdownMenuCheckboxItem>
+                  {availableRobotTypes.map((type) => (
+                    <DropdownMenuCheckboxItem
+                      key={type}
+                      checked={selectedCharts.includes(type)}
+                      onSelect={(e) => e.preventDefault()}
+                      onCheckedChange={() => {
+                        if (selectedCharts.includes("All")) {
+                          setSelectedCharts([type]);
+                        } else {
+                          const newSelection = selectedCharts.includes(type)
+                            ? selectedCharts.filter((t) => t !== type)
+                            : [...selectedCharts, type];
+                          setSelectedCharts(newSelection.length ? newSelection : ["All"]);
+                        }
+                      }}
+                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                    >
+                      {type}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
             <div className="flex flex-wrap gap-4 mb-8 px-6">
               {robotStats.map((stat) => (
@@ -339,24 +396,15 @@ const MetricDetails = () => {
                     <Legend 
                       wrapperStyle={{ color: 'white' }}
                     />
-                    <Line 
-                      type="monotone" 
-                      dataKey="Nurse Bots" 
-                      stroke="#4CAF50" 
-                      strokeWidth={2}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="Co-Bots" 
-                      stroke="#2196F3" 
-                      strokeWidth={2}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="Autonomous Beds" 
-                      stroke="#FFC107" 
-                      strokeWidth={2}
-                    />
+                    {(selectedCharts.includes("All") ? availableRobotTypes : selectedCharts).map((type, index) => (
+                      <Line 
+                        key={type}
+                        type="monotone" 
+                        dataKey={type} 
+                        stroke={index === 0 ? "#4CAF50" : index === 1 ? "#2196F3" : "#FFC107"} 
+                        strokeWidth={2}
+                      />
+                    ))}
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -369,3 +417,4 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
+
