@@ -191,9 +191,13 @@ const MetricDetails = () => {
           <div className="backdrop-blur-md border-white/10 rounded-lg">
             <h1 className="text-2xl font-bold text-white p-6 pt-0">{currentMetricDetails.title}</h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 px-6">
+            <div className="flex flex-wrap gap-4 mb-8 px-6">
               {robotStats.map((stat) => (
-                <div key={stat.type} className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg">
+                <div 
+                  key={stat.type} 
+                  className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg max-w-[200px] flex-1"
+                  style={{ minWidth: "150px" }}
+                >
                   <h3 className="text-lg font-semibold text-white mb-2">{stat.type}</h3>
                   <div className="flex items-center justify-between">
                     <div>
