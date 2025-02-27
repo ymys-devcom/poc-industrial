@@ -31,7 +31,7 @@ export const Footer = () => {
         {/* About Dialog */}
         <Dialog open={openDialog === "about"} onOpenChange={(open) => handleOpenChange(open, "about")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
               <Info className="h-3.5 w-3.5" />
               About
             </Button>
@@ -66,7 +66,7 @@ export const Footer = () => {
         {/* Terms Dialog */}
         <Dialog open={openDialog === "terms"} onOpenChange={(open) => handleOpenChange(open, "terms")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
               <FileText className="h-3.5 w-3.5" />
               Terms & Conditions
             </Button>
@@ -101,7 +101,7 @@ export const Footer = () => {
         {/* Contacts Dialog */}
         <Dialog open={openDialog === "contacts"} onOpenChange={(open) => handleOpenChange(open, "contacts")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
               <MessageSquare className="h-3.5 w-3.5" />
               Contacts
             </Button>
@@ -140,7 +140,7 @@ export const Footer = () => {
         {/* Support Dialog */}
         <Dialog open={openDialog === "support"} onOpenChange={(open) => handleOpenChange(open, "support")}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 flex items-center gap-1 text-xs">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-1 text-xs">
               <HelpCircle className="h-3.5 w-3.5" />
               Support
             </Button>
