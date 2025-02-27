@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -7,6 +8,22 @@ import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
+
+// Define interfaces for our data structures
+interface MetricValue {
+  base: number;
+  variation: number;
+}
+
+interface MetricValues {
+  [key: string]: MetricValue;
+}
+
+interface HospitalMetricValues {
+  [key: string]: {
+    [key: string]: MetricValue;
+  };
+}
 
 const MetricDetails = () => {
   const { metricId } = useParams();
@@ -141,7 +158,7 @@ const MetricDetails = () => {
 
     const metricSeed = metricId?.length || 1;
     
-    const baseValues = {
+    const baseValues: HospitalMetricValues = {
       "Cannaday building": {
         "Nurse Bots": { base: 75, variation: 15 },
         "Co-Bots": { base: 60, variation: 12 },
@@ -164,7 +181,7 @@ const MetricDetails = () => {
       }
     };
 
-    const errorRateValues = {
+    const errorRateValues: HospitalMetricValues = {
       "Cannaday building": {
         "Nurse Bots": { base: 3, variation: 1.5 },
         "Co-Bots": { base: 4, variation: 2 },
@@ -187,8 +204,8 @@ const MetricDetails = () => {
       }
     };
     
-    const hospitalKey = selectedHospital;
-    const values = metricId === "error-rate" ? errorRateValues[hospitalKey] : baseValues[hospitalKey];
+    const hospitalKey = selectedHospital as keyof HospitalMetricValues;
+    const values: MetricValues = metricId === "error-rate" ? errorRateValues[hospitalKey] : baseValues[hospitalKey];
 
     if (dateRange === "Today") {
       const data = Array.from({ length: 24 }, (_, hour) => {
