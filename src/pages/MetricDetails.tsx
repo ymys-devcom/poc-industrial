@@ -18,9 +18,9 @@ const MetricDetails = () => {
   const queryParams = new URLSearchParams(location.search);
   const hospitalFromUrl = queryParams.get('hospital');
   
+  // Set the selected hospital from URL parameter, preserving the "All" selection
   const [selectedHospital, setSelectedHospital] = useState(
-    // Use the hospital from URL if available, otherwise use the first hospital in the list
-    hospitalFromUrl || mockHospitals[0] === "All" ? mockHospitals[1] : mockHospitals[0]
+    hospitalFromUrl || mockHospitals[0]
   );
   
   const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
@@ -74,20 +74,23 @@ const MetricDetails = () => {
   };
 
   const robotStats = useMemo(() => {
+    // Determine if we're showing "All" hospitals
+    const isAllHospitals = selectedHospital === "All";
+
     const baseStats = [
-      { type: "Nurse Bots", active: 90, total: 95 },
-      { type: "Co-Bots", active: 15, total: 15 },
-      { type: "Autonomous Beds", active: 24, total: 25 },
+      { type: "Nurse Bots", active: isAllHospitals ? 185 : 90, total: isAllHospitals ? 195 : 95 },
+      { type: "Co-Bots", active: isAllHospitals ? 28 : 15, total: isAllHospitals ? 30 : 15 },
+      { type: "Autonomous Beds", active: isAllHospitals ? 48 : 24, total: isAllHospitals ? 50 : 25 },
     ];
 
     if (metricId === "downtime" || metricId === "error-rate") {
       return baseStats.map(stat => ({
         ...stat,
-        active: Math.max(0, stat.active - Math.floor(Math.random() * 10))
+        active: Math.max(0, stat.active - Math.floor(Math.random() * (isAllHospitals ? 20 : 10)))
       }));
     }
     return baseStats;
-  }, [metricId]);
+  }, [metricId, selectedHospital]);
 
   const generateChartData = () => {
     const now = new Date();
@@ -118,6 +121,9 @@ const MetricDetails = () => {
     }
 
     const metricSeed = metricId?.length || 1;
+    const isAllHospitals = selectedHospital === "All";
+    // Scale factor for "All" hospitals mode
+    const scaleFactor = isAllHospitals ? 2.1 : 1.0;
 
     if (dateRange === "Today") {
       return Array.from({ length: 24 }, (_, hour) => {
@@ -135,9 +141,9 @@ const MetricDetails = () => {
 
         return {
           date: hourString,
-          "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * timeOfDayFactor * (1 + variation))),
-          "Co-Bots": Math.max(0, Math.floor(coBotBase * timeOfDayFactor * (1 + variation))),
-          "Autonomous Beds": Math.max(0, Math.floor(bedBase * timeOfDayFactor * (1 + variation))),
+          "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * timeOfDayFactor * (1 + variation) * scaleFactor)),
+          "Co-Bots": Math.max(0, Math.floor(coBotBase * timeOfDayFactor * (1 + variation) * scaleFactor)),
+          "Autonomous Beds": Math.max(0, Math.floor(bedBase * timeOfDayFactor * (1 + variation) * scaleFactor)),
         };
       });
     }
@@ -156,14 +162,14 @@ const MetricDetails = () => {
 
       return {
         date: formattedDate,
-        "Nurse Bots": Math.max(0, Math.floor(nurseBotBase * (1 + trendFactor) + (Math.random() * 10))),
-        "Co-Bots": Math.max(0, Math.floor(coBotBase * (1 + trendFactor) + (Math.random() * 8))),
-        "Autonomous Beds": Math.max(0, Math.floor(bedBase * (1 + trendFactor) + (Math.random() * 9))),
+        "Nurse Bots": Math.max(0, Math.floor((nurseBotBase * (1 + trendFactor) + (Math.random() * 10)) * scaleFactor)),
+        "Co-Bots": Math.max(0, Math.floor((coBotBase * (1 + trendFactor) + (Math.random() * 8)) * scaleFactor)),
+        "Autonomous Beds": Math.max(0, Math.floor((bedBase * (1 + trendFactor) + (Math.random() * 9)) * scaleFactor)),
       };
     });
   };
 
-  const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId]);
+  const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId, selectedHospital]);
 
   const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric" };
 
@@ -206,7 +212,10 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
-            <h1 className="text-2xl font-bold text-white p-6 pt-0">{currentMetricDetails.title}</h1>
+            <h1 className="text-2xl font-bold text-white p-6 pt-0">
+              {currentMetricDetails.title}
+              {selectedHospital === "All" && " (All Hospitals)"}
+            </h1>
 
             <div className="flex flex-wrap gap-4 mb-8 px-6">
               {robotStats.map((stat) => (
