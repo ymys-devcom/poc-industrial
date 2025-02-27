@@ -28,7 +28,7 @@ export const Footer = () => {
         <img 
           src="/lovable-uploads/036be44f-66bd-4ac5-8b63-f64bf8579ff2.png" 
           alt="Powered By CHANG ROBOTICS" 
-          className="h-5" 
+          className="h-6" 
         />
       </div>
       <div className="flex space-x-4">
