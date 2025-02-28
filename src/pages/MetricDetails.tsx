@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -20,8 +21,13 @@ interface MetricValues {
 
 interface HospitalMetricValues {
   [key: string]: {
-    [key: string]: MetricValue;
+    [key: string]: MetricValues;
   };
+}
+
+interface DateRange {
+  from: Date | null;
+  to: Date | null;
 }
 
 const MetricDetails = () => {
@@ -32,7 +38,7 @@ const MetricDetails = () => {
   // State variables
   const [selectedHospital, setSelectedHospital] = useState<string | null>(null);
   const [selectedRobotTypes, setSelectedRobotTypes] = useState<string[]>([]);
-  const [dateRange, setDateRange] = useState<{ from: Date | null, to: Date | null }>({
+  const [dateRange, setDateRange] = useState<DateRange>({
     from: subDays(new Date(), 30),
     to: new Date(),
   });
@@ -69,16 +75,18 @@ const MetricDetails = () => {
 
   // Prepare chart data
   const chartData = () => {
-    if (!metricData) return [];
+    if (!metricData || !dateRange.from || !dateRange.to) return [];
 
-    const allDays = eachDayOfInterval({ start: dateRange.from!, end: dateRange.to! });
+    const allDays = eachDayOfInterval({ start: dateRange.from, end: dateRange.to });
     return allDays.map(day => {
       const dateKey = format(day, 'yyyy-MM-dd');
       let total = 0;
       Object.values(metricData).forEach(hospitalData => {
         if (hospitalData[dateKey]) {
           Object.values(hospitalData[dateKey]).forEach(robotData => {
-            total += robotData.base + robotData.variation;
+            Object.values(robotData).forEach(metricValue => {
+              total += metricValue.base + metricValue.variation;
+            });
           });
         }
       });
