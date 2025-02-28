@@ -2,6 +2,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
+import { Footer } from "@/components/Footer";
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -84,7 +85,7 @@ const MetricDetails = () => {
         title: "Downtime"
       }
     };
-    return metrics[id] || { title: "Unknown Metric" };
+    return metrics[id || ""] || { title: "Unknown Metric" };
   };
 
   const robotStats = useMemo(() => {
@@ -260,9 +261,9 @@ const MetricDetails = () => {
   const availableRobotTypes = ["Nurse Bots", "Co-Bots", "Autonomous Beds"];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
-      <main className="p-6">
+      <main className="p-6 flex-1">
         <DashboardFilters
           selectedHospital={selectedHospital}
           selectedRobotTypes={selectedRobotTypes}
@@ -371,6 +372,7 @@ const MetricDetails = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
