@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -438,31 +437,31 @@ const MetricDetails = () => {
               </h1>
             </div>
 
-            <div className="grid md:grid-cols-4 grid-cols-2 gap-3 mb-8">
-              {robotMetrics.map((stat) => (
-                <div 
-                  key={stat.type} 
-                  className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[200px] w-full"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
-                    <span className="text-base font-semibold text-white">{stat.total}</span>
-                  </div>
-                  <div className="border-t border-white/10 pt-2">
-                    <p className="text-white/60 text-xs">
-                      {currentMetricDetails.isAccumulative ? "Total" : "Average"}
-                    </p>
-                    <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
-                      {stat.isPercentage 
-                        ? `${Math.round(stat.metricValue)}%` 
-                        : stat.metricValue >= 1000 
-                          ? `${(stat.metricValue / 1000).toFixed(1)}k` 
-                          : Math.round(stat.metricValue)}
-                    </p>
-                  </div>
+          <div className="flex flex-row flex-wrap gap-3 mb-8">
+            {robotMetrics.map((stat) => (
+              <div 
+                key={stat.type} 
+                className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-full"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
+                  <span className="text-base font-semibold text-white">{stat.total}</span>
                 </div>
-              ))}
-            </div>
+                <div className="border-t border-white/10 pt-2">
+                  <p className="text-white/60 text-xs">
+                    {currentMetricDetails.isAccumulative ? "Total" : "Average"}
+                  </p>
+                  <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
+                    {stat.isPercentage 
+                      ? `${Math.round(stat.metricValue)}%` 
+                      : stat.metricValue >= 1000 
+                        ? `${(stat.metricValue / 1000).toFixed(1)}k` 
+                        : Math.round(stat.metricValue)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
 
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
