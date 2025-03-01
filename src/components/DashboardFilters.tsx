@@ -45,8 +45,8 @@ export const DashboardFilters = ({
   metricOptions = [],
 }: DashboardFiltersProps) => {
   return (
-    <div className="flex flex-col md:flex-col space-y-4 md:space-y-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+    <div className="flex flex-col md:flex-col space-y-4 md:space-y-4 w-full max-w-full">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -60,7 +60,7 @@ export const DashboardFilters = ({
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+            <DropdownMenuContent className="w-[calc(100vw-3rem)] md:w-[200px] bg-[#526189] text-white">
               {mockHospitals.map((hospital) => (
                 <DropdownMenuItem
                   key={hospital}
@@ -95,7 +95,7 @@ export const DashboardFilters = ({
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+            <DropdownMenuContent className="w-[calc(100vw-3rem)] md:w-[200px] bg-[#526189] text-white">
               {getMockRobotTypes(selectedHospital).map((type) => (
                 <DropdownMenuItem
                   key={type}
@@ -140,7 +140,7 @@ export const DashboardFilters = ({
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+              <DropdownMenuContent className="w-[calc(100vw-3rem)] md:w-[200px] bg-[#526189] text-white">
                 {metricOptions.map((option) => (
                   <DropdownMenuItem
                     key={option.id}
@@ -159,25 +159,27 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
           <Popover>
             <PopoverTrigger asChild>
               <Button 
                 variant="outline" 
-                className="justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="w-full md:w-auto justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <Calendar className="mr-2 h-4 w-4" />
-                {date.from ? (
-                  date.to ? (
-                    <>
-                      {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                    </>
+                <span className="truncate">
+                  {date.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(date.from, "LLL dd, y")
+                    )
                   ) : (
-                    format(date.from, "LLL dd, y")
-                  )
-                ) : (
-                  "Pick a date range"
-                )}
+                    "Pick a date range"
+                  )}
+                </span>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
@@ -187,7 +189,7 @@ export const DashboardFilters = ({
                 defaultMonth={date.from}
                 selected={{ from: date.from, to: date.to }}
                 onSelect={onCustomDateChange}
-                numberOfMonths={2}
+                numberOfMonths={1}
                 className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
               />
             </PopoverContent>
@@ -196,13 +198,13 @@ export const DashboardFilters = ({
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="w-full md:w-auto min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <span>{dateRange}</span>
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-[120px] bg-[#526189] text-white">
+            <DropdownMenuContent className="w-[calc(100vw-3rem)] md:min-w-[120px] bg-[#526189] text-white">
               <DropdownMenuItem 
                 onClick={() => onDateRangeChange("Today")}
                 className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
