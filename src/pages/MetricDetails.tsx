@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -431,9 +430,9 @@ const MetricDetails = () => {
                   </Button>
                 )}
                 {currentMetricDetails.title}
-                {selectedHospital !== "All" 
+                {!isMobile && selectedHospital !== "All" 
                   ? ` - ${selectedHospital}` 
-                  : " - All Sites"}
+                  : !isMobile ? " - All Sites" : ""}
               </h1>
             </div>
 
