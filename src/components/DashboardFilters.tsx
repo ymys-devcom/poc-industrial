@@ -1,4 +1,3 @@
-
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -117,7 +116,6 @@ export const DashboardFilters = ({
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Metrics dropdown - moved to be in the same row */}
           {metricOptions && metricOptions.length > 0 && onMetricToggle && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -140,7 +138,7 @@ export const DashboardFilters = ({
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+              <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white overflow-hidden">
                 {metricOptions.map((option) => (
                   <DropdownMenuItem
                     key={option.id}
@@ -159,7 +157,7 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        <div className="flex items-center space-x-2 w-full md:w-auto md:max-w-[480px]">
+        <div className="flex items-center space-x-2 w-full md:w-auto">
           <Popover>
             <PopoverTrigger asChild>
               <Button 
@@ -202,7 +200,11 @@ export const DashboardFilters = ({
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-[140px] bg-[#526189] text-white">
+            <DropdownMenuContent 
+              className="min-w-[140px] bg-[#526189] text-white overflow-hidden"
+              align="end"
+              sideOffset={8}
+            >
               <DropdownMenuItem 
                 onClick={() => onDateRangeChange("Today")}
                 className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
