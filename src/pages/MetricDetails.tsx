@@ -188,28 +188,28 @@ const MetricDetails = () => {
     
     const baseValues: HospitalMetricValues = {
       "Cannaday building": {
-        "All Bots": { base: 65, variation: 15 },
-        "Nurse Bots": { base: 60, variation: 15 },
-        "Co-Bots": { base: 50, variation: 12 },
-        "Autonomous Beds": { base: 45, variation: 10 }
+        "All Bots": { base: 50, variation: 10 },
+        "Nurse Bots": { base: 45, variation: 10 },
+        "Co-Bots": { base: 40, variation: 8 },
+        "Autonomous Beds": { base: 35, variation: 7 }
       },
       "Mayo building and hospital": {
-        "All Bots": { base: 60, variation: 12 },
-        "Nurse Bots": { base: 55, variation: 12 },
-        "Co-Bots": { base: 45, variation: 10 },
-        "Autonomous Beds": { base: 35, variation: 8 }
+        "All Bots": { base: 45, variation: 10 },
+        "Nurse Bots": { base: 40, variation: 8 },
+        "Co-Bots": { base: 35, variation: 7 },
+        "Autonomous Beds": { base: 30, variation: 6 }
       },
       "Mangurian building": {
-        "All Bots": { base: 55, variation: 10 },
-        "Nurse Bots": { base: 50, variation: 10 },
-        "Co-Bots": { base: 40, variation: 8 },
-        "Autonomous Beds": { base: 25, variation: 6 }
+        "All Bots": { base: 40, variation: 8 },
+        "Nurse Bots": { base: 35, variation: 7 },
+        "Co-Bots": { base: 30, variation: 6 },
+        "Autonomous Beds": { base: 25, variation: 5 }
       },
       "All": {
-        "All Bots": { base: 70, variation: 15 },
-        "Nurse Bots": { base: 65, variation: 15 },
-        "Co-Bots": { base: 55, variation: 12 },
-        "Autonomous Beds": { base: 45, variation: 10 }
+        "All Bots": { base: 50, variation: 10 },
+        "Nurse Bots": { base: 45, variation: 10 },
+        "Co-Bots": { base: 40, variation: 8 },
+        "Autonomous Beds": { base: 35, variation: 7 }
       }
     };
 
