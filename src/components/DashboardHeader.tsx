@@ -30,7 +30,7 @@ export const DashboardHeader = () => {
           <DropdownMenuContent 
             align="end" 
             alignOffset={0}
-            className="w-[200px] bg-[#526189] text-white"
+            className="w-[200px] bg-[#526189] text-white overflow-hidden"
             sideOffset={8}
           >
             <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
