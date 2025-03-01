@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -10,7 +9,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
 
-// Define interfaces for our data structures
 interface MetricValue {
   base: number;
   variation: number;
@@ -48,7 +46,6 @@ const MetricDetails = () => {
     to: undefined,
   });
 
-  // Effect to update selected hospital when URL changes
   useEffect(() => {
     if (hospitalFromUrl && mockHospitals.includes(hospitalFromUrl)) {
       setSelectedHospital(hospitalFromUrl);
@@ -302,7 +299,9 @@ const MetricDetails = () => {
             <div className="flex items-center justify-between p-6 pt-0">
               <h1 className="text-2xl font-bold text-white">
                 {currentMetricDetails.title}
-                {selectedHospital === "All" && " (All Sites)"}
+                {selectedHospital !== "All" 
+                  ? ` - ${selectedHospital}` 
+                  : " - All Sites"}
               </h1>
             </div>
 
