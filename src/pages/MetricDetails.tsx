@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -417,7 +418,7 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
-            <div className="flex items-center justify-between pb-4 px-6">
+            <div className="flex items-center justify-between pb-4">
               <h1 className="text-2xl font-bold text-white flex items-center">
                 {isMobile && (
                   <Button 
@@ -436,7 +437,7 @@ const MetricDetails = () => {
               </h1>
             </div>
 
-            <div className="grid md:grid-cols-4 grid-cols-2 gap-3 mb-8 px-6">
+            <div className="grid md:grid-cols-4 grid-cols-2 gap-3 mb-8">
               {robotMetrics.map((stat) => (
                 <div 
                   key={stat.type} 
@@ -462,7 +463,7 @@ const MetricDetails = () => {
               ))}
             </div>
 
-            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mx-6 mb-6">
+            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
