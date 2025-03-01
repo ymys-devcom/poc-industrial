@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -441,12 +440,11 @@ const MetricDetails = () => {
               {robotMetrics.map((stat) => (
                 <div 
                   key={stat.type} 
-                  className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-full md:w-auto md:max-w-[240px] md:flex-1"
-                  style={{ minWidth: '150px' }}
+                  className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(50%-0.5rem)]"
                 >
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-white">{stat.type}</h3>
-                    <span className="text-xl font-bold text-white">{stat.total}</span>
+                    <span className="text-xl font-semibold text-white">{stat.total}</span>
                   </div>
                   <div className="border-t border-white/10 pt-2">
                     <p className="text-white/60 text-sm">
