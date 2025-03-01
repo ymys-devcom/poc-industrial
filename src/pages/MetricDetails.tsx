@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -465,7 +464,7 @@ const MetricDetails = () => {
           </div>
 
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
-              <h3 className="text-lg font-semibold text-white mb-4 mt-4">Performance Over Time</h3>
+              <h3 className="text-lg font-semibold text-white mb-4 mt-4 md:mt-0">Performance Over Time</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart 
