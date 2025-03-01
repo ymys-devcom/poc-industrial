@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -8,21 +9,6 @@ import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
-
-interface MetricValue {
-  base: number;
-  variation: number;
-}
-
-interface MetricValues {
-  [key: string]: MetricValue;
-}
-
-interface HospitalMetricValues {
-  [key: string]: {
-    [key: string]: MetricValue;
-  };
-}
 
 const MetricDetails = () => {
   const { metricId } = useParams();
@@ -45,12 +31,24 @@ const MetricDetails = () => {
     from: undefined,
     to: undefined,
   });
+  
+  const [mockData, setMockData] = useState(() => 
+    generateMockDataForRange(dateRange));
 
   useEffect(() => {
     if (hospitalFromUrl && mockHospitals.includes(hospitalFromUrl)) {
       setSelectedHospital(hospitalFromUrl);
     }
   }, [hospitalFromUrl]);
+  
+  useEffect(() => {
+    // Update mock data when date range or custom date changes
+    if (date.from && date.to) {
+      setMockData(generateMockDataForRange("Custom Range", date));
+    } else {
+      setMockData(generateMockDataForRange(dateRange));
+    }
+  }, [dateRange, date]);
 
   const getMetricDetails = (id: string) => {
     const metrics: Record<string, { title: string, isPercentage: boolean, isAccumulative: boolean }> = {
@@ -103,276 +101,450 @@ const MetricDetails = () => {
     return metrics[id || ""] || { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
   };
 
-  const robotStats = useMemo(() => {
-    const hospitalRobotStats = {
-      "Cannaday building": [
-        { type: "Nurse Bots", active: 90, total: 95 },
-        { type: "Co-Bots", active: 12, total: 15 },
-        { type: "Autonomous Beds", active: 24, total: 25 },
-      ],
-      "Mayo building and hospital": [
-        { type: "Nurse Bots", active: 75, total: 80 },
-        { type: "Co-Bots", active: 8, total: 10 },
-        { type: "Autonomous Beds", active: 18, total: 20 },
-      ],
-      "Mangurian building": [
-        { type: "Nurse Bots", active: 62, total: 65 },
-        { type: "Co-Bots", active: 8, total: 9 },
-        { type: "Autonomous Beds", active: 12, total: 15 },
-      ],
-      "All": [
-        { type: "All Bots", active: 309, total: 334 },
-        { type: "Nurse Bots", active: 227, total: 240 },
-        { type: "Co-Bots", active: 28, total: 34 },
-        { type: "Autonomous Beds", active: 54, total: 60 },
-      ]
-    };
+  // Get relevant hospitals based on selection
+  const relevantHospitals = useMemo(() => {
+    return selectedHospital === "All" 
+      ? mockHospitals.filter(h => h !== "All") 
+      : [selectedHospital];
+  }, [selectedHospital]);
 
-    let stats = hospitalRobotStats[selectedHospital] || hospitalRobotStats["All"];
+  // Get relevant robot types based on selection
+  const relevantRobotTypes = useMemo(() => {
+    return selectedRobotTypes.includes("All")
+      ? ["Nurse Bots", "Co-Bots", "Autonomous Beds"]
+      : selectedRobotTypes;
+  }, [selectedRobotTypes]);
 
-    if (!selectedRobotTypes.includes("All")) {
-      stats = stats.filter(stat => selectedRobotTypes.includes(stat.type));
-    }
-
-    if (metricId === "downtime" || metricId === "error-rate") {
-      const isAll = selectedHospital === "All";
-      return stats.map(stat => ({
-        ...stat,
-        active: stat.type === "Nurse Bots" ? Math.floor(stat.active * 0.95) :
-                stat.type === "Co-Bots" ? Math.floor(stat.active * 0.90) :
-                stat.type === "Autonomous Beds" ? Math.floor(stat.active * 0.85) :
-                Math.floor(stat.active * 0.93)
-      }));
-    }
+  // Get the metric values for robots in the selected hospital
+  const robotMetricValues = useMemo(() => {
+    const result = [];
     
-    return stats;
-  }, [metricId, selectedHospital, selectedRobotTypes]);
-
-  const generateChartData = () => {
-    const now = new Date();
-    let startDate: Date;
-    let endDate = now;
-    
-    if (date.from && date.to) {
-      startDate = date.from;
-      endDate = date.to;
-    } else {
-      switch (dateRange) {
-        case "Today":
-          startDate = now;
-          endDate = now;
-          break;
-        case "Last 7 Days":
-          startDate = subDays(now, 7);
-          break;
-        case "Last 30 Days":
-          startDate = subDays(now, 30);
-          break;
-        case "Last 90 Days":
-          startDate = subDays(now, 90);
-          break;
-        default:
-          startDate = subDays(now, 7);
+    for (const hospital of relevantHospitals) {
+      for (const robotType of relevantRobotTypes) {
+        const robotData = mockData[hospital]?.[robotType];
+        if (robotData) {
+          const metric = robotData.metrics.find(m => m.id === metricId);
+          if (metric) {
+            const numericValue = parseFloat(metric.value.replace(/[^0-9.]/g, ''));
+            
+            result.push({
+              hospital,
+              type: robotType,
+              metricValue: numericValue,
+              displayValue: metric.value,
+              total: robotType === "Nurse Bots" ? 95 : 
+                     robotType === "Co-Bots" ? 15 : 25,
+              active: robotType === "Nurse Bots" ? 90 : 
+                      robotType === "Co-Bots" ? 12 : 24,
+              isPercentage: metric.value.includes('%')
+            });
+          }
+        }
       }
     }
 
-    const metricSeed = metricId === "utilization" ? 10 :
-                      metricId === "mission-time" ? 20 :
-                      metricId === "active-time" ? 30 :
-                      metricId === "error-rate" ? 40 :
-                      metricId === "battery" ? 50 :
-                      metricId === "miles-saved" ? 60 :
-                      metricId === "hours-saved" ? 70 :
-                      metricId === "completed-missions" ? 80 :
-                      metricId === "downtime" ? 90 : 100;
+    // If we're looking at "All" hospital, add the combined values
+    if (selectedHospital === "All" && result.length > 0) {
+      // Group by robot type
+      const byRobotType: Record<string, number[]> = {};
+      result.forEach(item => {
+        if (!byRobotType[item.type]) {
+          byRobotType[item.type] = [];
+        }
+        byRobotType[item.type].push(item.metricValue);
+      });
+      
+      // Add combined values for each robot type
+      Object.entries(byRobotType).forEach(([robotType, values]) => {
+        const metricDetails = getMetricDetails(metricId || "");
+        const isAccumulative = metricDetails.isAccumulative;
+        
+        // For accumulative values, sum them up
+        // For averages, calculate the mean
+        const combValue = isAccumulative 
+          ? values.reduce((sum, val) => sum + val, 0)
+          : values.reduce((sum, val) => sum + val, 0) / values.length;
+          
+        result.push({
+          hospital: "All",
+          type: robotType,
+          metricValue: combValue,
+          displayValue: metricDetails.isPercentage 
+            ? `${Math.round(combValue)}%` 
+            : metricId === "miles-saved" 
+              ? `${Math.round(combValue)} miles` 
+              : `${Math.round(combValue)}${metricId === "hours-saved" ? 'h' : ''}`,
+          total: robotType === "Nurse Bots" ? 240 : 
+                 robotType === "Co-Bots" ? 34 : 60,
+          active: robotType === "Nurse Bots" ? 227 : 
+                  robotType === "Co-Bots" ? 28 : 54,
+          isPercentage: metricDetails.isPercentage
+        });
+      });
+    }
     
-    const baseValues: HospitalMetricValues = {
-      "Cannaday building": {
-        "All Bots": { base: 50, variation: 10 },
-        "Nurse Bots": { base: 45, variation: 10 },
-        "Co-Bots": { base: 40, variation: 8 },
-        "Autonomous Beds": { base: 35, variation: 7 }
-      },
-      "Mayo building and hospital": {
-        "All Bots": { base: 45, variation: 10 },
-        "Nurse Bots": { base: 40, variation: 8 },
-        "Co-Bots": { base: 35, variation: 7 },
-        "Autonomous Beds": { base: 30, variation: 6 }
-      },
-      "Mangurian building": {
-        "All Bots": { base: 40, variation: 8 },
-        "Nurse Bots": { base: 35, variation: 7 },
-        "Co-Bots": { base: 30, variation: 6 },
-        "Autonomous Beds": { base: 25, variation: 5 }
-      },
-      "All": {
-        "All Bots": { base: 50, variation: 10 },
-        "Nurse Bots": { base: 45, variation: 10 },
-        "Co-Bots": { base: 40, variation: 8 },
-        "Autonomous Beds": { base: 35, variation: 7 }
-      }
-    };
+    // If we're looking at multiple robot types, add the combined "All Bots" value
+    if ((selectedRobotTypes.includes("All") || selectedRobotTypes.length > 1) && result.length > 0) {
+      // Group by hospital
+      const byHospital: Record<string, number[]> = {};
+      result.forEach(item => {
+        if (!byHospital[item.hospital]) {
+          byHospital[item.hospital] = [];
+        }
+        byHospital[item.hospital].push(item.metricValue);
+      });
+      
+      // Add combined values for each hospital
+      Object.entries(byHospital).forEach(([hospital, values]) => {
+        const metricDetails = getMetricDetails(metricId || "");
+        const isAccumulative = metricDetails.isAccumulative;
+        
+        // For accumulative values, sum them up
+        // For averages, calculate the mean
+        const combValue = isAccumulative 
+          ? values.reduce((sum, val) => sum + val, 0)
+          : values.reduce((sum, val) => sum + val, 0) / values.length;
+          
+        const totalRobots = hospital === "Cannaday building" ? 135 :
+                            hospital === "Mayo building and hospital" ? 110 :
+                            hospital === "Mangurian building" ? 89 : 334;
+                            
+        const activeRobots = hospital === "Cannaday building" ? 126 :
+                             hospital === "Mayo building and hospital" ? 101 :
+                             hospital === "Mangurian building" ? 82 : 309;
+                             
+        result.push({
+          hospital: hospital,
+          type: "All Bots",
+          metricValue: combValue,
+          displayValue: metricDetails.isPercentage 
+            ? `${Math.round(combValue)}%` 
+            : metricId === "miles-saved" 
+              ? `${Math.round(combValue)} miles` 
+              : `${Math.round(combValue)}${metricId === "hours-saved" ? 'h' : ''}`,
+          total: totalRobots,
+          active: activeRobots,
+          isPercentage: metricDetails.isPercentage
+        });
+      });
+    }
+    
+    return result;
+  }, [mockData, metricId, relevantHospitals, relevantRobotTypes, selectedHospital, selectedRobotTypes]);
 
-    const errorRateValues: HospitalMetricValues = {
-      "Cannaday building": {
-        "All Bots": { base: 3, variation: 1.5 },
-        "Nurse Bots": { base: 3, variation: 1.5 },
-        "Co-Bots": { base: 4, variation: 2 },
-        "Autonomous Beds": { base: 4.5, variation: 2.5 }
-      },
-      "Mayo building and hospital": {
-        "All Bots": { base: 3, variation: 1.5 },
-        "Nurse Bots": { base: 2.5, variation: 1.2 },
-        "Co-Bots": { base: 3.5, variation: 1.8 },
-        "Autonomous Beds": { base: 4, variation: 2 }
-      },
-      "Mangurian building": {
-        "All Bots": { base: 2.5, variation: 1.2 },
-        "Nurse Bots": { base: 2, variation: 1 },
-        "Co-Bots": { base: 3, variation: 1.5 },
-        "Autonomous Beds": { base: 3.5, variation: 1.8 }
-      },
-      "All": {
-        "All Bots": { base: 2.8, variation: 1.2 },
-        "Nurse Bots": { base: 2.5, variation: 1.2 },
-        "Co-Bots": { base: 3.5, variation: 1.8 },
-        "Autonomous Beds": { base: 4, variation: 2 }
-      }
-    };
-    
-    const accumulativeValues: HospitalMetricValues = {
-      "Cannaday building": {
-        "All Bots": { base: 9200, variation: 1500 },
-        "Nurse Bots": { base: 5500, variation: 800 },
-        "Co-Bots": { base: 1500, variation: 300 },
-        "Autonomous Beds": { base: 2200, variation: 400 }
-      },
-      "Mayo building and hospital": {
-        "All Bots": { base: 7800, variation: 1200 },
-        "Nurse Bots": { base: 4800, variation: 700 },
-        "Co-Bots": { base: 1200, variation: 250 },
-        "Autonomous Beds": { base: 1800, variation: 350 }
-      },
-      "Mangurian building": {
-        "All Bots": { base: 6500, variation: 1000 },
-        "Nurse Bots": { base: 4000, variation: 600 },
-        "Co-Bots": { base: 1000, variation: 200 },
-        "Autonomous Beds": { base: 1500, variation: 300 }
-      },
-      "All": {
-        "All Bots": { base: 23500, variation: 3000 },
-        "Nurse Bots": { base: 14300, variation: 2000 },
-        "Co-Bots": { base: 3700, variation: 700 },
-        "Autonomous Beds": { base: 5500, variation: 900 }
-      }
-    };
-    
+  // Get chart data from hourly data in mockData
+  const chartData = useMemo(() => {
     const metricDetails = getMetricDetails(metricId || "");
     
-    const hospitalKey = selectedHospital as keyof HospitalMetricValues;
-    const values: MetricValues = metricId === "error-rate" || metricId === "downtime" 
-      ? errorRateValues[hospitalKey] 
-      : metricDetails.isAccumulative 
-        ? accumulativeValues[hospitalKey]
-        : baseValues[hospitalKey];
-
+    // For today, show hourly data
     if (dateRange === "Today") {
-      return Array.from({ length: 24 }, (_, hour) => {
-        const currentHour = setMinutes(setHours(new Date(), hour), 0);
-        const hourString = format(currentHour, 'HH:00');
-        
-        const timeOfDayFactor = hour >= 9 && hour <= 17 ? 1.2 : 
-                               (hour >= 6 && hour <= 20 ? 1.0 : 0.6);
-        
-        const data: Record<string, any> = {
-          date: hourString
-        };
-        
-        Object.entries(values).forEach(([robotType, { base, variation }]) => {
-          if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
-            const hourVariation = Math.sin((hour + metricSeed) * 0.3) * (variation * 0.02);
-            let value = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
+      // Initialize with 24 hours
+      const hourlyData = Array.from({ length: 24 }, (_, hour) => ({
+        date: `${hour}:00`,
+      }));
+      
+      // Add data for each robot type
+      for (const hospital of relevantHospitals) {
+        for (const robotType of relevantRobotTypes) {
+          const robotData = mockData[hospital]?.[robotType];
+          if (robotData) {
+            const metric = robotData.metrics.find(m => m.id === metricId);
+            if (metric && metric.hourlyData) {
+              metric.hourlyData.forEach((hourData, index) => {
+                const key = `${hospital}-${robotType}`;
+                hourlyData[index][key] = hourData.value;
+              });
+            }
+          }
+        }
+      }
+      
+      // If "All Bots" is selected or multiple robot types are selected, calculate combined values
+      if (selectedRobotTypes.includes("All") || selectedRobotTypes.length > 1) {
+        hourlyData.forEach((hour, index) => {
+          for (const hospital of relevantHospitals) {
+            let sum = 0;
+            let count = 0;
             
-            if (metricDetails.isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
-              value = Math.min(value, 100);
+            // Sum up values for all robot types in this hospital for this hour
+            for (const robotType of relevantRobotTypes) {
+              const key = `${hospital}-${robotType}`;
+              if (hour[key]) {
+                sum += hour[key];
+                count++;
+              }
             }
             
-            data[robotType] = value;
+            // Calculate average or sum based on metric type
+            if (count > 0) {
+              const combinedValue = metricDetails.isAccumulative 
+                ? sum
+                : sum / count;
+              
+              hour[`${hospital}-All Bots`] = combinedValue;
+            }
           }
         });
-        
-        return data;
-      });
-    }
-
-    const days = eachDayOfInterval({ start: startDate, end: endDate });
-    
-    return days.map((day) => {
-      const daysSinceStart = differenceInDays(day, startDate);
-      const formattedDate = format(day, 'MMM dd');
-      
-      const data: Record<string, any> = {
-        date: formattedDate
-      };
-      
-      Object.entries(values).forEach(([robotType, { base, variation }]) => {
-        if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
-          const trendFactor = Math.sin((daysSinceStart + metricSeed) * 0.1) * (variation * 0.01);
-          const pseudoRandomVariation = Math.sin((daysSinceStart * metricSeed) * 0.7) * variation * 0.05;
-          let value = Math.max(0, Math.floor(base * (1 + trendFactor + pseudoRandomVariation)));
-          
-          if (metricDetails.isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
-            value = Math.min(value, 100);
-          }
-          
-          data[robotType] = value;
-        }
-      });
-      
-      return data;
-    });
-  };
-
-  const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId, selectedHospital, selectedRobotTypes]);
-
-  const calculateMetricAveragesOrTotals = () => {
-    const metricDetails = getMetricDetails(metricId || "");
-    const isAccumulative = metricDetails.isAccumulative;
-    const isPercentage = metricDetails.isPercentage;
-    
-    return robotStats.map(robot => {
-      const robotType = robot.type;
-      
-      let sum = 0;
-      let count = 0;
-      
-      chartData.forEach(dataPoint => {
-        if (dataPoint[robotType] !== undefined) {
-          sum += dataPoint[robotType];
-          count++;
-        }
-      });
-      
-      let value = isAccumulative ? sum : (count > 0 ? sum / count : 0);
-      
-      if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
-        value = Math.min(value, 100);
       }
       
-      return {
-        ...robot,
-        metricValue: value,
-        isPercentage
-      };
-    });
-  };
-
-  const robotMetrics = useMemo(() => calculateMetricAveragesOrTotals(), 
-    [chartData, robotStats, metricId]);
+      // If "All" hospital is selected, calculate combined values for each robot type
+      if (selectedHospital === "All") {
+        hourlyData.forEach((hour, index) => {
+          // Include "All Bots" if it's selected
+          if (selectedRobotTypes.includes("All")) {
+            let sum = 0;
+            let count = 0;
+            
+            // Calculate combined values for all hospitals and all robot types
+            for (const hospital of relevantHospitals) {
+              for (const robotType of relevantRobotTypes) {
+                const key = `${hospital}-${robotType}`;
+                if (hour[key]) {
+                  sum += hour[key];
+                  count++;
+                }
+              }
+            }
+            
+            // Calculate average or sum based on metric type
+            if (count > 0) {
+              const combinedValue = metricDetails.isAccumulative 
+                ? sum
+                : sum / count;
+              
+              hour[`All-All Bots`] = combinedValue;
+            }
+          } else {
+            // Calculate combined values for each robot type across all hospitals
+            for (const robotType of relevantRobotTypes) {
+              let sum = 0;
+              let count = 0;
+              
+              // Sum up values for this robot type across all hospitals
+              for (const hospital of relevantHospitals) {
+                const key = `${hospital}-${robotType}`;
+                if (hour[key]) {
+                  sum += hour[key];
+                  count++;
+                }
+              }
+              
+              // Calculate average or sum based on metric type
+              if (count > 0) {
+                const combinedValue = metricDetails.isAccumulative 
+                  ? sum
+                  : sum / count;
+                
+                hour[`All-${robotType}`] = combinedValue;
+              }
+            }
+          }
+        });
+      }
+      
+      return hourlyData;
+    } 
+    // For other time ranges, show daily data
+    else {
+      // Calculate start date based on date range
+      const now = new Date();
+      let startDate: Date;
+      let endDate = now;
+      
+      if (date.from && date.to) {
+        startDate = date.from;
+        endDate = date.to;
+      } else {
+        switch (dateRange) {
+          case "Last 7 Days":
+            startDate = subDays(now, 7);
+            break;
+          case "Last 30 Days":
+            startDate = subDays(now, 30);
+            break;
+          case "Last 90 Days":
+            startDate = subDays(now, 90);
+            break;
+          case "Last 180 Days":
+            startDate = subDays(now, 180);
+            break;
+          default:
+            startDate = subDays(now, 7);
+        }
+      }
+      
+      // Generate daily data
+      const days = eachDayOfInterval({ start: startDate, end: endDate });
+      
+      // Initialize with each day
+      const dailyData = days.map(day => ({
+        date: format(day, 'MMM dd'),
+        rawDate: day
+      }));
+      
+      // Adjust values based on days
+      dailyData.forEach((day, index) => {
+        const dayProgress = index / (dailyData.length - 1);
+        
+        for (const hospital of relevantHospitals) {
+          for (const robotType of relevantRobotTypes) {
+            const robotData = mockData[hospital]?.[robotType];
+            if (robotData) {
+              const metric = robotData.metrics.find(m => m.id === metricId);
+              if (metric) {
+                const hourlyData = metric.hourlyData;
+                
+                // Calculate a daily value based on the hourly pattern and the day index
+                let dayValue = 0;
+                
+                if (hourlyData.length > 0) {
+                  // Use sin curve to create smooth variation over time
+                  const variation = Math
+                    .sin((index / (dailyData.length - 1)) * Math.PI * 2)
+                    * 0.2;
+                  
+                  // Take a weighted average of multiple hours to simulate daily value
+                  const baseValue = (
+                    hourlyData[9].value + 
+                    hourlyData[12].value + 
+                    hourlyData[15].value
+                  ) / 3;
+                  
+                  dayValue = baseValue * (1 + variation);
+                  
+                  // For accumulative metrics, scale by days in range
+                  if (metricDetails.isAccumulative) {
+                    const daysInRange = differenceInDays(endDate, startDate) || 1;
+                    dayValue = dayValue * 24 / daysInRange;
+                  }
+                }
+                
+                day[`${hospital}-${robotType}`] = dayValue;
+              }
+            }
+          }
+        }
+        
+        // Calculate combined values similar to hourly data
+        // For "All Bots" if selected
+        if (selectedRobotTypes.includes("All") || selectedRobotTypes.length > 1) {
+          for (const hospital of relevantHospitals) {
+            let sum = 0;
+            let count = 0;
+            
+            for (const robotType of relevantRobotTypes) {
+              const key = `${hospital}-${robotType}`;
+              if (day[key]) {
+                sum += day[key];
+                count++;
+              }
+            }
+            
+            if (count > 0) {
+              const combinedValue = metricDetails.isAccumulative 
+                ? sum
+                : sum / count;
+              
+              day[`${hospital}-All Bots`] = combinedValue;
+            }
+          }
+        }
+        
+        // For "All" hospital if selected
+        if (selectedHospital === "All") {
+          if (selectedRobotTypes.includes("All")) {
+            let sum = 0;
+            let count = 0;
+            
+            for (const hospital of relevantHospitals) {
+              for (const robotType of relevantRobotTypes) {
+                const key = `${hospital}-${robotType}`;
+                if (day[key]) {
+                  sum += day[key];
+                  count++;
+                }
+              }
+            }
+            
+            if (count > 0) {
+              const combinedValue = metricDetails.isAccumulative 
+                ? sum
+                : sum / count;
+              
+              day[`All-All Bots`] = combinedValue;
+            }
+          } else {
+            for (const robotType of relevantRobotTypes) {
+              let sum = 0;
+              let count = 0;
+              
+              for (const hospital of relevantHospitals) {
+                const key = `${hospital}-${robotType}`;
+                if (day[key]) {
+                  sum += day[key];
+                  count++;
+                }
+              }
+              
+              if (count > 0) {
+                const combinedValue = metricDetails.isAccumulative 
+                  ? sum
+                  : sum / count;
+                
+                day[`All-${robotType}`] = combinedValue;
+              }
+            }
+          }
+        }
+      });
+      
+      return dailyData;
+    }
+  }, [mockData, metricId, relevantHospitals, relevantRobotTypes, selectedHospital, selectedRobotTypes, dateRange, date]);
 
   const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
 
-  const availableRobotTypes = ["All Bots", "Nurse Bots", "Co-Bots", "Autonomous Beds"];
+  // Prepare data series for chart display
+  const chartSeries = useMemo(() => {
+    const result = [];
+    
+    // Get all possible keys (hospital-robotType combinations)
+    const allKeys = new Set<string>();
+    chartData.forEach(dataPoint => {
+      Object.keys(dataPoint).forEach(key => {
+        if (key !== 'date' && key !== 'rawDate') {
+          allKeys.add(key);
+        }
+      });
+    });
+    
+    // For each key, determine if it should be shown based on selection
+    for (const key of allKeys) {
+      const [hospital, robotType] = key.split('-');
+      
+      const shouldShow = 
+        (selectedHospital === "All" || selectedHospital === hospital) &&
+        (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType));
+      
+      if (shouldShow) {
+        const displayName = selectedHospital === "All" && hospital !== "All"
+          ? `${hospital} - ${robotType}`
+          : robotType;
+          
+        result.push({
+          key,
+          name: displayName,
+          color: 
+            robotType === "All Bots" ? "#FF9143" :
+            robotType === "Nurse Bots" ? "#4CAF50" :
+            robotType === "Co-Bots" ? "#2196F3" :
+            "#FFC107"
+        });
+      }
+    }
+    
+    return result;
+  }, [chartData, selectedHospital, selectedRobotTypes]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
@@ -398,7 +570,10 @@ const MetricDetails = () => {
             const newTypes = selectedRobotTypes.filter(t => t !== type);
             setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
           }}
-          onDateRangeChange={setDateRange}
+          onDateRangeChange={(range) => {
+            setDateRange(range);
+            setDate({ from: undefined, to: undefined });
+          }}
           onCustomDateChange={setDate}
         />
 
@@ -423,9 +598,9 @@ const MetricDetails = () => {
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8 px-6">
-              {robotMetrics.map((stat) => (
+              {robotMetricValues.map((stat) => (
                 <div 
-                  key={stat.type} 
+                  key={`${stat.hospital}-${stat.type}`} 
                   className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-full md:w-auto md:max-w-[240px] md:flex-1"
                   style={{ minWidth: '150px' }}
                 >
@@ -438,11 +613,7 @@ const MetricDetails = () => {
                       {currentMetricDetails.isAccumulative ? "Total" : "Average"}
                     </p>
                     <p className="text-4xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
-                      {stat.isPercentage 
-                        ? `${Math.round(stat.metricValue)}%` 
-                        : stat.metricValue >= 1000 
-                          ? `${(stat.metricValue / 1000).toFixed(1)}k` 
-                          : Math.round(stat.metricValue)}
+                      {stat.displayValue}
                     </p>
                   </div>
                 </div>
@@ -475,16 +646,15 @@ const MetricDetails = () => {
                     <Legend 
                       wrapperStyle={{ color: 'white' }}
                     />
-                    {availableRobotTypes
-                      .filter(type => selectedRobotTypes.includes("All") || selectedRobotTypes.includes(type))
-                      .map((type, index) => (
-                        <Line 
-                          key={type}
-                          type="monotone" 
-                          dataKey={type} 
-                          stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : "#FFC107"} 
-                          strokeWidth={2}
-                        />
+                    {chartSeries.map((series) => (
+                      <Line 
+                        key={series.key}
+                        type="monotone" 
+                        name={series.name}
+                        dataKey={series.key}
+                        stroke={series.color}
+                        strokeWidth={2}
+                      />
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
