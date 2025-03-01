@@ -1,3 +1,4 @@
+
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,12 +47,12 @@ export const DashboardFilters = ({
   return (
     <div className="flex flex-col md:flex-col space-y-4 md:space-y-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="w-full md:w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <span className="flex-1 text-left truncate">
                   {selectedHospital === "All" ? "All Sites" : selectedHospital}
@@ -59,7 +60,7 @@ export const DashboardFilters = ({
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+            <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
               {mockHospitals.map((hospital) => (
                 <DropdownMenuItem
                   key={hospital}
@@ -71,12 +72,11 @@ export const DashboardFilters = ({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="w-full md:min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <span className="flex-1 text-left truncate">
                   {selectedRobotTypes.includes("All")
@@ -95,7 +95,7 @@ export const DashboardFilters = ({
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+            <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
               {getMockRobotTypes(selectedHospital).map((type) => (
                 <DropdownMenuItem
                   key={type}
@@ -117,12 +117,13 @@ export const DashboardFilters = ({
             </DropdownMenuContent>
           </DropdownMenu>
           
+          {/* Metrics dropdown - moved to be in the same row */}
           {metricOptions && metricOptions.length > 0 && onMetricToggle && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="w-full md:min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  className="min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
                 >
                   <span className="flex-1 text-left truncate">
                     {visibleMetrics.includes("all") 
@@ -139,7 +140,7 @@ export const DashboardFilters = ({
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
+              <DropdownMenuContent className="w-[200px] bg-[#526189] text-white">
                 {metricOptions.map((option) => (
                   <DropdownMenuItem
                     key={option.id}
@@ -158,7 +159,6 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        
         <div className="flex items-center space-x-2">
           <Popover>
             <PopoverTrigger asChild>
