@@ -138,7 +138,10 @@ const MetricDetails = () => {
       const isAll = selectedHospital === "All";
       return stats.map(stat => ({
         ...stat,
-        active: Math.max(0, stat.active - Math.floor(Math.random() * (isAll ? stat.active * 0.1 : stat.active * 0.2)))
+        active: stat.type === "Nurse Bots" ? Math.floor(stat.active * 0.95) :
+                stat.type === "Co-Bots" ? Math.floor(stat.active * 0.90) :
+                stat.type === "Autonomous Beds" ? Math.floor(stat.active * 0.85) :
+                Math.floor(stat.active * 0.93)
       }));
     }
     
@@ -173,7 +176,15 @@ const MetricDetails = () => {
       }
     }
 
-    const metricSeed = metricId?.length || 1;
+    const metricSeed = metricId === "utilization" ? 10 :
+                      metricId === "mission-time" ? 20 :
+                      metricId === "active-time" ? 30 :
+                      metricId === "error-rate" ? 40 :
+                      metricId === "battery" ? 50 :
+                      metricId === "miles-saved" ? 60 :
+                      metricId === "hours-saved" ? 70 :
+                      metricId === "completed-missions" ? 80 :
+                      metricId === "downtime" ? 90 : 100;
     
     const baseValues: HospitalMetricValues = {
       "Cannaday building": {
@@ -266,7 +277,7 @@ const MetricDetails = () => {
         : baseValues[hospitalKey];
 
     if (dateRange === "Today") {
-      const data = Array.from({ length: 24 }, (_, hour) => {
+      return Array.from({ length: 24 }, (_, hour) => {
         const currentHour = setMinutes(setHours(new Date(), hour), 0);
         const hourString = format(currentHour, 'HH:00');
         
@@ -279,14 +290,13 @@ const MetricDetails = () => {
         
         Object.entries(values).forEach(([robotType, { base, variation }]) => {
           if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
-            const hourVariation = Math.sin(hour * 0.3 + metricSeed) * (variation * 0.02);
+            const hourVariation = Math.sin((hour + metricSeed) * 0.3) * (variation * 0.02);
             data[robotType] = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
           }
         });
         
         return data;
       });
-      return data;
     }
 
     const days = eachDayOfInterval({ start: startDate, end: endDate });
@@ -301,9 +311,9 @@ const MetricDetails = () => {
       
       Object.entries(values).forEach(([robotType, { base, variation }]) => {
         if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
-          const trendFactor = Math.sin(daysSinceStart * 0.1 + metricSeed) * (variation * 0.01);
-          const randomVariation = (Math.random() - 0.5) * variation * 0.1;
-          data[robotType] = Math.max(0, Math.floor(base * (1 + trendFactor + randomVariation)));
+          const trendFactor = Math.sin((daysSinceStart + metricSeed) * 0.1) * (variation * 0.01);
+          const pseudoRandomVariation = Math.sin((daysSinceStart * metricSeed) * 0.7) * variation * 0.05;
+          data[robotType] = Math.max(0, Math.floor(base * (1 + trendFactor + pseudoRandomVariation)));
         }
       });
       
@@ -321,7 +331,6 @@ const MetricDetails = () => {
     return robotStats.map(robot => {
       const robotType = robot.type;
       
-      // Calculate average/total value from chart data
       let sum = 0;
       let count = 0;
       
@@ -332,8 +341,6 @@ const MetricDetails = () => {
         }
       });
       
-      // For accumulative metrics, use the sum directly
-      // For averages, divide by count
       const value = isAccumulative ? sum : (count > 0 ? sum / count : 0);
       
       return {
