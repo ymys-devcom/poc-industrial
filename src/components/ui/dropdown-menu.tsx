@@ -69,7 +69,7 @@ const DropdownMenuContent = React.forwardRef<
       document.body.removeAttribute('data-state');
     };
     
-    // We can't use onOpenAutoFocus directly, so we use this approach
+    // Cleanup on unmount
     return () => handleClose();
   }, []);
 
@@ -91,9 +91,13 @@ const DropdownMenuContent = React.forwardRef<
         onInteractOutside={() => {
           document.body.removeAttribute('data-state');
         }}
-        onOpenAutoFocus={(e) => {
-          document.body.setAttribute('data-state', 'open');
-          e.preventDefault();
+        // Fix: Using onOpenChange instead of onOpenAutoFocus
+        onOpenChange={(open) => {
+          if (open) {
+            document.body.setAttribute('data-state', 'open');
+          } else {
+            document.body.removeAttribute('data-state');
+          }
         }}
         {...props}
       />
