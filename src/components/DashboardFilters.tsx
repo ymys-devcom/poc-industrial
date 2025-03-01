@@ -48,6 +48,7 @@ export const DashboardFilters = ({
     <div className="flex flex-col md:flex-col space-y-4 md:space-y-4 w-full max-w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
+          {/* Hospital dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
@@ -72,6 +73,8 @@ export const DashboardFilters = ({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Robot type dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
@@ -117,7 +120,7 @@ export const DashboardFilters = ({
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Metrics dropdown - moved to be in the same row */}
+          {/* Metrics dropdown */}
           {metricOptions && metricOptions.length > 0 && onMetricToggle && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -159,20 +162,21 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
+
+        {/* Date controls container - fixing the issue */}
         <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
-          {/* Date filters container - modified to be on one line */}
           <div className="flex w-full md:w-auto space-x-2">
-            {/* Date picker - with fixed width to prevent growth */}
-            <div className="flex-grow w-[60%]">
+            {/* Date picker - Fixed width container to prevent movement */}
+            <div className="w-[60%] md:w-[200px]">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[200px] justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
+                    className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
                   >
                     <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                     <div className="flex-1 overflow-hidden">
-                      <span className="block truncate w-full max-w-[130px]">
+                      <span className="block truncate w-full">
                         {date.from ? (
                           date.to ? (
                             <>
@@ -201,8 +205,9 @@ export const DashboardFilters = ({
                 </PopoverContent>
               </Popover>
             </div>
-            {/* Date range dropdown - 40% width (changed from 35%) */}
-            <div className="w-[40%]">
+
+            {/* Date range dropdown - fixed width */}
+            <div className="w-[40%] md:w-[120px]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
