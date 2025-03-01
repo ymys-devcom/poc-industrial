@@ -254,7 +254,7 @@ export const DashboardFilters = ({
               </div>
 
               {/* Date range dropdown - fixed width */}
-              <div className="w-[40%] md:w-[120px]">
+              <div className="w-[40%] md:w-auto">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
