@@ -168,22 +168,24 @@ export const DashboardFilters = ({
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[200px] justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                    className="w-full md:w-[200px] justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
                   >
                     <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
-                    <span className="truncate max-w-[150px] inline-block">
-                      {date.from ? (
-                        date.to ? (
-                          <>
-                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                          </>
+                    <div className="flex-1 overflow-hidden">
+                      <span className="block truncate w-full max-w-[130px]">
+                        {date.from ? (
+                          date.to ? (
+                            <>
+                              {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                            </>
+                          ) : (
+                            format(date.from, "LLL dd, y")
+                          )
                         ) : (
-                          format(date.from, "LLL dd, y")
-                        )
-                      ) : (
-                        "Pick a date range"
-                      )}
-                    </span>
+                          "Pick a date range"
+                        )}
+                      </span>
+                    </div>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
