@@ -436,7 +436,7 @@ const MetricDetails = () => {
               </h1>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mb-8 px-6">
+            <div className="grid md:grid-cols-4 grid-cols-2 gap-3 mb-8 px-6">
               {robotMetrics.map((stat) => (
                 <div 
                   key={stat.type} 
