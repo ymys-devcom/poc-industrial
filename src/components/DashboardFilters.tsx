@@ -211,7 +211,7 @@ export const DashboardFilters = ({
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[calc(100vw-3rem)] md:min-w-[120px] bg-[#526189] text-white">
+                <DropdownMenuContent className="w-auto md:min-w-[120px] bg-[#526189] text-white">
                   <DropdownMenuItem 
                     onClick={() => onDateRangeChange("Today")}
                     className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
