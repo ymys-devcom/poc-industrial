@@ -162,8 +162,8 @@ export const DashboardFilters = ({
         <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
           {/* Date filters container - modified to be on one line */}
           <div className="flex w-full md:w-auto space-x-2">
-            {/* Date picker - 65% width */}
-            <div className="flex-grow w-[65%]">
+            {/* Date picker - 60% width (changed from 65%) */}
+            <div className="flex-grow w-[60%]">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
@@ -199,8 +199,8 @@ export const DashboardFilters = ({
                 </PopoverContent>
               </Popover>
             </div>
-            {/* Date range dropdown - 35% width */}
-            <div className="w-[35%]">
+            {/* Date range dropdown - 40% width (changed from 35%) */}
+            <div className="w-[40%]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
