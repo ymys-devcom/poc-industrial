@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -8,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MetricValue {
   base: number;
@@ -28,6 +30,7 @@ const MetricDetails = () => {
   const { metricId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
   
   const queryParams = new URLSearchParams(location.search);
   const hospitalFromUrl = queryParams.get('hospital');
@@ -402,19 +405,31 @@ const MetricDetails = () => {
           onCustomDateChange={setDate}
         />
 
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate("/")}
-          className="mb-3 mt-5 text-white hover:bg-white/10"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Button>
+        {!isMobile && (
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate("/")}
+            className="mb-3 mt-5 text-white hover:bg-white/10"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        )}
 
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
             <div className="flex items-center justify-between p-6 pt-0">
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl font-bold text-white flex items-center">
+                {isMobile && (
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => navigate("/")}
+                    className="p-1 mr-2 text-white hover:bg-white/10"
+                    aria-label="Back to Dashboard"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                )}
                 {currentMetricDetails.title}
                 {selectedHospital !== "All" 
                   ? ` - ${selectedHospital}` 
