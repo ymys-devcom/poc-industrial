@@ -159,7 +159,7 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        <div className="flex items-center space-x-2 w-full md:w-auto">
+        <div className="flex items-center space-x-2 w-full md:w-auto md:max-w-[480px]">
           <Popover>
             <PopoverTrigger asChild>
               <Button 
@@ -196,13 +196,13 @@ export const DashboardFilters = ({
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="flex-1 min-w-[145px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="flex-1 min-w-[140px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <span>{dateRange}</span>
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-[145px] bg-[#526189] text-white">
+            <DropdownMenuContent className="min-w-[140px] bg-[#526189] text-white">
               <DropdownMenuItem 
                 onClick={() => onDateRangeChange("Today")}
                 className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
