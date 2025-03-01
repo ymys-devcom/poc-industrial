@@ -60,8 +60,8 @@ const Index = () => {
   const handleCustomDateChange = (range: { from: Date | undefined; to: Date | undefined }) => {
     setDate(range);
     if (range.from && range.to) {
-      setDateRange("Custom Range");
-      setMockData(generateMockDataForRange("Custom Range", range));
+      setDateRange("Custom");
+      setMockData(generateMockDataForRange("Custom", range));
     }
   };
 
