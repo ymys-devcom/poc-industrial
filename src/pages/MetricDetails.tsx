@@ -436,22 +436,21 @@ const MetricDetails = () => {
               </h1>
             </div>
 
-            <div className="flex flex-wrap gap-4 mb-8 px-6">
+            <div className="grid grid-cols-2 gap-3 mb-8 px-6">
               {robotMetrics.map((stat) => (
                 <div 
                   key={stat.type} 
-                  className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-[calc(50%-0.5rem)] sm:w-[calc(50%-0.5rem)] md:w-auto md:flex-1"
-                  style={{ minWidth: '150px' }}
+                  className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg"
                 >
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold text-white">{stat.type}</h3>
-                    <span className="text-xl font-semibold text-white">{stat.total}</span>
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
+                    <span className="text-base font-semibold text-white">{stat.total}</span>
                   </div>
                   <div className="border-t border-white/10 pt-2">
-                    <p className="text-white/60 text-sm">
+                    <p className="text-white/60 text-xs">
                       {currentMetricDetails.isAccumulative ? "Total" : "Average"}
                     </p>
-                    <p className="text-4xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
+                    <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
                       {stat.isPercentage 
                         ? `${Math.round(stat.metricValue)}%` 
                         : stat.metricValue >= 1000 

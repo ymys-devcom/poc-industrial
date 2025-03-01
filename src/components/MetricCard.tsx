@@ -9,6 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { MetricData } from "@/utils/mockDataGenerator";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface MetricCardProps {
   metric: MetricData;
@@ -69,29 +70,38 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
 
   return (
     <Card
-      className="bg-mayo-card backdrop-blur-md border-white/10 p-3 cursor-pointer hover:bg-[#14294B] transition-colors text-white"
+      className="bg-mayo-card backdrop-blur-md border-white/10 p-2 cursor-pointer hover:bg-[#14294B] transition-colors text-white"
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-1">
-          <span className="text-sm" style={{ color: metricColor }}>{metric.label}</span>
-          <span className="text-lg font-semibold" style={{ color: metricColor }}>{metric.value}</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <span className="text-xs truncate max-w-[90px]" style={{ color: metricColor }}>
+                {metric.label}
+              </span>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2 text-xs" side="top">
+              {metric.label}
+            </PopoverContent>
+          </Popover>
+          <span className="text-base font-semibold" style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className="h-[120px] mt-1">
+        <div className="h-[110px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metric.hourlyData} margin={{ left: -4, right: 8, top: 8, bottom: 0 }}>
+            <BarChart data={metric.hourlyData} margin={{ left: -6, right: 5, top: 8, bottom: 0 }}>
               <XAxis 
                 dataKey="hour" 
                 interval={3} 
-                tick={{ fontSize: 9, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: 8, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)" 
               />
               <YAxis
-                tick={{ fontSize: 9, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: 8, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)"
                 domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
-                width={30}
+                width={25}
               />
               <Tooltip
                 contentStyle={{
@@ -99,7 +109,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   borderRadius: "8px",
                   color: "white",
-                  fontSize: "11px"
+                  fontSize: "10px"
                 }}
                 formatter={(value: number, name: string, props: any) => {
                   const roundedValue = Math.round(value * 10) / 10;
