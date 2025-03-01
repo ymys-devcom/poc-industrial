@@ -69,29 +69,29 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
 
   return (
     <Card
-      className="bg-mayo-card backdrop-blur-md border-white/10 p-4 cursor-pointer hover:bg-[#14294B] transition-colors text-white"
+      className="bg-mayo-card backdrop-blur-md border-white/10 p-3 cursor-pointer hover:bg-[#14294B] transition-colors text-white"
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-[1.17rem]" style={{ color: metricColor }}>{metric.label}</span>
-          <span className="text-2xl font-semibold" style={{ color: metricColor }}>{metric.value}</span>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-sm" style={{ color: metricColor }}>{metric.label}</span>
+          <span className="text-lg font-semibold" style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className="h-[140px] mt-1">
+        <div className="h-[120px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={metric.hourlyData} margin={{ left: -4, right: 8, top: 8, bottom: 0 }}>
               <XAxis 
                 dataKey="hour" 
                 interval={3} 
-                tick={{ fontSize: 12, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: 9, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)" 
               />
               <YAxis
-                tick={{ fontSize: 12, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: 9, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)"
                 domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
-                width={40}
+                width={30}
               />
               <Tooltip
                 contentStyle={{
@@ -99,6 +99,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   borderRadius: "8px",
                   color: "white",
+                  fontSize: "11px"
                 }}
                 formatter={(value: number, name: string, props: any) => {
                   const roundedValue = Math.round(value * 10) / 10;
