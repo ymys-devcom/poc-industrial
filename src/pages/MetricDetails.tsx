@@ -453,7 +453,10 @@ const MetricDetails = () => {
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
+                  <LineChart 
+                    data={chartData}
+                    margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                     <XAxis 
                       dataKey="date" 
@@ -463,6 +466,7 @@ const MetricDetails = () => {
                     <YAxis 
                       stroke="rgba(255,255,255,0.5)"
                       tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                      width={40}
                     />
                     <Tooltip 
                       contentStyle={{ 
