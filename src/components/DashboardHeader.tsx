@@ -18,7 +18,7 @@ export const DashboardHeader = () => {
           className="h-[3.6rem]"
         />
       </div>
-      <div className="md:flex hidden items-center space-x-4">
+      <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:ring-0 data-[state=open]:outline-none">
