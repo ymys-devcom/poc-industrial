@@ -408,7 +408,7 @@ const MetricDetails = () => {
           <Button 
             variant="ghost-compact" 
             onClick={() => navigate("/")}
-            className="mb-1 mt-5 text-white hover:bg-white/10"
+            className="mb-1 mt-5 text-white hover:bg-white/10 px-4"
             size="sm"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
