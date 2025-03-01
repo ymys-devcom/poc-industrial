@@ -162,16 +162,16 @@ export const DashboardFilters = ({
         <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
           {/* Date filters container - modified to be on one line */}
           <div className="flex w-full md:w-auto space-x-2">
-            {/* Date picker - 60% width (changed from 65%) */}
+            {/* Date picker - with fixed width to prevent growth */}
             <div className="flex-grow w-[60%]">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-auto justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                    className="w-full md:w-[200px] justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
                   >
-                    <Calendar className="mr-2 h-4 w-4" />
-                    <span className="truncate">
+                    <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
+                    <span className="truncate max-w-[150px] inline-block">
                       {date.from ? (
                         date.to ? (
                           <>
