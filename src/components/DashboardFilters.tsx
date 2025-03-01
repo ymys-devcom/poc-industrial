@@ -45,8 +45,8 @@ export const DashboardFilters = ({
   metricOptions = [],
 }: DashboardFiltersProps) => {
   return (
-    <div className="flex flex-col md:flex-col space-y-4 md:space-y-4 max-w-full overflow-x-hidden">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 max-w-full">
+    <div className="flex flex-col space-y-4 w-full overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full overflow-visible">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -159,7 +159,7 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        <div className="flex items-center space-x-2 w-full md:w-auto md:max-w-[480px] pr-1">
+        <div className="flex items-center space-x-2 w-full md:w-auto md:max-w-[470px]">
           <Popover>
             <PopoverTrigger asChild>
               <Button 
@@ -198,7 +198,7 @@ export const DashboardFilters = ({
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="flex-1 min-w-[140px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="flex-1 min-w-[130px] max-w-[140px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <span className="truncate">{dateRange}</span>
                 <ChevronDown className="h-4 w-4 shrink-0" />
