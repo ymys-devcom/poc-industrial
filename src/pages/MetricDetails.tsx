@@ -53,36 +53,54 @@ const MetricDetails = () => {
   }, [hospitalFromUrl]);
 
   const getMetricDetails = (id: string) => {
-    const metrics: Record<string, { title: string }> = {
+    const metrics: Record<string, { title: string, isPercentage: boolean, isAccumulative: boolean }> = {
       "utilization": {
-        title: "Utilization Rate"
+        title: "Utilization Rate",
+        isPercentage: true,
+        isAccumulative: false
       },
       "mission-time": {
-        title: "Mission Time"
+        title: "Mission Time",
+        isPercentage: false,
+        isAccumulative: false
       },
       "active-time": {
-        title: "Active Time"
+        title: "Active Time",
+        isPercentage: false,
+        isAccumulative: false
       },
       "error-rate": {
-        title: "Error Rate"
+        title: "Error Rate",
+        isPercentage: true,
+        isAccumulative: false
       },
       "battery": {
-        title: "Battery Health"
+        title: "Battery Health",
+        isPercentage: true,
+        isAccumulative: false
       },
       "miles-saved": {
-        title: "Miles Saved"
+        title: "Miles Saved",
+        isPercentage: false,
+        isAccumulative: true
       },
       "hours-saved": {
-        title: "Hours Saved"
+        title: "Hours Saved",
+        isPercentage: false,
+        isAccumulative: true
       },
       "completed-missions": {
-        title: "Completed Missions"
+        title: "Completed Missions",
+        isPercentage: false,
+        isAccumulative: true
       },
       "downtime": {
-        title: "Downtime"
+        title: "Downtime",
+        isPercentage: true,
+        isAccumulative: false
       }
     };
-    return metrics[id || ""] || { title: "Unknown Metric" };
+    return metrics[id || ""] || { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
   };
 
   const robotStats = useMemo(() => {
@@ -103,6 +121,7 @@ const MetricDetails = () => {
         { type: "Autonomous Beds", active: 12, total: 15 },
       ],
       "All": [
+        { type: "All Bots", active: 309, total: 334 },
         { type: "Nurse Bots", active: 227, total: 240 },
         { type: "Co-Bots", active: 28, total: 34 },
         { type: "Autonomous Beds", active: 54, total: 60 },
@@ -158,21 +177,25 @@ const MetricDetails = () => {
     
     const baseValues: HospitalMetricValues = {
       "Cannaday building": {
+        "All Bots": { base: 85, variation: 15 },
         "Nurse Bots": { base: 75, variation: 15 },
         "Co-Bots": { base: 60, variation: 12 },
         "Autonomous Beds": { base: 45, variation: 10 }
       },
       "Mayo building and hospital": {
+        "All Bots": { base: 75, variation: 12 },
         "Nurse Bots": { base: 65, variation: 12 },
         "Co-Bots": { base: 50, variation: 10 },
         "Autonomous Beds": { base: 35, variation: 8 }
       },
       "Mangurian building": {
+        "All Bots": { base: 65, variation: 10 },
         "Nurse Bots": { base: 55, variation: 10 },
         "Co-Bots": { base: 40, variation: 8 },
         "Autonomous Beds": { base: 25, variation: 6 }
       },
       "All": {
+        "All Bots": { base: 90, variation: 15 },
         "Nurse Bots": { base: 85, variation: 15 },
         "Co-Bots": { base: 70, variation: 12 },
         "Autonomous Beds": { base: 55, variation: 10 }
@@ -181,29 +204,66 @@ const MetricDetails = () => {
 
     const errorRateValues: HospitalMetricValues = {
       "Cannaday building": {
+        "All Bots": { base: 3, variation: 1.5 },
         "Nurse Bots": { base: 3, variation: 1.5 },
         "Co-Bots": { base: 4, variation: 2 },
         "Autonomous Beds": { base: 4.5, variation: 2.5 }
       },
       "Mayo building and hospital": {
+        "All Bots": { base: 3, variation: 1.5 },
         "Nurse Bots": { base: 2.5, variation: 1.2 },
         "Co-Bots": { base: 3.5, variation: 1.8 },
         "Autonomous Beds": { base: 4, variation: 2 }
       },
       "Mangurian building": {
+        "All Bots": { base: 2.5, variation: 1.2 },
         "Nurse Bots": { base: 2, variation: 1 },
         "Co-Bots": { base: 3, variation: 1.5 },
         "Autonomous Beds": { base: 3.5, variation: 1.8 }
       },
       "All": {
+        "All Bots": { base: 2.8, variation: 1.2 },
         "Nurse Bots": { base: 2.5, variation: 1.2 },
         "Co-Bots": { base: 3.5, variation: 1.8 },
         "Autonomous Beds": { base: 4, variation: 2 }
       }
     };
     
+    const accumulativeValues: HospitalMetricValues = {
+      "Cannaday building": {
+        "All Bots": { base: 9200, variation: 1500 },
+        "Nurse Bots": { base: 5500, variation: 800 },
+        "Co-Bots": { base: 1500, variation: 300 },
+        "Autonomous Beds": { base: 2200, variation: 400 }
+      },
+      "Mayo building and hospital": {
+        "All Bots": { base: 7800, variation: 1200 },
+        "Nurse Bots": { base: 4800, variation: 700 },
+        "Co-Bots": { base: 1200, variation: 250 },
+        "Autonomous Beds": { base: 1800, variation: 350 }
+      },
+      "Mangurian building": {
+        "All Bots": { base: 6500, variation: 1000 },
+        "Nurse Bots": { base: 4000, variation: 600 },
+        "Co-Bots": { base: 1000, variation: 200 },
+        "Autonomous Beds": { base: 1500, variation: 300 }
+      },
+      "All": {
+        "All Bots": { base: 23500, variation: 3000 },
+        "Nurse Bots": { base: 14300, variation: 2000 },
+        "Co-Bots": { base: 3700, variation: 700 },
+        "Autonomous Beds": { base: 5500, variation: 900 }
+      }
+    };
+    
+    const metricDetails = getMetricDetails(metricId || "");
+    
     const hospitalKey = selectedHospital as keyof HospitalMetricValues;
-    const values: MetricValues = metricId === "error-rate" ? errorRateValues[hospitalKey] : baseValues[hospitalKey];
+    const values: MetricValues = metricId === "error-rate" || metricId === "downtime" 
+      ? errorRateValues[hospitalKey] 
+      : metricDetails.isAccumulative 
+        ? accumulativeValues[hospitalKey]
+        : baseValues[hospitalKey];
 
     if (dateRange === "Today") {
       const data = Array.from({ length: 24 }, (_, hour) => {
@@ -253,9 +313,43 @@ const MetricDetails = () => {
 
   const chartData = useMemo(() => generateChartData(), [dateRange, date, metricId, selectedHospital, selectedRobotTypes]);
 
-  const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric" };
+  const calculateMetricAveragesOrTotals = () => {
+    const metricDetails = getMetricDetails(metricId || "");
+    const isAccumulative = metricDetails.isAccumulative;
+    const isPercentage = metricDetails.isPercentage;
+    
+    return robotStats.map(robot => {
+      const robotType = robot.type;
+      
+      // Calculate average/total value from chart data
+      let sum = 0;
+      let count = 0;
+      
+      chartData.forEach(dataPoint => {
+        if (dataPoint[robotType] !== undefined) {
+          sum += dataPoint[robotType];
+          count++;
+        }
+      });
+      
+      // For accumulative metrics, use the sum directly
+      // For averages, divide by count
+      const value = isAccumulative ? sum : (count > 0 ? sum / count : 0);
+      
+      return {
+        ...robot,
+        metricValue: value,
+        isPercentage
+      };
+    });
+  };
 
-  const availableRobotTypes = ["Nurse Bots", "Co-Bots", "Autonomous Beds"];
+  const robotMetrics = useMemo(() => calculateMetricAveragesOrTotals(), 
+    [chartData, robotStats, metricId]);
+
+  const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
+
+  const availableRobotTypes = ["All Bots", "Nurse Bots", "Co-Bots", "Autonomous Beds"];
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
@@ -306,22 +400,27 @@ const MetricDetails = () => {
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8 px-6">
-              {robotStats.map((stat) => (
+              {robotMetrics.map((stat) => (
                 <div 
                   key={stat.type} 
                   className="bg-mayo-card backdrop-blur-md border-white/10 p-4 rounded-lg w-full md:w-auto md:max-w-[240px] md:flex-1"
                   style={{ minWidth: '150px' }}
                 >
-                  <h3 className="text-lg font-semibold text-white mb-2">{stat.type}</h3>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-3xl font-bold text-white">{stat.active}</p>
-                      <p className="text-white/60 text-sm">Active</p>
-                    </div>
-                    <div>
-                      <p className="text-3xl font-bold text-white/80">{stat.total}</p>
-                      <p className="text-white/60 text-sm">Total</p>
-                    </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-white">{stat.type}</h3>
+                    <span className="text-xl font-bold text-white">{stat.total}</span>
+                  </div>
+                  <div className="border-t border-white/10 pt-2">
+                    <p className="text-white/60 text-sm">
+                      {currentMetricDetails.isAccumulative ? "Total" : "Average"}
+                    </p>
+                    <p className="text-4xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
+                      {stat.isPercentage 
+                        ? `${Math.round(stat.metricValue)}%` 
+                        : stat.metricValue >= 1000 
+                          ? `${(stat.metricValue / 1000).toFixed(1)}k` 
+                          : Math.round(stat.metricValue)}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -360,7 +459,7 @@ const MetricDetails = () => {
                           key={type}
                           type="monotone" 
                           dataKey={type} 
-                          stroke={index === 0 ? "#4CAF50" : index === 1 ? "#2196F3" : "#FFC107"} 
+                          stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : "#FFC107"} 
                           strokeWidth={2}
                         />
                     ))}
