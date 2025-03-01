@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -408,7 +409,7 @@ const MetricDetails = () => {
           <Button 
             variant="ghost-compact" 
             onClick={() => navigate("/")}
-            className="mb-1 mt-5 text-white hover:bg-white/10 px-4"
+            className="mb-1 mt-5 text-white hover:bg-white/10 px-1"
             size="sm"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
