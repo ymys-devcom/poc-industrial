@@ -188,28 +188,28 @@ const MetricDetails = () => {
     
     const baseValues: HospitalMetricValues = {
       "Cannaday building": {
-        "All Bots": { base: 85, variation: 15 },
-        "Nurse Bots": { base: 75, variation: 15 },
-        "Co-Bots": { base: 60, variation: 12 },
-        "Autonomous Beds": { base: 45, variation: 10 }
+        "All Bots": { base: 50, variation: 10 },
+        "Nurse Bots": { base: 45, variation: 10 },
+        "Co-Bots": { base: 40, variation: 8 },
+        "Autonomous Beds": { base: 35, variation: 7 }
       },
       "Mayo building and hospital": {
-        "All Bots": { base: 75, variation: 12 },
-        "Nurse Bots": { base: 65, variation: 12 },
-        "Co-Bots": { base: 50, variation: 10 },
-        "Autonomous Beds": { base: 35, variation: 8 }
+        "All Bots": { base: 45, variation: 10 },
+        "Nurse Bots": { base: 40, variation: 8 },
+        "Co-Bots": { base: 35, variation: 7 },
+        "Autonomous Beds": { base: 30, variation: 6 }
       },
       "Mangurian building": {
-        "All Bots": { base: 65, variation: 10 },
-        "Nurse Bots": { base: 55, variation: 10 },
-        "Co-Bots": { base: 40, variation: 8 },
-        "Autonomous Beds": { base: 25, variation: 6 }
+        "All Bots": { base: 40, variation: 8 },
+        "Nurse Bots": { base: 35, variation: 7 },
+        "Co-Bots": { base: 30, variation: 6 },
+        "Autonomous Beds": { base: 25, variation: 5 }
       },
       "All": {
-        "All Bots": { base: 90, variation: 15 },
-        "Nurse Bots": { base: 85, variation: 15 },
-        "Co-Bots": { base: 70, variation: 12 },
-        "Autonomous Beds": { base: 55, variation: 10 }
+        "All Bots": { base: 50, variation: 10 },
+        "Nurse Bots": { base: 45, variation: 10 },
+        "Co-Bots": { base: 40, variation: 8 },
+        "Autonomous Beds": { base: 35, variation: 7 }
       }
     };
 
@@ -291,7 +291,13 @@ const MetricDetails = () => {
         Object.entries(values).forEach(([robotType, { base, variation }]) => {
           if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
             const hourVariation = Math.sin((hour + metricSeed) * 0.3) * (variation * 0.02);
-            data[robotType] = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
+            let value = Math.max(0, Math.floor(base * timeOfDayFactor * (1 + hourVariation)));
+            
+            if (metricDetails.isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
+              value = Math.min(value, 100);
+            }
+            
+            data[robotType] = value;
           }
         });
         
@@ -313,7 +319,13 @@ const MetricDetails = () => {
         if (selectedRobotTypes.includes("All") || selectedRobotTypes.includes(robotType)) {
           const trendFactor = Math.sin((daysSinceStart + metricSeed) * 0.1) * (variation * 0.01);
           const pseudoRandomVariation = Math.sin((daysSinceStart * metricSeed) * 0.7) * variation * 0.05;
-          data[robotType] = Math.max(0, Math.floor(base * (1 + trendFactor + pseudoRandomVariation)));
+          let value = Math.max(0, Math.floor(base * (1 + trendFactor + pseudoRandomVariation)));
+          
+          if (metricDetails.isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
+            value = Math.min(value, 100);
+          }
+          
+          data[robotType] = value;
         }
       });
       
@@ -341,7 +353,11 @@ const MetricDetails = () => {
         }
       });
       
-      const value = isAccumulative ? sum : (count > 0 ? sum / count : 0);
+      let value = isAccumulative ? sum : (count > 0 ? sum / count : 0);
+      
+      if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
+        value = Math.min(value, 100);
+      }
       
       return {
         ...robot,
