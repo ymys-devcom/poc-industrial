@@ -418,8 +418,8 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
-            <div className="flex items-center justify-between p-6 pt-0">
-              <h1 className="text-2xl font-bold text-white flex items-center">
+            <div className="flex items-center justify-between p-6 pt-6">
+              <h1 className="text-2xl font-bold text-white flex items-center pt-6">
                 {isMobile && (
                   <Button 
                     variant="ghost" 
@@ -427,7 +427,7 @@ const MetricDetails = () => {
                     className="p-1 mr-2 text-white hover:bg-white/10"
                     aria-label="Back to Dashboard"
                   >
-                    <ArrowLeft className="h-5 w-5" />
+                    <ArrowLeft className="h-5 w-5" style={{ strokeWidth: 2 }} />
                   </Button>
                 )}
                 {currentMetricDetails.title}
