@@ -417,7 +417,7 @@ const MetricDetails = () => {
 
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
-            <div className="flex items-center justify-between py-6">
+            <div className="flex items-center justify-between py-6 px-6">
               <h1 className="text-2xl font-bold text-white flex items-center">
                 {isMobile && (
                   <Button 
