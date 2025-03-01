@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -407,7 +406,7 @@ const MetricDetails = () => {
 
         {!isMobile && (
           <Button 
-            variant="ghost" 
+            variant="ghost-compact" 
             onClick={() => navigate("/")}
             className="mb-3 mt-5 text-white hover:bg-white/10"
           >
