@@ -160,83 +160,92 @@ export const DashboardFilters = ({
           )}
         </div>
         <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="w-full md:w-auto justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
-              >
-                <Calendar className="mr-2 h-4 w-4" />
-                <span className="truncate">
-                  {date.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(date.from, "LLL dd, y")
-                    )
-                  ) : (
-                    "Pick a date range"
-                  )}
-                </span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
-              <CalendarComponent
-                initialFocus
-                mode="range"
-                defaultMonth={date.from}
-                selected={{ from: date.from, to: date.to }}
-                onSelect={onCustomDateChange}
-                numberOfMonths={1}
-                className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
-              />
-            </PopoverContent>
-          </Popover>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="w-full md:w-auto min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
-              >
-                <span>{dateRange}</span>
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[calc(100vw-3rem)] md:min-w-[120px] bg-[#526189] text-white">
-              <DropdownMenuItem 
-                onClick={() => onDateRangeChange("Today")}
-                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-              >
-                Today
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => onDateRangeChange("Last 7 Days")}
-                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-              >
-                Last 7 Days
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => onDateRangeChange("Last 30 Days")}
-                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-              >
-                Last 30 Days
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => onDateRangeChange("Last 90 Days")}
-                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-              >
-                Last 90 Days
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => onDateRangeChange("Last 180 Days")}
-                className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-              >
-                Last 180 Days
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Date filters container - modified to be on one line */}
+          <div className="flex w-full md:w-auto space-x-2">
+            {/* Date picker - 65% width */}
+            <div className="flex-grow w-[65%]">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="w-full md:w-auto justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <span className="truncate">
+                      {date.from ? (
+                        date.to ? (
+                          <>
+                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                          </>
+                        ) : (
+                          format(date.from, "LLL dd, y")
+                        )
+                      ) : (
+                        "Pick a date range"
+                      )}
+                    </span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
+                  <CalendarComponent
+                    initialFocus
+                    mode="range"
+                    defaultMonth={date.from}
+                    selected={{ from: date.from, to: date.to }}
+                    onSelect={onCustomDateChange}
+                    numberOfMonths={1}
+                    className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            {/* Date range dropdown - 35% width */}
+            <div className="w-[35%]">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  >
+                    <span>{dateRange}</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[calc(100vw-3rem)] md:min-w-[120px] bg-[#526189] text-white">
+                  <DropdownMenuItem 
+                    onClick={() => onDateRangeChange("Today")}
+                    className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    Today
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onDateRangeChange("Last 7 Days")}
+                    className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    Last 7 Days
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onDateRangeChange("Last 30 Days")}
+                    className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    Last 30 Days
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onDateRangeChange("Last 90 Days")}
+                    className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    Last 90 Days
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onDateRangeChange("Last 180 Days")}
+                    className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                  >
+                    Last 180 Days
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
         </div>
       </div>
     </div>
