@@ -95,12 +95,12 @@ export const DashboardFilters = ({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Robot type dropdown */}
+            {/* Robot type dropdown - adjusted width to fit content */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="w-full md:min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
                 >
                   <span className="flex-1 text-left truncate">
                     {selectedRobotTypes.includes("All")
@@ -155,13 +155,13 @@ export const DashboardFilters = ({
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* Metrics dropdown */}
+            {/* Metrics dropdown - adjusted width to fit content */}
             {metricOptions && metricOptions.length > 0 && onMetricToggle && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:min-w-[200px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                    className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
                   >
                     <span className="flex-1 text-left truncate">
                       {visibleMetrics.includes("all") 
