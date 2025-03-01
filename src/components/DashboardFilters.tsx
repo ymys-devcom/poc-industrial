@@ -45,8 +45,8 @@ export const DashboardFilters = ({
   metricOptions = [],
 }: DashboardFiltersProps) => {
   return (
-    <div className="flex flex-col space-y-4 w-full overflow-hidden">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full overflow-visible">
+    <div className="flex flex-col md:flex-col space-y-4 md:space-y-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -117,7 +117,7 @@ export const DashboardFilters = ({
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Metrics dropdown */}
+          {/* Metrics dropdown - moved to be in the same row */}
           {metricOptions && metricOptions.length > 0 && onMetricToggle && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -159,27 +159,25 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        <div className="flex items-center space-x-2 w-full md:w-auto md:max-w-[470px]">
+        <div className="flex items-center space-x-2 w-full md:w-auto md:max-w-[480px]">
           <Popover>
             <PopoverTrigger asChild>
               <Button 
                 variant="outline" 
-                className="flex-1 justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
+                className="flex-1 justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
-                <Calendar className="mr-2 h-4 w-4 shrink-0" />
-                <span className="truncate">
-                  {date.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(date.from, "LLL dd, y")
-                    )
+                <Calendar className="mr-2 h-4 w-4" />
+                {date.from ? (
+                  date.to ? (
+                    <>
+                      {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                    </>
                   ) : (
-                    "Pick a date range"
-                  )}
-                </span>
+                    format(date.from, "LLL dd, y")
+                  )
+                ) : (
+                  "Pick a date range"
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
@@ -198,10 +196,10 @@ export const DashboardFilters = ({
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="flex-1 min-w-[130px] max-w-[140px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="flex-1 min-w-[140px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
-                <span className="truncate">{dateRange}</span>
-                <ChevronDown className="h-4 w-4 shrink-0" />
+                <span>{dateRange}</span>
+                <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-[140px] bg-[#526189] text-white">
