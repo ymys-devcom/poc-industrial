@@ -72,7 +72,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
 
   return (
     <Card
-      className="bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white md:p-3 p-2"
+      className={`bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white ${isMobile ? 'p-2' : 'p-3'}`}
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
@@ -80,7 +80,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`md:text-sm text-xs truncate ${isMobile ? 'max-w-[90px]' : 'max-w-[150px]'}`} 
+                className={`${isMobile ? 'text-xs max-w-[90px]' : 'text-sm max-w-[150px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -90,9 +90,9 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className="md:text-lg text-base font-semibold" style={{ color: metricColor }}>{metric.value}</span>
+          <span className={`${isMobile ? 'text-base' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className="md:h-[120px] h-[110px] mt-1">
+        <div className={`${isMobile ? 'h-[110px]' : 'h-[120px]'} mt-1`}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={metric.hourlyData} margin={{ left: isMobile ? -6 : -4, right: isMobile ? 5 : 8, top: 8, bottom: 0 }}>
               <XAxis 
