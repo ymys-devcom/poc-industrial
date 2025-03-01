@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { MetricData } from "@/utils/mockDataGenerator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MetricCardProps {
   metric: MetricData;
@@ -67,17 +68,21 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const yAxisFormatter = getYAxisFormatter(metric.id);
   const maxValue = getMaxValueForMetric(metric);
   const metricColor = getMetricColor(metric.id);
+  const isMobile = useIsMobile();
 
   return (
     <Card
-      className="bg-mayo-card backdrop-blur-md border-white/10 p-2 cursor-pointer hover:bg-[#14294B] transition-colors text-white"
+      className="bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white md:p-3 p-2"
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-1">
           <Popover>
             <PopoverTrigger asChild>
-              <span className="text-xs truncate max-w-[90px]" style={{ color: metricColor }}>
+              <span 
+                className={`md:text-sm text-xs truncate ${isMobile ? 'max-w-[90px]' : 'max-w-[150px]'}`} 
+                style={{ color: metricColor }}
+              >
                 {metric.label}
               </span>
             </PopoverTrigger>
@@ -85,23 +90,23 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className="text-base font-semibold" style={{ color: metricColor }}>{metric.value}</span>
+          <span className="md:text-lg text-base font-semibold" style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className="h-[110px] mt-1">
+        <div className="md:h-[120px] h-[110px] mt-1">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metric.hourlyData} margin={{ left: -6, right: 5, top: 8, bottom: 0 }}>
+            <BarChart data={metric.hourlyData} margin={{ left: isMobile ? -6 : -4, right: isMobile ? 5 : 8, top: 8, bottom: 0 }}>
               <XAxis 
                 dataKey="hour" 
                 interval={3} 
-                tick={{ fontSize: 8, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: isMobile ? 8 : 9, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)" 
               />
               <YAxis
-                tick={{ fontSize: 8, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: isMobile ? 8 : 9, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)"
                 domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
-                width={25}
+                width={isMobile ? 25 : 30}
               />
               <Tooltip
                 contentStyle={{
@@ -109,7 +114,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   borderRadius: "8px",
                   color: "white",
-                  fontSize: "10px"
+                  fontSize: isMobile ? "10px" : "11px"
                 }}
                 formatter={(value: number, name: string, props: any) => {
                   const roundedValue = Math.round(value * 10) / 10;
