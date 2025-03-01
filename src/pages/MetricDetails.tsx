@@ -441,7 +441,7 @@ const MetricDetails = () => {
             {robotMetrics.map((stat) => (
               <div 
                 key={stat.type} 
-                className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-full"
+                className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-[calc(50%-0.375rem)]"
               >
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
@@ -464,7 +464,7 @@ const MetricDetails = () => {
           </div>
 
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
+              <h3 className="text-lg font-semibold text-white mb-4 pt-4 md:pt-0">Performance Over Time</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart 
