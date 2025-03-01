@@ -409,6 +409,7 @@ const MetricDetails = () => {
             variant="ghost-compact" 
             onClick={() => navigate("/")}
             className="mb-3 mt-5 text-white hover:bg-white/10"
+            size="sm"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
