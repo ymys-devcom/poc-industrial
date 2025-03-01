@@ -27,12 +27,7 @@ export const DashboardHeader = () => {
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            align="end" 
-            alignOffset={0}
-            className="w-[200px] bg-[#526189] text-white overflow-hidden"
-            sideOffset={8}
-          >
+          <DropdownMenuContent align="end" className="w-[200px] bg-[#526189] text-white">
             <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>

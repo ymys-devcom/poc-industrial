@@ -202,9 +202,9 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)] flex flex-col">
       <DashboardHeader />
-      <main className="p-6 flex-grow overflow-x-hidden">
+      <main className="p-6 flex-grow">
         <DashboardFilters
           selectedHospital={selectedHospital}
           selectedRobotTypes={selectedRobotTypes}

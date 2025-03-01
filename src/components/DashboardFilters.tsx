@@ -1,3 +1,4 @@
+
 import { Calendar, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -116,6 +117,7 @@ export const DashboardFilters = ({
             </DropdownMenuContent>
           </DropdownMenu>
           
+          {/* Metrics dropdown - moved to be in the same row */}
           {metricOptions && metricOptions.length > 0 && onMetricToggle && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -138,7 +140,7 @@ export const DashboardFilters = ({
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white overflow-hidden">
+              <DropdownMenuContent className="w-full md:w-[200px] bg-[#526189] text-white">
                 {metricOptions.map((option) => (
                   <DropdownMenuItem
                     key={option.id}
@@ -157,12 +159,12 @@ export const DashboardFilters = ({
             </DropdownMenu>
           )}
         </div>
-        <div className="flex items-center space-x-2 w-full md:w-auto">
+        <div className="flex items-center space-x-2">
           <Popover>
             <PopoverTrigger asChild>
               <Button 
                 variant="outline" 
-                className="flex-1 justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <Calendar className="mr-2 h-4 w-4" />
                 {date.from ? (
@@ -194,17 +196,13 @@ export const DashboardFilters = ({
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="flex-1 min-w-[140px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                className="min-w-[120px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
               >
                 <span>{dateRange}</span>
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              className="min-w-[140px] bg-[#526189] text-white overflow-hidden"
-              align="end"
-              sideOffset={8}
-            >
+            <DropdownMenuContent className="min-w-[120px] bg-[#526189] text-white">
               <DropdownMenuItem 
                 onClick={() => onDateRangeChange("Today")}
                 className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
