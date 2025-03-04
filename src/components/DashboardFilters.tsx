@@ -73,7 +73,7 @@ export const DashboardFilters = ({
                   <PopoverTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
+                      className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden rounded-full"
                     >
                       <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                       <div className="flex-1 overflow-hidden">
@@ -81,10 +81,10 @@ export const DashboardFilters = ({
                           {date.from ? (
                             date.to ? (
                               <>
-                                {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                {format(date.from, "MM/dd/yyyy")} - {format(date.to, "MM/dd/yyyy")}
                               </>
                             ) : (
-                              format(date.from, "LLL dd, y")
+                              format(date.from, "MM/dd/yyyy")
                             )
                           ) : (
                             "Pick a date range"
@@ -113,7 +113,7 @@ export const DashboardFilters = ({
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                      className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer rounded-full"
                     >
                       <span className="truncate">{dateRange}</span>
                       <ChevronDown className="h-4 w-4" />
@@ -128,6 +128,12 @@ export const DashboardFilters = ({
                       className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
                     >
                       <span className="truncate">Today</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => onDateRangeChange("This Week")}
+                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                    >
+                      <span className="truncate">This Week</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 7 Days")}
@@ -147,12 +153,6 @@ export const DashboardFilters = ({
                     >
                       <span className="truncate">Last 90 Days</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => onDateRangeChange("Last 180 Days")}
-                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
-                    >
-                      <span className="truncate">Last 180 Days</span>
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -160,12 +160,12 @@ export const DashboardFilters = ({
               {/* Filter toggle button - 15% width */}
               <div className="w-[15%]">
                 <Button
-                  variant="outline"
+                  variant="ghost-compact"
                   onClick={toggleMobileFilters}
-                  className="w-full flex items-center justify-center bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  className="w-full flex items-center justify-center bg-transparent hover:bg-transparent text-orange-500 border-none hover:border-none"
                 >
                   {showMobileFilters ? (
-                    <Filter className="h-5 w-5" style={{ strokeWidth: 2 }} />
+                    <X className="h-5 w-5" style={{ strokeWidth: 2 }} />
                   ) : (
                     <Filter className="h-5 w-5" style={{ strokeWidth: 2 }} />
                   )}
@@ -182,7 +182,7 @@ export const DashboardFilters = ({
                     <DropdownMenuTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                        className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer rounded-full"
                       >
                         <span className="flex-1 text-left truncate">
                           {selectedHospital === "All" ? "All Sites" : selectedHospital}
@@ -224,14 +224,14 @@ export const DashboardFilters = ({
                     <DropdownMenuTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                        className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer rounded-full"
                       >
                         <span className="flex-1 text-left truncate">
                           {selectedRobotTypes.includes("All")
                             ? "All AMR Types"
                             : selectedRobotTypes.length === 1
                             ? selectedRobotTypes[0]
-                            : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
+                            : `${selectedRobotTypes[0]} (+${selectedRobotTypes.length - 1})`}
                         </span>
                         <div className="flex items-center gap-2">
                           {selectedRobotTypes.length > 0 && !selectedRobotTypes.includes("All") && (
@@ -287,7 +287,7 @@ export const DashboardFilters = ({
                       <DropdownMenuTrigger asChild>
                         <Button 
                           variant="outline" 
-                          className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                          className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer rounded-full"
                         >
                           <span className="flex-1 text-left truncate">
                             {visibleMetrics.includes("all") 
