@@ -157,12 +157,12 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               </div>
 
-              {/* Filter toggle button - 10% width - UPDATED to remove border, background and hover */}
+              {/* Filter toggle button - 10% width - UPDATED to match dropdown button hover color */}
               <div className="w-[10%]">
                 <Button
                   variant="ghost"
                   onClick={toggleMobileFilters}
-                  className="w-full flex items-center justify-center text-white cursor-pointer p-0"
+                  className="w-full flex items-center justify-center text-white cursor-pointer p-0 hover:bg-[#526189]"
                 >
                   {showMobileFilters ? (
                     <X className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
