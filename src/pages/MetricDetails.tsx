@@ -379,123 +379,133 @@ const MetricDetails = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
-      <main className="flex-1">
-        <div className="p-6 pb-0">
-          <div className="flex items-center mb-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate("/")}
-              className="p-1 mr-2 text-white hover:bg-white/10"
-              aria-label="Back to Dashboard"
-            >
-              <ArrowLeft className="h-5 w-5" style={{ strokeWidth: 2 }} />
-            </Button>
-            <h1 className="text-2xl font-bold text-white">
-              {currentMetricDetails.title}
-              {!isMobile && selectedHospital !== "All" 
-                ? ` - ${selectedHospital}` 
-                : !isMobile ? " - All Sites" : ""}
-            </h1>
-          </div>
-        </div>
-
-        <div className="p-6 pt-0">
-          <DashboardFilters
-            selectedHospital={selectedHospital}
-            selectedRobotTypes={selectedRobotTypes}
-            dateRange={dateRange}
-            date={date}
-            onHospitalChange={setSelectedHospital}
-            onRobotTypeChange={(type) => {
-              if (type === "All") {
-                setSelectedRobotTypes(["All"]);
-              } else {
-                const newTypes = selectedRobotTypes.includes(type)
-                  ? selectedRobotTypes.filter(t => t !== type)
-                  : [...selectedRobotTypes.filter(t => t !== "All"), type];
-                setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
-              }
-            }}
-            onRemoveRobotType={(type) => {
-              const newTypes = selectedRobotTypes.filter(t => t !== type);
+      <main className="p-6 flex-1">
+        <DashboardFilters
+          selectedHospital={selectedHospital}
+          selectedRobotTypes={selectedRobotTypes}
+          dateRange={dateRange}
+          date={date}
+          onHospitalChange={setSelectedHospital}
+          onRobotTypeChange={(type) => {
+            if (type === "All") {
+              setSelectedRobotTypes(["All"]);
+            } else {
+              const newTypes = selectedRobotTypes.includes(type)
+                ? selectedRobotTypes.filter(t => t !== type)
+                : [...selectedRobotTypes.filter(t => t !== "All"), type];
               setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
-            }}
-            onDateRangeChange={setDateRange}
-            onCustomDateChange={setDate}
-          />
+            }
+          }}
+          onRemoveRobotType={(type) => {
+            const newTypes = selectedRobotTypes.filter(t => t !== type);
+            setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
+          }}
+          onDateRangeChange={setDateRange}
+          onCustomDateChange={setDate}
+        />
 
-          <div className="space-y-6">
-            <div className="backdrop-blur-md border-white/10 rounded-lg">
-              <div className="flex flex-row flex-wrap gap-3 mb-8">
-                {robotMetrics.map((stat) => (
-                  <div 
-                    key={stat.type} 
-                    className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-[calc(50%-0.375rem)]"
+        {!isMobile && (
+          <Button 
+            variant="ghost-compact" 
+            onClick={() => navigate("/")}
+            className="mb-1 mt-5 text-white hover:bg-white/10 px-1"
+            size="sm"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        )}
+
+        <div className="space-y-6">
+          <div className="backdrop-blur-md border-white/10 rounded-lg">
+            <div className="flex items-center justify-between pb-4">
+              <h1 className="text-2xl font-bold text-white flex items-center pt-4 md:pt-4">
+                {isMobile && (
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => navigate("/")}
+                    className="p-1 mr-2 text-white hover:bg-white/10"
+                    aria-label="Back to Dashboard"
                   >
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
-                      <span className="text-base font-semibold text-white">{stat.total}</span>
-                    </div>
-                    <div className="border-t border-white/10 pt-2">
-                      <p className="text-white/60 text-xs">
-                        {currentMetricDetails.isAccumulative ? "Total" : "Average"}
-                      </p>
-                      <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
-                        {stat.isPercentage 
-                          ? `${Math.round(stat.metricValue)}%` 
-                          : stat.metricValue >= 1000 
-                            ? `${(stat.metricValue / 1000).toFixed(1)}k` 
-                            : Math.round(stat.metricValue)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    <ArrowLeft className="h-5 w-5" style={{ strokeWidth: 2 }} />
+                  </Button>
+                )}
+                {currentMetricDetails.title}
+                {!isMobile && selectedHospital !== "All" 
+                  ? ` - ${selectedHospital}` 
+                  : !isMobile ? " - All Sites" : ""}
+              </h1>
+            </div>
 
-              <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
-                <div className="h-[276px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart 
-                      data={chartData}
-                      margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis 
-                        dataKey="date" 
-                        stroke="rgba(255,255,255,0.5)"
-                        tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                      />
-                      <YAxis 
-                        stroke="rgba(255,255,255,0.5)"
-                        tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                        width={40}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'rgba(1, 45, 90, 0.75)', 
-                          border: 'none',
-                          borderRadius: '4px',
-                          color: 'white' 
-                        }}
-                      />
-                      <Legend 
-                        wrapperStyle={{ color: 'white' }}
-                      />
-                      {availableRobotTypes
-                        .filter(type => selectedRobotTypes.includes("All") || selectedRobotTypes.includes(type))
-                        .map((type, index) => (
-                          <Line 
-                            key={type}
-                            type="monotone" 
-                            dataKey={type} 
-                            stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : "#FFC107"} 
-                            strokeWidth={2}
-                          />
-                        ))}
-                    </LineChart>
-                  </ResponsiveContainer>
+          <div className="flex flex-row flex-wrap gap-3 mb-8">
+            {robotMetrics.map((stat) => (
+              <div 
+                key={stat.type} 
+                className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-[calc(50%-0.375rem)]"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
+                  <span className="text-base font-semibold text-white">{stat.total}</span>
                 </div>
+                <div className="border-t border-white/10 pt-2">
+                  <p className="text-white/60 text-xs">
+                    {currentMetricDetails.isAccumulative ? "Total" : "Average"}
+                  </p>
+                  <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
+                    {stat.isPercentage 
+                      ? `${Math.round(stat.metricValue)}%` 
+                      : stat.metricValue >= 1000 
+                        ? `${(stat.metricValue / 1000).toFixed(1)}k` 
+                        : Math.round(stat.metricValue)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
+              <div className="h-[276px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart 
+                    data={chartData}
+                    margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="rgba(255,255,255,0.5)"
+                      tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                    />
+                    <YAxis 
+                      stroke="rgba(255,255,255,0.5)"
+                      tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                      width={40}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(1, 45, 90, 0.75)', 
+                        border: 'none',
+                        borderRadius: '4px',
+                        color: 'white' 
+                      }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ color: 'white' }}
+                    />
+                    {availableRobotTypes
+                      .filter(type => selectedRobotTypes.includes("All") || selectedRobotTypes.includes(type))
+                      .map((type, index) => (
+                        <Line 
+                          key={type}
+                          type="monotone" 
+                          dataKey={type} 
+                          stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : "#FFC107"} 
+                          strokeWidth={2}
+                        />
+                    ))}
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
