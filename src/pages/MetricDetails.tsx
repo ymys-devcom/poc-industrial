@@ -420,7 +420,7 @@ const MetricDetails = () => {
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
             <div className="flex items-center justify-between pb-4">
-              <h1 className="text-2xl font-bold text-white flex items-center pt-4 md:pt-0">
+              <h1 className="text-2xl font-bold text-white flex items-center pt-4 md:pt-4">
                 {isMobile && (
                   <Button 
                     variant="ghost" 
@@ -466,7 +466,7 @@ const MetricDetails = () => {
 
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
-              <div className="h-[400px]">
+              <div className="h-[240px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart 
                     data={chartData}
