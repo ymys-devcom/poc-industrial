@@ -73,7 +73,7 @@ export const DashboardFilters = ({
                   <PopoverTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex justify-start text-left font-normal text-xs bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden px-2 py-1"
+                      className="w-full flex justify-start text-left text-xs bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden px-2 py-1"
                     >
                       <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                       <div className="flex-1 overflow-hidden">
