@@ -68,12 +68,12 @@ export const DashboardFilters = ({
             {/* First row - always visible */}
             <div className="flex space-x-2 w-full">
               {/* Date picker - 60% width */}
-              <div className="w-[60%]">
+              <div className="w-[55%]">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
+                      className="w-full flex justify-start text-left font-normal text-xs bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden px-2 py-1"
                     >
                       <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                       <div className="flex-1 overflow-hidden">
@@ -107,13 +107,13 @@ export const DashboardFilters = ({
                 </Popover>
               </div>
 
-              {/* Date range presets - 25% width */}
-              <div className="w-[25%]">
+              {/* Date range presets - increased to 35% width (10% wider) */}
+              <div className="w-[35%]">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                      className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="truncate">{dateRange}</span>
                       <ChevronDown className="h-4 w-4" />
@@ -125,31 +125,31 @@ export const DashboardFilters = ({
                   >
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Today")}
-                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                     >
                       <span className="truncate">Today</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 7 Days")}
-                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                     >
                       <span className="truncate">Last 7 Days</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 30 Days")}
-                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                     >
                       <span className="truncate">Last 30 Days</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 90 Days")}
-                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                     >
                       <span className="truncate">Last 90 Days</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 180 Days")}
-                      className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                     >
                       <span className="truncate">Last 180 Days</span>
                     </DropdownMenuItem>
@@ -157,17 +157,17 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               </div>
 
-              {/* Filter toggle button - 15% width */}
-              <div className="w-[15%]">
+              {/* Filter toggle button - 10% width (down from 15% to accommodate wider date preset) */}
+              <div className="w-[10%]">
                 <Button
                   variant="outline"
                   onClick={toggleMobileFilters}
-                  className="w-full flex items-center justify-center bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                  className="w-full flex items-center justify-center bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer px-2 py-1"
                 >
                   {showMobileFilters ? (
-                    <Filter className="h-5 w-5" style={{ strokeWidth: 2 }} />
+                    <X className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
                   ) : (
-                    <Filter className="h-5 w-5" style={{ strokeWidth: 2 }} />
+                    <Filter className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
                   )}
                 </Button>
               </div>
@@ -182,7 +182,7 @@ export const DashboardFilters = ({
                     <DropdownMenuTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                        className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                       >
                         <span className="flex-1 text-left truncate">
                           {selectedHospital === "All" ? "All Sites" : selectedHospital}
@@ -199,7 +199,7 @@ export const DashboardFilters = ({
                           <TooltipTrigger asChild>
                             <DropdownMenuItem
                               onClick={() => onHospitalChange(hospital)}
-                              className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden"
+                              className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden px-2 py-1"
                             >
                               <span className="truncate">
                                 {hospital === "All" ? "All Sites" : hospital}
@@ -224,7 +224,7 @@ export const DashboardFilters = ({
                     <DropdownMenuTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                        className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                       >
                         <span className="flex-1 text-left truncate">
                           {selectedRobotTypes.includes("All")
@@ -251,7 +251,7 @@ export const DashboardFilters = ({
                         <Tooltip key={type}>
                           <TooltipTrigger asChild>
                             <DropdownMenuItem
-                              className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                              className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                               onClick={() => onRobotTypeChange(type)}
                             >
                               <span className="truncate">
@@ -287,7 +287,7 @@ export const DashboardFilters = ({
                       <DropdownMenuTrigger asChild>
                         <Button 
                           variant="outline" 
-                          className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                          className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                         >
                           <span className="flex-1 text-left truncate">
                             {visibleMetrics.includes("all") 
@@ -312,7 +312,7 @@ export const DashboardFilters = ({
                           <Tooltip key={option.id}>
                             <TooltipTrigger asChild>
                               <DropdownMenuItem
-                                className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                                className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                                 onClick={() => onMetricToggle(option.id)}
                               >
                                 <span className="truncate">{option.label}</span>
@@ -339,7 +339,7 @@ export const DashboardFilters = ({
             )}
           </div>
         ) : (
-          // Desktop layout
+          // Desktop layout - also update with smaller text and padding
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
               {/* Hospital dropdown */}
@@ -347,7 +347,7 @@ export const DashboardFilters = ({
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                    className="w-full md:w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedHospital === "All" ? "All Sites" : selectedHospital}
@@ -364,7 +364,7 @@ export const DashboardFilters = ({
                       <TooltipTrigger asChild>
                         <DropdownMenuItem
                           onClick={() => onHospitalChange(hospital)}
-                          className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden"
+                          className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden px-2 py-1"
                         >
                           <span className="truncate">
                             {hospital === "All" ? "All Sites" : hospital}
@@ -387,7 +387,7 @@ export const DashboardFilters = ({
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                    className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
@@ -414,7 +414,7 @@ export const DashboardFilters = ({
                     <Tooltip key={type}>
                       <TooltipTrigger asChild>
                         <DropdownMenuItem
-                          className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                          className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                           onClick={() => onRobotTypeChange(type)}
                         >
                           <span className="truncate">
@@ -448,7 +448,7 @@ export const DashboardFilters = ({
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                      className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="flex-1 text-left truncate">
                         {visibleMetrics.includes("all") 
@@ -473,7 +473,7 @@ export const DashboardFilters = ({
                       <Tooltip key={option.id}>
                         <TooltipTrigger asChild>
                           <DropdownMenuItem
-                            className="flex items-center justify-between text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                            className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                             onClick={() => onMetricToggle(option.id)}
                           >
                             <span className="truncate">{option.label}</span>
@@ -506,7 +506,7 @@ export const DashboardFilters = ({
                     <PopoverTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden"
+                        className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1"
                       >
                         <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                         <div className="flex-1 overflow-hidden">
@@ -540,13 +540,13 @@ export const DashboardFilters = ({
                   </Popover>
                 </div>
 
-                {/* Date range dropdown - fixed width */}
+                {/* Date range dropdown - increased to be 10% wider */}
                 <div className="w-[40%] md:w-auto">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer"
+                        className="w-full min-w-[110px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                       >
                         <span className="truncate">{dateRange}</span>
                         <ChevronDown className="h-4 w-4" />
@@ -558,31 +558,31 @@ export const DashboardFilters = ({
                     >
                       <DropdownMenuItem 
                         onClick={() => onDateRangeChange("Today")}
-                        className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                       >
                         <span className="truncate">Today</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDateRangeChange("Last 7 Days")}
-                        className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                       >
                         <span className="truncate">Last 7 Days</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDateRangeChange("Last 30 Days")}
-                        className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                       >
                         <span className="truncate">Last 30 Days</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDateRangeChange("Last 90 Days")}
-                        className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                       >
                         <span className="truncate">Last 90 Days</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDateRangeChange("Last 180 Days")}
-                        className="text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer"
+                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                       >
                         <span className="truncate">Last 180 Days</span>
                       </DropdownMenuItem>
