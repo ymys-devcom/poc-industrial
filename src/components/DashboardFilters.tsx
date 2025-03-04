@@ -500,13 +500,13 @@ export const DashboardFilters = ({
             {/* Date controls container */}
             <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
               <div className="flex w-full md:w-auto space-x-2">
-                {/* Date picker - Fixed width container */}
+                {/* Date picker - Fixed width container - Updated to remove font-normal */}
                 <div className="w-[60%] md:w-[200px]">
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button 
                         variant="outline" 
-                        className="w-full flex justify-start text-left font-normal bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1"
+                        className="w-full flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1"
                       >
                         <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                         <div className="flex-1 overflow-hidden">
