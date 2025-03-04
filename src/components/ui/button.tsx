@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent",
         link: "text-primary underline-offset-4 hover:underline",
-        "ghost-compact": "hover:bg-transparent px-0.5 py-0.5", // Reduced padding and transparent hover
+        "ghost-compact": "hover:bg-accent px-0.5 py-0.5", // Reduced padding to be half of previous values
       },
       size: {
         default: "h-10 px-4 py-2",
