@@ -22,10 +22,10 @@ const buttonVariants = cva(
         "ghost-compact": "hover:bg-accent px-0.5 py-0.5", // Reduced padding to be half of previous values
       },
       size: {
-        default: "h-8 px-4 py-1.5", // Reduced height by 20%
-        sm: "h-7 rounded-md px-3", // Reduced height by 20%
-        lg: "h-9 rounded-md px-8", // Reduced height by 20%
-        icon: "h-8 w-8", // Reduced height and width by 20%
+        default: "h-8 px-4 py-1.5 md:h-[42px] md:text-[calc(0.875rem+2px)]", // Added desktop height and increased font size
+        sm: "h-7 rounded-md px-3 md:h-[38px] md:text-[calc(0.875rem+2px)]", // Added desktop height and increased font size
+        lg: "h-9 rounded-md px-8 md:h-[42px] md:text-[calc(0.875rem+2px)]", // Added desktop height and increased font size
+        icon: "h-8 w-8 md:h-[42px] md:w-[42px]", // Added desktop height and width
       },
     },
     defaultVariants: {
