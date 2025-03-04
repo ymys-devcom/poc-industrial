@@ -1,5 +1,5 @@
 
-import { Calendar, ChevronDown, CheckCircle, Filter, X } from "lucide-react";
+import { Calendar, ChevronDown, CheckCircle, Filter, FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -157,7 +157,7 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               </div>
 
-              {/* Filter toggle button - 10% width - UPDATED to match dropdown button hover color */}
+              {/* Filter toggle button - 10% width - UPDATED to use FilterX when filters are opened */}
               <div className="w-[10%]">
                 <Button
                   variant="ghost"
@@ -165,7 +165,7 @@ export const DashboardFilters = ({
                   className="w-full flex items-center justify-center text-white cursor-pointer p-0 hover:bg-[#526189]"
                 >
                   {showMobileFilters ? (
-                    <X className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
+                    <FilterX className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
                   ) : (
                     <Filter className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
                   )}
