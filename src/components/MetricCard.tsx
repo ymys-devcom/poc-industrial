@@ -80,7 +80,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-xs max-w-[90px]' : 'text-base max-w-[150px]'} truncate`} 
+                className={`${isMobile ? 'text-sm max-w-[90px]' : 'text-base max-w-[150px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
