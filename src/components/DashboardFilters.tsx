@@ -1,3 +1,4 @@
+
 import { Calendar, ChevronDown, CheckCircle, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -62,8 +63,11 @@ export const DashboardFilters = ({
     <TooltipProvider>
       <div className="flex flex-col md:flex-col space-y-4 md:space-y-4 w-full max-w-full">
         {isMobile ? (
+          // Mobile layout
           <div className="flex flex-col space-y-4 w-full">
+            {/* First row - always visible */}
             <div className="flex space-x-2 w-full">
+              {/* Date picker - 60% width */}
               <div className="w-[55%]">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -102,6 +106,8 @@ export const DashboardFilters = ({
                   </PopoverContent>
                 </Popover>
               </div>
+
+              {/* Date range presets - increased to 35% width (10% wider) */}
               <div className="w-[35%]">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -150,6 +156,8 @@ export const DashboardFilters = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+
+              {/* Filter toggle button - 10% width (down from 15% to accommodate wider date preset) */}
               <div className="w-[10%]">
                 <Button
                   variant="outline"
@@ -164,8 +172,11 @@ export const DashboardFilters = ({
                 </Button>
               </div>
             </div>
+
+            {/* Additional filters - toggle visibility */}
             {showMobileFilters && (
               <>
+                {/* Site dropdown - full width */}
                 <div className="w-full">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -206,6 +217,8 @@ export const DashboardFilters = ({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+
+                {/* Robot type dropdown - full width */}
                 <div className="w-full">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -231,8 +244,8 @@ export const DashboardFilters = ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
-                      className="bg-[#526189] text-white w-auto"
-                      align="start"
+                      fitToTriggerWidth
+                      className="bg-[#526189] text-white"
                     >
                       {getMockRobotTypes(selectedHospital).map((type) => (
                         <Tooltip key={type}>
@@ -241,7 +254,7 @@ export const DashboardFilters = ({
                               className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                               onClick={() => onRobotTypeChange(type)}
                             >
-                              <span className="whitespace-nowrap">
+                              <span className="truncate">
                                 {type === "All" ? "All AMR Types" : type}
                               </span>
                               {selectedRobotTypes.includes(type) && (
@@ -266,6 +279,8 @@ export const DashboardFilters = ({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+
+                {/* Metrics dropdown - if applicable */}
                 {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                   <div className="w-full">
                     <DropdownMenu>
@@ -324,8 +339,10 @@ export const DashboardFilters = ({
             )}
           </div>
         ) : (
+          // Desktop layout - also update with smaller text and padding
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
+              {/* Hospital dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
@@ -364,11 +381,13 @@ export const DashboardFilters = ({
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {/* Robot type dropdown - adjusted width to fit content */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-auto min-w-[160px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
@@ -388,8 +407,8 @@ export const DashboardFilters = ({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
-                  className="bg-[#526189] text-white w-auto"
-                  align="start"
+                  fitToTriggerWidth
+                  className="bg-[#526189] text-white"
                 >
                   {getMockRobotTypes(selectedHospital).map((type) => (
                     <Tooltip key={type}>
@@ -398,7 +417,7 @@ export const DashboardFilters = ({
                           className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
                           onClick={() => onRobotTypeChange(type)}
                         >
-                          <span className="whitespace-nowrap">
+                          <span className="truncate">
                             {type === "All" ? "All AMR Types" : type}
                           </span>
                           {selectedRobotTypes.includes(type) && (
@@ -422,12 +441,14 @@ export const DashboardFilters = ({
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+              
+              {/* Metrics dropdown - adjusted width to fit content */}
               {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                      className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="flex-1 text-left truncate">
                         {visibleMetrics.includes("all") 
@@ -475,8 +496,11 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               )}
             </div>
+
+            {/* Date controls container */}
             <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
               <div className="flex w-full md:w-auto space-x-2">
+                {/* Date picker - Fixed width container */}
                 <div className="w-[60%] md:w-[200px]">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -515,6 +539,8 @@ export const DashboardFilters = ({
                     </PopoverContent>
                   </Popover>
                 </div>
+
+                {/* Date range dropdown - increased to be 10% wider */}
                 <div className="w-[40%] md:w-auto">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
