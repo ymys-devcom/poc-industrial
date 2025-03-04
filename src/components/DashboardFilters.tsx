@@ -157,12 +157,12 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               </div>
 
-              {/* Filter toggle button - 10% width (down from 15% to accommodate wider date preset) */}
+              {/* Filter toggle button - 10% width - UPDATED to remove border, background and hover */}
               <div className="w-[10%]">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   onClick={toggleMobileFilters}
-                  className="w-full flex items-center justify-center bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer px-2 py-1"
+                  className="w-full flex items-center justify-center text-white cursor-pointer p-0"
                 >
                   {showMobileFilters ? (
                     <X className="h-5 w-5 text-orange-500" style={{ strokeWidth: 2 }} />
