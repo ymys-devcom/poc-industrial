@@ -22,10 +22,10 @@ const buttonVariants = cva(
         "ghost-compact": "hover:bg-accent px-0.5 py-0.5", // Reduced padding to be half of previous values
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-8 px-4 py-1.5", // Reduced height by 20%
+        sm: "h-7 rounded-md px-3", // Reduced height by 20%
+        lg: "h-9 rounded-md px-8", // Reduced height by 20%
+        icon: "h-8 w-8", // Reduced height and width by 20%
       },
     },
     defaultVariants: {
