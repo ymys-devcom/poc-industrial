@@ -380,6 +380,20 @@ const MetricDetails = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       <main className="p-6 flex-1">
+        {isMobile && (
+          <h1 className="text-xl font-bold text-white flex items-center mb-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate("/")}
+              className="p-1 mr-2 text-white hover:bg-white/10"
+              aria-label="Back to Dashboard"
+            >
+              <ArrowLeft className="h-5 w-5" style={{ strokeWidth: 2 }} />
+            </Button>
+            {currentMetricDetails.title}
+          </h1>
+        )}
+        
         <DashboardFilters
           selectedHospital={selectedHospital}
           selectedRobotTypes={selectedRobotTypes}
@@ -419,22 +433,14 @@ const MetricDetails = () => {
         <div className="space-y-6">
           <div className="backdrop-blur-md border-white/10 rounded-lg">
             <div className="flex items-center justify-between pb-4">
-              <h1 className="text-2xl font-bold text-white flex items-center pt-4 md:pt-4">
-                {isMobile && (
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => navigate("/")}
-                    className="p-1 mr-2 text-white hover:bg-white/10"
-                    aria-label="Back to Dashboard"
-                  >
-                    <ArrowLeft className="h-5 w-5" style={{ strokeWidth: 2 }} />
-                  </Button>
-                )}
-                {currentMetricDetails.title}
-                {!isMobile && selectedHospital !== "All" 
-                  ? ` - ${selectedHospital}` 
-                  : !isMobile ? " - All Sites" : ""}
-              </h1>
+              {!isMobile && (
+                <h1 className="text-2xl font-bold text-white flex items-center">
+                  {currentMetricDetails.title}
+                  {selectedHospital !== "All" 
+                    ? ` - ${selectedHospital}` 
+                    : " - All Sites"}
+                </h1>
+              )}
             </div>
 
           <div className="flex flex-row flex-wrap gap-3 mb-8">
