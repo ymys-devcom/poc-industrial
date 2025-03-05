@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -66,7 +65,6 @@ const Index = () => {
   };
 
   const handleMetricClick = (metricId: string) => {
-    // Add the selected hospital as a query parameter in the URL
     navigate(`/metrics/${metricId}?hospital=${selectedHospital}`);
   };
 
@@ -76,15 +74,12 @@ const Index = () => {
         return ["all"];
       }
       
-      // Remove "all" from the selection
       const withoutAll = prev.filter(id => id !== "all");
       
-      // Toggle the selected metric
       const newSelection = prev.includes(metricId)
         ? withoutAll.filter(id => id !== metricId)
         : [...withoutAll, metricId];
       
-      // If nothing is selected, select "all"
       if (newSelection.length === 0) {
         return ["all"];
       }
@@ -139,10 +134,9 @@ const Index = () => {
         let valueCount = 0;
 
         if (metric.id === "mission-time") {
-          // Sum up all hourly values for mission time
           const sum = aggregatedHourlyData.reduce((acc, curr) => acc + curr.value, 0);
           totalCurrentValue = sum;
-          valueCount = 1; // Set to 1 to avoid division later
+          valueCount = 1;
         } else {
           hospitals.forEach(hospital => {
             robotTypes.forEach(robotType => {
@@ -184,12 +178,10 @@ const Index = () => {
 
   const currentData = aggregateData();
   
-  // Filter the metrics based on the visible metrics selection
   const filteredMetrics = visibleMetrics.includes("all") 
     ? currentData.metrics 
     : currentData.metrics.filter(metric => visibleMetrics.includes(metric.id));
 
-  // Metric names for dropdown
   const metricOptions = [
     { id: "all", label: "All Metrics" },
     { id: "utilization", label: "Utilization" },
@@ -219,7 +211,7 @@ const Index = () => {
           onMetricToggle={handleMetricToggle}
           metricOptions={metricOptions}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
           {filteredMetrics.map((metric) => (
             <MetricCard
               key={metric.id}

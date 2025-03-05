@@ -72,7 +72,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
 
   return (
     <Card
-      className={`bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white ${isMobile ? 'p-2' : 'p-3'}`}
+      className={`bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white ${isMobile ? 'p-1' : 'p-3'}`}
       onClick={() => onMetricClick(metric.id)}
     >
       <div className="flex flex-col">
@@ -80,7 +80,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-sm max-w-[90px]' : 'text-base max-w-[150px]'} truncate`} 
+                className={`${isMobile ? 'text-xs max-w-[60px]' : 'text-base max-w-[150px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -90,23 +90,23 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className={`${isMobile ? 'text-base' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
+          <span className={`${isMobile ? 'text-sm' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className={`${isMobile ? 'h-[110px]' : 'h-[120px]'} mt-1`}>
+        <div className={`${isMobile ? 'h-[90px]' : 'h-[120px]'} mt-1`}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metric.hourlyData} margin={{ left: isMobile ? -6 : -4, right: isMobile ? 5 : 8, top: 8, bottom: 0 }}>
+            <BarChart data={metric.hourlyData} margin={{ left: isMobile ? -10 : -4, right: isMobile ? 2 : 8, top: 8, bottom: 0 }}>
               <XAxis 
                 dataKey="hour" 
-                interval={3} 
-                tick={{ fontSize: isMobile ? 8 : 9, fill: "rgba(255, 255, 255, 0.8)" }}
+                interval={isMobile ? 5 : 3} 
+                tick={{ fontSize: isMobile ? 7 : 9, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)" 
               />
               <YAxis
-                tick={{ fontSize: isMobile ? 8 : 9, fill: "rgba(255, 255, 255, 0.8)" }}
+                tick={{ fontSize: isMobile ? 7 : 9, fill: "rgba(255, 255, 255, 0.8)" }}
                 stroke="rgba(255, 255, 255, 0.2)"
                 domain={[0, maxValue]}
                 tickFormatter={yAxisFormatter}
-                width={isMobile ? 25 : 30}
+                width={isMobile ? 20 : 30}
               />
               <Tooltip
                 contentStyle={{
@@ -114,7 +114,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   borderRadius: "8px",
                   color: "white",
-                  fontSize: isMobile ? "10px" : "11px"
+                  fontSize: isMobile ? "8px" : "11px"
                 }}
                 formatter={(value: number, name: string, props: any) => {
                   const roundedValue = Math.round(value * 10) / 10;
