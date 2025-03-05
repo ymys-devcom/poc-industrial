@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -95,7 +96,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-[13px] max-w-[85px]' : 'text-[17px] max-w-[150px]'} truncate`} 
+                className={`${isMobile ? 'text-[13px] max-w-[85px]' : 'text-[17px] max-w-[200px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
