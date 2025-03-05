@@ -1,4 +1,3 @@
-
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -134,7 +133,7 @@ const generateHospitalData = (hospitalMultiplier: number, multiplier: number, ti
   "Injection Mold": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
   "Thermoform": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
   "RM Delivery": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "WIPTransport": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "WIP Transport": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
 });
 
 export const generateMockDataForRange = (
@@ -186,13 +185,11 @@ export const generateMockDataForRange = (
   return {
     "PolyPhorm Plant": generateHospitalData(1.2, multiplier, timeRangeMultiplier),
     "ThermoMolt Plant": generateHospitalData(1.0, multiplier, timeRangeMultiplier),
-    "Mangurian building": generateHospitalData(0.8, multiplier, timeRangeMultiplier),
   };
 };
 
-export const mockHospitals = ["All", "PolyPhorm Plant", "ThermoMolt Plant", "Mangurian building"];
+export const mockHospitals = ["All", "PolyPhorm Plant", "ThermoMolt Plant"];
 
 export const getMockRobotTypes = (hospital: string) => {
-  return ["All", "Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"];
+  return ["All", "Injection Mold", "Thermoform", "RM Delivery", "WIP Transport"];
 };
-
