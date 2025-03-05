@@ -78,6 +78,9 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
     if (metric.id === "completed-missions" && value.includes("/ hour")) {
       return value.replace("/ hour", "/h");
     }
+    if (metric.id === "completed-missions" && value.includes(" /h")) {
+      return value.replace(" /h", "/h");
+    }
     return value;
   };
 
