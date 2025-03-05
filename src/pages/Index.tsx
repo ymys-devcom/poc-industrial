@@ -219,6 +219,7 @@ const Index = () => {
               key={metric.id}
               metric={metric}
               onMetricClick={handleMetricClick}
+              selectedRobotTypes={selectedRobotTypes}
             />
           ))}
         </div>
