@@ -70,8 +70,8 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const metricColor = getMetricColor(metric.id);
   const isMobile = useIsMobile();
 
-  // Calculate the mobile chart height (10% smaller than before)
-  const mobileChartHeight = isMobile ? 81 : 120; // 90px * 0.9 = 81px
+  // Calculate the chart height - making it 5% shorter to eliminate the empty space
+  const chartHeight = isMobile ? 77 : 114; // Reduced by about 5% from 81px and 120px
 
   return (
     <Card
@@ -95,12 +95,12 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           </Popover>
           <span className={`${isMobile ? 'text-sm' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className={`h-[${mobileChartHeight}px] mt-1`}>
+        <div style={{ height: `${chartHeight}px` }} className="mt-1">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart 
               data={metric.hourlyData} 
               margin={{ 
-                left: isMobile ? 5 : -4, // Move chart more to the right on mobile to see Y-axis
+                left: isMobile ? 5 : -4, // Keep chart moved right on mobile to see Y-axis
                 right: isMobile ? 2 : 8, 
                 top: 8, 
                 bottom: 0 
