@@ -70,6 +70,9 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const metricColor = getMetricColor(metric.id);
   const isMobile = useIsMobile();
 
+  // Calculate the mobile chart height (10% smaller than before)
+  const mobileChartHeight = isMobile ? 81 : 120; // 90px * 0.9 = 81px
+
   return (
     <Card
       className={`bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white ${isMobile ? 'p-1' : 'p-3'}`}
@@ -80,7 +83,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-xs max-w-[60px]' : 'text-base max-w-[150px]'} truncate`} 
+                className={`${isMobile ? 'text-xs max-w-[75px]' : 'text-base max-w-[150px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -92,9 +95,17 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           </Popover>
           <span className={`${isMobile ? 'text-sm' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className={`${isMobile ? 'h-[90px]' : 'h-[120px]'} mt-1`}>
+        <div className={`${isMobile ? `h-[${mobileChartHeight}px]` : 'h-[120px]'} mt-1`}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metric.hourlyData} margin={{ left: isMobile ? -10 : -4, right: isMobile ? 2 : 8, top: 8, bottom: 0 }}>
+            <BarChart 
+              data={metric.hourlyData} 
+              margin={{ 
+                left: isMobile ? -16 : -4, // Move chart more to the left on mobile
+                right: isMobile ? 2 : 8, 
+                top: 8, 
+                bottom: 0 
+              }}
+            >
               <XAxis 
                 dataKey="hour" 
                 interval={isMobile ? 5 : 3} 
