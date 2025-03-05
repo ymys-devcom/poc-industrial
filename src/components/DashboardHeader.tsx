@@ -19,8 +19,8 @@ export const DashboardHeader = () => {
     <header className="px-6 h-[62px] md:h-[73px] flex justify-between items-center bg-[#14294B]">
       <div className="flex items-center space-x-3">
         <img 
-          src="/lovable-uploads/9c9cf929-efe0-4eae-8878-4f85be2b59dd.png" 
-          alt="Mayo Clinic Logo" 
+          src="/lovable-uploads/665baa1d-08bd-45f1-a8cd-acc5a37e2f0e.png" 
+          alt="PolyForm Industries Logo" 
           className="h-[3.1rem] md:h-[3.6rem]"
         />
       </div>
