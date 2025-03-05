@@ -69,7 +69,8 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const metricColor = getMetricColor(metric.id);
   const isMobile = useIsMobile();
 
-  const chartHeight = isMobile ? 77 : 114; // Reduced by about 5% from 81px and 120px
+  const chartHeight = isMobile ? 77 : 114;
+  const barChartHeight = isMobile ? "110%" : "100%";
 
   const formatDisplayValue = (value: string): string => {
     if (metric.id === "miles-saved" && value.includes("miles")) {
@@ -109,11 +110,11 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           </span>
         </div>
         <div style={{ height: `${chartHeight}px` }} className="mt-1">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={barChartHeight}>
             <BarChart 
               data={metric.hourlyData} 
               margin={{ 
-                left: isMobile ? 5 : -4, // Keep chart moved right on mobile to see Y-axis
+                left: isMobile ? 5 : -4,
                 right: isMobile ? 2 : 8, 
                 top: 8, 
                 bottom: 0 
