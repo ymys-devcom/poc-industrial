@@ -95,12 +95,12 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           </Popover>
           <span className={`${isMobile ? 'text-sm' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
         </div>
-        <div className={`${isMobile ? `h-[${mobileChartHeight}px]` : 'h-[120px]'} mt-1`}>
+        <div className={`h-[${mobileChartHeight}px] mt-1`}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart 
               data={metric.hourlyData} 
               margin={{ 
-                left: isMobile ? -16 : -4, // Move chart more to the left on mobile
+                left: isMobile ? 5 : -4, // Move chart more to the right on mobile to see Y-axis
                 right: isMobile ? 2 : 8, 
                 top: 8, 
                 bottom: 0 
