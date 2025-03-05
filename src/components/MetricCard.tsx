@@ -124,7 +124,7 @@ const getMetricBaseValue = (metricId: string, robotType: string) => {
 };
 
 // Get mission types with values that match the detailed view
-const getMissionTypeData = (metricId: string, robotType: string) => {
+const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
   // Generate random mini chart data
   const generateMiniChartData = () => {
     return Array.from({ length: 10 }, (_, i) => ({
@@ -132,9 +132,16 @@ const getMissionTypeData = (metricId: string, robotType: string) => {
     }));
   };
   
-  const robotTypes = ["Injection Mold", "Thermoform", "RM Delivery", "WIP Transport"];
+  // Get the list of robot types to display based on selection
+  let robotTypesToDisplay: string[];
   
-  return robotTypes.map(type => {
+  if (selectedRobotTypes.includes("All")) {
+    robotTypesToDisplay = ["Injection Mold", "Thermoform", "RM Delivery", "WIP Transport"];
+  } else {
+    robotTypesToDisplay = [...selectedRobotTypes];
+  }
+  
+  return robotTypesToDisplay.map(type => {
     const baseValue = getMetricBaseValue(metricId, type);
     const randomVariation = (Math.random() * 0.1) - 0.05;
     let value = Math.round(baseValue * (1 + randomVariation));
@@ -175,7 +182,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
   };
 
   // Get mission types based on selected robot types
-  const missionTypes = getMissionTypeData(metric.id, selectedRobotTypes[0] || "All");
+  const missionTypes = getMissionTypeData(metric.id, selectedRobotTypes);
   const showDetailedView = true; // You might want to control this with a state or prop
 
   return (
