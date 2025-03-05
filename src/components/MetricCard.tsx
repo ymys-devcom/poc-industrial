@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -67,7 +66,6 @@ const getMetricColor = (metricId: string) => {
 };
 
 const getMetricBaseValue = (metricId: string, robotType: string) => {
-  // Base values that match DetailPage values
   const baseValues = {
     "utilization": {
       "Injection Mold": 45,
@@ -123,16 +121,13 @@ const getMetricBaseValue = (metricId: string, robotType: string) => {
   return baseValues[metricId as keyof typeof baseValues]?.[robotType] || 0;
 };
 
-// Get mission types with values that match the detailed view
 const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
-  // Generate random mini chart data
   const generateMiniChartData = () => {
     return Array.from({ length: 10 }, (_, i) => ({
       value: Math.floor(Math.random() * 20) + 1
     }));
   };
   
-  // Get the list of robot types to display based on selection
   let robotTypesToDisplay: string[];
   
   if (selectedRobotTypes.includes("All")) {
@@ -146,7 +141,6 @@ const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
     const randomVariation = (Math.random() * 0.1) - 0.05;
     let value = Math.round(baseValue * (1 + randomVariation));
     
-    // Format the value based on metric type
     if (metricId === "mission-time") {
       value = Math.round(baseValue * 10) / 10;
     }
@@ -181,9 +175,8 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
     return value;
   };
 
-  // Get mission types based on selected robot types
   const missionTypes = getMissionTypeData(metric.id, selectedRobotTypes);
-  const showDetailedView = true; // You might want to control this with a state or prop
+  const showDetailedView = true;
 
   return (
     <Card
@@ -277,7 +270,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                             ? `${missionType.value}/h`
                             : missionType.value}
                   </span>
-                  <div className={`${isMobile ? 'w-[64px]' : 'w-[80px]'} h-[24px]`}>
+                  <div className={`${isMobile ? 'w-[51px] h-[19px]' : 'w-[80px] h-[24px]'}`}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={missionType.miniChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                         <Bar dataKey="value" fill={metricColor} />
