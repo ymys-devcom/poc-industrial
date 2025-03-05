@@ -107,26 +107,30 @@ const MetricDetails = () => {
 
   const robotStats = useMemo(() => {
     const hospitalRobotStats = {
-      "Cannaday building": [
-        { type: "Nurse Bots", active: 90, total: 95 },
-        { type: "Co-Bots", active: 12, total: 15 },
-        { type: "Autonomous Beds", active: 24, total: 25 },
+      "PolyPhorm Plant": [
+        { type: "Injection Mold", active: 90, total: 95 },
+        { type: "Thermoform", active: 12, total: 15 },
+        { type: "RM Delivery", active: 24, total: 25 },
+        { type: "WIPTransport", active: 24, total: 25 },
       ],
-      "Mayo building and hospital": [
-        { type: "Nurse Bots", active: 75, total: 80 },
-        { type: "Co-Bots", active: 8, total: 10 },
-        { type: "Autonomous Beds", active: 18, total: 20 },
+      "ThermoMolt Plant": [
+        { type: "Injection Mold", active: 75, total: 80 },
+        { type: "Thermoform", active: 8, total: 10 },
+        { type: "RM Delivery", active: 18, total: 20 },
+        { type: "WIPTransport", active: 18, total: 20 },
       ],
       "Mangurian building": [
-        { type: "Nurse Bots", active: 62, total: 65 },
-        { type: "Co-Bots", active: 8, total: 9 },
-        { type: "Autonomous Beds", active: 12, total: 15 },
+        { type: "Injection Mold", active: 62, total: 65 },
+        { type: "Thermoform", active: 8, total: 9 },
+        { type: "RM Delivery", active: 12, total: 15 },
+        { type: "WIPTransport", active: 12, total: 15 },
       ],
       "All": [
         { type: "All Bots", active: 309, total: 334 },
-        { type: "Nurse Bots", active: 227, total: 240 },
-        { type: "Co-Bots", active: 28, total: 34 },
-        { type: "Autonomous Beds", active: 54, total: 60 },
+        { type: "Injection Mold", active: 227, total: 240 },
+        { type: "Thermoform", active: 28, total: 34 },
+        { type: "RM Delivery", active: 54, total: 60 },
+        { type: "WIPTransport", active: 54, total: 60 },
       ]
     };
 
@@ -140,9 +144,10 @@ const MetricDetails = () => {
       const isAll = selectedHospital === "All";
       return stats.map(stat => ({
         ...stat,
-        active: stat.type === "Nurse Bots" ? Math.floor(stat.active * 0.95) :
-                stat.type === "Co-Bots" ? Math.floor(stat.active * 0.90) :
-                stat.type === "Autonomous Beds" ? Math.floor(stat.active * 0.85) :
+        active: stat.type === "Injection Mold" ? Math.floor(stat.active * 0.95) :
+                stat.type === "Thermoform" ? Math.floor(stat.active * 0.90) :
+                stat.type === "RM Delivery" ? Math.floor(stat.active * 0.85) :
+                stat.type === "WIPTransport" ? Math.floor(stat.active * 0.85) :
                 Math.floor(stat.active * 0.93)
       }));
     }
@@ -189,83 +194,95 @@ const MetricDetails = () => {
                       metricId === "downtime" ? 90 : 100;
     
     const baseValues: HospitalMetricValues = {
-      "Cannaday building": {
+      "PolyPhorm Plant": {
         "All Bots": { base: 50, variation: 10 },
-        "Nurse Bots": { base: 45, variation: 10 },
-        "Co-Bots": { base: 40, variation: 8 },
-        "Autonomous Beds": { base: 35, variation: 7 }
+        "Injection Mold": { base: 45, variation: 10 },
+        "Thermoform": { base: 40, variation: 8 },
+        "RM Delivery": { base: 35, variation: 7 },
+        "WIPTransport": { base: 35, variation: 7 }
       },
-      "Mayo building and hospital": {
+      "ThermoMolt Plant": {
         "All Bots": { base: 45, variation: 10 },
-        "Nurse Bots": { base: 40, variation: 8 },
-        "Co-Bots": { base: 35, variation: 7 },
-        "Autonomous Beds": { base: 30, variation: 6 }
+        "Injection Mold": { base: 40, variation: 8 },
+        "Thermoform": { base: 35, variation: 7 },
+        "RM Delivery": { base: 30, variation: 6 },
+        "WIPTransport": { base: 30, variation: 6 }
       },
       "Mangurian building": {
         "All Bots": { base: 40, variation: 8 },
-        "Nurse Bots": { base: 35, variation: 7 },
-        "Co-Bots": { base: 30, variation: 6 },
-        "Autonomous Beds": { base: 25, variation: 5 }
+        "Injection Mold": { base: 35, variation: 7 },
+        "Thermoform": { base: 30, variation: 6 },
+        "RM Delivery": { base: 25, variation: 5 },
+        "WIPTransport": { base: 25, variation: 5 }
       },
       "All": {
         "All Bots": { base: 50, variation: 10 },
-        "Nurse Bots": { base: 45, variation: 10 },
-        "Co-Bots": { base: 40, variation: 8 },
-        "Autonomous Beds": { base: 35, variation: 7 }
+        "Injection Mold": { base: 45, variation: 10 },
+        "Thermoform": { base: 40, variation: 8 },
+        "RM Delivery": { base: 35, variation: 7 },
+        "WIPTransport": { base: 35, variation: 7 }
       }
     };
 
     const errorRateValues: HospitalMetricValues = {
-      "Cannaday building": {
+      "PolyPhorm Plant": {
         "All Bots": { base: 3, variation: 1.5 },
-        "Nurse Bots": { base: 3, variation: 1.5 },
-        "Co-Bots": { base: 4, variation: 2 },
-        "Autonomous Beds": { base: 4.5, variation: 2.5 }
+        "Injection Mold": { base: 3, variation: 1.5 },
+        "Thermoform": { base: 4, variation: 2 },
+        "RM Delivery": { base: 4.5, variation: 2.5 },
+        "WIPTransport": { base: 4.5, variation: 2.5 }
       },
-      "Mayo building and hospital": {
+      "ThermoMolt Plant": {
         "All Bots": { base: 3, variation: 1.5 },
-        "Nurse Bots": { base: 2.5, variation: 1.2 },
-        "Co-Bots": { base: 3.5, variation: 1.8 },
-        "Autonomous Beds": { base: 4, variation: 2 }
+        "Injection Mold": { base: 2.5, variation: 1.2 },
+        "Thermoform": { base: 3.5, variation: 1.8 },
+        "RM Delivery": { base: 4, variation: 2 },
+        "WIPTransport": { base: 4, variation: 2 }
       },
       "Mangurian building": {
         "All Bots": { base: 2.5, variation: 1.2 },
-        "Nurse Bots": { base: 2, variation: 1 },
-        "Co-Bots": { base: 3, variation: 1.5 },
-        "Autonomous Beds": { base: 3.5, variation: 1.8 }
+        "Injection Mold": { base: 2, variation: 1 },
+        "Thermoform": { base: 3, variation: 1.5 },
+        "RM Delivery": { base: 3.5, variation: 1.8 },
+        "WIPTransport": { base: 3.5, variation: 1.8 }
       },
       "All": {
         "All Bots": { base: 2.8, variation: 1.2 },
-        "Nurse Bots": { base: 2.5, variation: 1.2 },
-        "Co-Bots": { base: 3.5, variation: 1.8 },
-        "Autonomous Beds": { base: 4, variation: 2 }
+        "Injection Mold": { base: 2.5, variation: 1.2 },
+        "Thermoform": { base: 3.5, variation: 1.8 },
+        "RM Delivery": { base: 4, variation: 2 },
+        "WIPTransport": { base: 4, variation: 2 }
       }
     };
     
     const accumulativeValues: HospitalMetricValues = {
-      "Cannaday building": {
+      "PolyPhorm Plant": {
         "All Bots": { base: 9200, variation: 1500 },
-        "Nurse Bots": { base: 5500, variation: 800 },
-        "Co-Bots": { base: 1500, variation: 300 },
-        "Autonomous Beds": { base: 2200, variation: 400 }
+        "Injection Mold": { base: 5500, variation: 800 },
+        "Thermoform": { base: 1500, variation: 300 },
+        "RM Delivery": { base: 2200, variation: 400 },
+        "WIPTransport": { base: 2200, variation: 400 }
       },
-      "Mayo building and hospital": {
+      "ThermoMolt Plant": {
         "All Bots": { base: 7800, variation: 1200 },
-        "Nurse Bots": { base: 4800, variation: 700 },
-        "Co-Bots": { base: 1200, variation: 250 },
-        "Autonomous Beds": { base: 1800, variation: 350 }
+        "Injection Mold": { base: 4800, variation: 700 },
+        "Thermoform": { base: 1200, variation: 250 },
+        "RM Delivery": { base: 1800, variation: 350 },
+        "WIPTransport": { base: 1800, variation: 350 }
       },
       "Mangurian building": {
         "All Bots": { base: 6500, variation: 1000 },
-        "Nurse Bots": { base: 4000, variation: 600 },
-        "Co-Bots": { base: 1000, variation: 200 },
-        "Autonomous Beds": { base: 1500, variation: 300 }
+        "Injection Mold": { base: 4000, variation: 600 },
+        "Thermoform": { base: 1000, variation: 200 },
+        "RM Delivery": { base: 1500, variation: 300 },
+        "WIPTransport": { base: 1500, variation: 300 }
       },
       "All": {
         "All Bots": { base: 23500, variation: 3000 },
-        "Nurse Bots": { base: 14300, variation: 2000 },
-        "Co-Bots": { base: 3700, variation: 700 },
-        "Autonomous Beds": { base: 5500, variation: 900 }
+        "Injection Mold": { base: 14300, variation: 2000 },
+        "Thermoform": { base: 3700, variation: 700 },
+        "RM Delivery": { base: 5500, variation: 900 },
+        "WIPTransport": { base: 5500, variation: 900 }
       }
     };
     
@@ -374,7 +391,7 @@ const MetricDetails = () => {
 
   const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
 
-  const availableRobotTypes = ["All Bots", "Nurse Bots", "Co-Bots", "Autonomous Beds"];
+  const availableRobotTypes = ["All Bots", "Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"];
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
@@ -438,7 +455,7 @@ const MetricDetails = () => {
                   {currentMetricDetails.title}
                   {selectedHospital !== "All" 
                     ? ` - ${selectedHospital}` 
-                    : " - All Sites"}
+                    : " - All Facilities"}
                 </h1>
               )}
             </div>
@@ -506,7 +523,7 @@ const MetricDetails = () => {
                           key={type}
                           type="monotone" 
                           dataKey={type} 
-                          stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : "#FFC107"} 
+                          stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : index === 3 ? "#FFC107" : "#E91E63"} 
                           strokeWidth={2}
                         />
                     ))}

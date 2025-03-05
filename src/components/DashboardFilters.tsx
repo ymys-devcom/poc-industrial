@@ -157,7 +157,7 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               </div>
 
-              {/* Filter toggle button - 10% width - UPDATED to use FilterX when filters are opened */}
+              {/* Filter toggle button - 10% width */}
               <div className="w-[10%]">
                 <Button
                   variant="ghost"
@@ -185,7 +185,7 @@ export const DashboardFilters = ({
                         className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                       >
                         <span className="flex-1 text-left truncate">
-                          {selectedHospital === "All" ? "All Sites" : selectedHospital}
+                          {selectedHospital === "All" ? "All Facilities" : selectedHospital}
                         </span>
                         <ChevronDown className="h-4 w-4" />
                       </Button>
@@ -202,7 +202,7 @@ export const DashboardFilters = ({
                               className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden px-2 py-1"
                             >
                               <span className="truncate">
-                                {hospital === "All" ? "All Sites" : hospital}
+                                {hospital === "All" ? "All Facilities" : hospital}
                               </span>
                             </DropdownMenuItem>
                           </TooltipTrigger>
@@ -210,7 +210,7 @@ export const DashboardFilters = ({
                             className="bg-[#14294B] text-white border-white/10"
                             side="right"
                           >
-                            {hospital === "All" ? "All Sites" : hospital}
+                            {hospital === "All" ? "All Facilities" : hospital}
                           </TooltipContent>
                         </Tooltip>
                       ))}
@@ -228,7 +228,7 @@ export const DashboardFilters = ({
                       >
                         <span className="flex-1 text-left truncate">
                           {selectedRobotTypes.includes("All")
-                            ? "All AMR Types"
+                            ? "All Mission Types"
                             : selectedRobotTypes.length === 1
                             ? selectedRobotTypes[0]
                             : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
@@ -255,7 +255,7 @@ export const DashboardFilters = ({
                               onClick={() => onRobotTypeChange(type)}
                             >
                               <span className="truncate">
-                                {type === "All" ? "All AMR Types" : type}
+                                {type === "All" ? "All Mission Types" : type}
                               </span>
                               {selectedRobotTypes.includes(type) && (
                                 <CheckCircle
@@ -272,7 +272,7 @@ export const DashboardFilters = ({
                             className="bg-[#14294B] text-white border-white/10"
                             side="right"
                           >
-                            {type === "All" ? "All AMR Types" : type}
+                            {type === "All" ? "All Mission Types" : type}
                           </TooltipContent>
                         </Tooltip>
                       ))}
@@ -350,7 +350,7 @@ export const DashboardFilters = ({
                     className="w-full md:w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
-                      {selectedHospital === "All" ? "All Sites" : selectedHospital}
+                      {selectedHospital === "All" ? "All Facilities" : selectedHospital}
                     </span>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
@@ -367,7 +367,7 @@ export const DashboardFilters = ({
                           className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden px-2 py-1"
                         >
                           <span className="truncate">
-                            {hospital === "All" ? "All Sites" : hospital}
+                            {hospital === "All" ? "All Facilities" : hospital}
                           </span>
                         </DropdownMenuItem>
                       </TooltipTrigger>
@@ -375,7 +375,7 @@ export const DashboardFilters = ({
                         className="bg-[#14294B] text-white border-white/10"
                         side="right"
                       >
-                        {hospital === "All" ? "All Sites" : hospital}
+                        {hospital === "All" ? "All Facilities" : hospital}
                       </TooltipContent>
                     </Tooltip>
                   ))}
@@ -391,7 +391,7 @@ export const DashboardFilters = ({
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
-                        ? "All AMR Types"
+                        ? "All Mission Types"
                         : selectedRobotTypes.length === 1
                         ? selectedRobotTypes[0]
                         : `${selectedRobotTypes[0]} +${selectedRobotTypes.length - 1}`}
@@ -418,7 +418,7 @@ export const DashboardFilters = ({
                           onClick={() => onRobotTypeChange(type)}
                         >
                           <span className="truncate">
-                            {type === "All" ? "All AMR Types" : type}
+                            {type === "All" ? "All Mission Types" : type}
                           </span>
                           {selectedRobotTypes.includes(type) && (
                             <CheckCircle
@@ -435,7 +435,7 @@ export const DashboardFilters = ({
                         className="bg-[#14294B] text-white border-white/10"
                         side="right"
                       >
-                        {type === "All" ? "All AMR Types" : type}
+                        {type === "All" ? "All Mission Types" : type}
                       </TooltipContent>
                     </Tooltip>
                   ))}

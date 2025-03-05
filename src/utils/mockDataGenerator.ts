@@ -1,3 +1,4 @@
+
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -130,9 +131,10 @@ const generateMetricsForRobot = (
 };
 
 const generateHospitalData = (hospitalMultiplier: number, multiplier: number, timeRangeMultiplier: number = 1) => ({
-  "Nurse Bots": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Co-Bots": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Autonomous Beds": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Injection Mold": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Thermoform": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "RM Delivery": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "WIPTransport": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
 });
 
 export const generateMockDataForRange = (
@@ -182,14 +184,15 @@ export const generateMockDataForRange = (
   const timeRangeMultiplier = getTimeRangeMultiplier(range);
 
   return {
-    "Cannaday building": generateHospitalData(1.2, multiplier, timeRangeMultiplier),
-    "Mayo building and hospital": generateHospitalData(1.0, multiplier, timeRangeMultiplier),
+    "PolyPhorm Plant": generateHospitalData(1.2, multiplier, timeRangeMultiplier),
+    "ThermoMolt Plant": generateHospitalData(1.0, multiplier, timeRangeMultiplier),
     "Mangurian building": generateHospitalData(0.8, multiplier, timeRangeMultiplier),
   };
 };
 
-export const mockHospitals = ["All", "Cannaday building", "Mayo building and hospital", "Mangurian building"];
+export const mockHospitals = ["All", "PolyPhorm Plant", "ThermoMolt Plant", "Mangurian building"];
 
 export const getMockRobotTypes = (hospital: string) => {
-  return ["All", "Nurse Bots", "Co-Bots", "Autonomous Beds"];
+  return ["All", "Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"];
 };
+
