@@ -156,15 +156,17 @@ const Index = () => {
 
         let valueString;
         if (metric.id === "miles-saved") {
-          valueString = `${Math.round(averageCurrentValue)} miles`;
+          valueString = `${Math.round(averageCurrentValue)}m`;
         } else if (metric.value.includes("%")) {
           valueString = `${Math.round(averageCurrentValue)}%`;
         } else if (metric.id === "completed-missions") {
           valueString = `${Math.round(averageCurrentValue)}/h`;
         } else if (metric.id === "mission-time") {
           valueString = `${Math.round(averageCurrentValue)}h`;
+        } else if (metric.id === "hours-saved") {
+          valueString = `${Math.round(averageCurrentValue)}h`;
         } else {
-          valueString = `${Math.round(averageCurrentValue)} hrs`;
+          valueString = `${Math.round(averageCurrentValue)}`;
         }
 
         return {

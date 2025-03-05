@@ -1,4 +1,3 @@
-
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -64,10 +63,8 @@ const generateMetricsForRobot = (
   multiplier: number,
   timeRangeMultiplier: number = 1
 ) => {
-  // Generate hourly data for mission time (in hours)
   const missionTimeHourlyData = generateHourlyPattern(baseMissionTime, hospitalMultiplier, baseMissionTime * 2, timeRangeMultiplier);
   
-  // Calculate average mission time in hours
   const averageMissionTime = missionTimeHourlyData.reduce((sum, hour) => sum + hour.value, 0) / 24;
 
   return {
