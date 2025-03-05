@@ -83,7 +83,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-xs max-w-[75px]' : 'text-base max-w-[150px]'} truncate`} 
+                className={`${isMobile ? 'text-[13px] max-w-[75px]' : 'text-[17px] max-w-[150px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -93,7 +93,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className={`${isMobile ? 'text-sm' : 'text-lg'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
+          <span className={`${isMobile ? 'text-[15px]' : 'text-[19px]'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
         </div>
         <div style={{ height: `${chartHeight}px` }} className="mt-1">
           <ResponsiveContainer width="100%" height="100%">
