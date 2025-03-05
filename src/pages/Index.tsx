@@ -160,7 +160,7 @@ const Index = () => {
         } else if (metric.value.includes("%")) {
           valueString = `${Math.round(averageCurrentValue)}%`;
         } else if (metric.id === "completed-missions") {
-          valueString = `${Math.round(averageCurrentValue)} / hour`;
+          valueString = `${Math.round(averageCurrentValue)}/h`;
         } else if (metric.id === "mission-time") {
           valueString = `${Math.round(averageCurrentValue)}h`;
         } else {
