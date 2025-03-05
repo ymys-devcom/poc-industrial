@@ -21,7 +21,7 @@ export const DashboardHeader = () => {
         <img 
           src="/lovable-uploads/665baa1d-08bd-45f1-a8cd-acc5a37e2f0e.png" 
           alt="PolyForm Industries Logo" 
-          className="h-[3.1rem] md:h-[3.6rem]"
+          className="h-[2.325rem] md:h-[2.7rem]"
         />
       </div>
       <div className="flex items-center space-x-4">
