@@ -70,8 +70,8 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const metricColor = getMetricColor(metric.id);
   const isMobile = useIsMobile();
 
-  // Adjust chart height to fill more of the available space
-  const chartHeight = isMobile ? 85 : 120; // Increased from 77px to 85px for mobile
+  // Calculate the chart height - making it 5% shorter to eliminate the empty space
+  const chartHeight = isMobile ? 77 : 114; // Reduced by about 5% from 81px and 120px
 
   return (
     <Card
@@ -103,7 +103,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
                 left: isMobile ? 5 : -4, // Keep chart moved right on mobile to see Y-axis
                 right: isMobile ? 2 : 8, 
                 top: 8, 
-                bottom: 0  // Reduced bottom margin to use more vertical space
+                bottom: 0 
               }}
             >
               <XAxis 
