@@ -66,36 +66,90 @@ const getMetricColor = (metricId: string) => {
   }
 };
 
-// Mock data for mission types - in a real app, this would come from your data source
-const getMissionTypeData = (metricId: string, robotType: string) => {
-  // This is just sample data - replace with real data in a production app
-  const baseValues: Record<string, number> = {
-    "Injection Mold": 158,
-    "Thermoform": 120,
-    "RM Delivery": 187,
-    "WIP Transfer": 48
+const getMetricBaseValue = (metricId: string, robotType: string) => {
+  // Base values that match DetailPage values
+  const baseValues = {
+    "utilization": {
+      "Injection Mold": 45,
+      "Thermoform": 40,
+      "RM Delivery": 35,
+      "WIP Transport": 35,
+      "All Bots": 50
+    },
+    "mission-time": {
+      "Injection Mold": 2.4,
+      "Thermoform": 2.7,
+      "RM Delivery": 2.85,
+      "WIP Transport": 2.85,
+      "All Bots": 2.5
+    },
+    "miles-saved": {
+      "Injection Mold": 1250,
+      "Thermoform": 1100,
+      "RM Delivery": 950,
+      "WIP Transport": 950,
+      "All Bots": 1200
+    },
+    "hours-saved": {
+      "Injection Mold": 500,
+      "Thermoform": 450,
+      "RM Delivery": 400,
+      "WIP Transport": 400,
+      "All Bots": 480
+    },
+    "completed-missions": {
+      "Injection Mold": 6,
+      "Thermoform": 5,
+      "RM Delivery": 4,
+      "WIP Transport": 4,
+      "All Bots": 5
+    },
+    "downtime": {
+      "Injection Mold": 3,
+      "Thermoform": 4,
+      "RM Delivery": 4.5,
+      "WIP Transport": 4.5,
+      "All Bots": 3
+    },
+    "error-rate": {
+      "Injection Mold": 2.5,
+      "Thermoform": 3.5,
+      "RM Delivery": 4,
+      "WIP Transport": 4,
+      "All Bots": 3
+    }
   };
   
-  // Scale values based on metric type
-  let multiplier = 1;
-  if (metricId === "miles-saved") multiplier = 0.1;
-  if (metricId === "hours-saved") multiplier = 0.5;
-  if (metricId === "error-rate") multiplier = 0.05;
-  if (metricId === "downtime") multiplier = 0.2;
-  if (metricId === "mission-time") multiplier = 0.3;
-  
+  return baseValues[metricId as keyof typeof baseValues]?.[robotType] || 0;
+};
+
+// Get mission types with values that match the detailed view
+const getMissionTypeData = (metricId: string, robotType: string) => {
   // Generate random mini chart data
   const generateMiniChartData = () => {
-    return Array.from({ length: 10 }, () => ({
+    return Array.from({ length: 10 }, (_, i) => ({
       value: Math.floor(Math.random() * 20) + 1
     }));
   };
   
-  return Object.entries(baseValues).map(([name, value]) => ({
-    name,
-    value: Math.round(value * multiplier * (1 + (Math.random() * 0.4 - 0.2))),
-    miniChartData: generateMiniChartData()
-  }));
+  const robotTypes = ["Injection Mold", "Thermoform", "RM Delivery", "WIP Transport"];
+  
+  return robotTypes.map(type => {
+    const baseValue = getMetricBaseValue(metricId, type);
+    const randomVariation = (Math.random() * 0.1) - 0.05;
+    let value = Math.round(baseValue * (1 + randomVariation));
+    
+    // Format the value based on metric type
+    if (metricId === "mission-time") {
+      value = Math.round(baseValue * 10) / 10;
+    }
+    
+    return {
+      name: type,
+      value: value,
+      miniChartData: generateMiniChartData()
+    };
+  });
 };
 
 export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: MetricCardProps) => {
@@ -204,7 +258,15 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                 <span className="text-white text-sm truncate max-w-[110px]">{missionType.name}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-[17px] font-medium" style={{ color: metricColor }}>
-                    {missionType.value}
+                    {metric.id === "utilization" || metric.id === "downtime" || metric.id === "error-rate" 
+                      ? `${missionType.value}%` 
+                      : metric.id === "mission-time" || metric.id === "hours-saved" 
+                        ? `${missionType.value}h`
+                        : metric.id === "miles-saved"
+                          ? `${missionType.value}m`
+                          : metric.id === "completed-missions"
+                            ? `${missionType.value}/h`
+                            : missionType.value}
                   </span>
                   <div className="w-[80px] h-[24px]">
                     <ResponsiveContainer width="100%" height="100%">
