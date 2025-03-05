@@ -88,7 +88,7 @@ const generateMetricsForRobot = (
       },
       {
         label: "Miles Saved",
-        value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier * timeRangeMultiplier)} miles`,
+        value: `${Math.round(baseMilesSaved * multiplier * hospitalMultiplier * timeRangeMultiplier)}m`,
         trend: "up" as const,
         id: "miles-saved",
         hourlyData: generateHourlyPattern(baseMilesSaved / 24, hospitalMultiplier, baseMilesSaved, timeRangeMultiplier)
@@ -102,7 +102,7 @@ const generateMetricsForRobot = (
       },
       {
         label: "Completed Missions",
-        value: `${Math.round(baseCompletedMissions * multiplier * hospitalMultiplier * timeRangeMultiplier)} / hour`,
+        value: `${Math.round(baseCompletedMissions * multiplier * hospitalMultiplier * timeRangeMultiplier)}/h`,
         trend: "up" as const,
         id: "completed-missions",
         hourlyData: generateHourlyPattern(baseCompletedMissions, hospitalMultiplier, baseCompletedMissions * 2, timeRangeMultiplier)

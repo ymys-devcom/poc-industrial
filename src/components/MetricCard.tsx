@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -70,8 +69,17 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
   const metricColor = getMetricColor(metric.id);
   const isMobile = useIsMobile();
 
-  // Calculate the chart height - making it 5% shorter to eliminate the empty space
   const chartHeight = isMobile ? 77 : 114; // Reduced by about 5% from 81px and 120px
+
+  const formatDisplayValue = (value: string): string => {
+    if (metric.id === "miles-saved" && value.includes("miles")) {
+      return value.replace(" miles", "m");
+    }
+    if (metric.id === "completed-missions" && value.includes("/ hour")) {
+      return value.replace("/ hour", "/h");
+    }
+    return value;
+  };
 
   return (
     <Card
@@ -83,7 +91,7 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-[13px] max-w-[75px]' : 'text-[17px] max-w-[150px]'} truncate`} 
+                className={`${isMobile ? 'text-[13px] max-w-[85px]' : 'text-[17px] max-w-[150px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -93,7 +101,9 @@ export const MetricCard = ({ metric, onMetricClick }: MetricCardProps) => {
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className={`${isMobile ? 'text-[15px]' : 'text-[19px]'} font-semibold`} style={{ color: metricColor }}>{metric.value}</span>
+          <span className={`${isMobile ? 'text-[15px]' : 'text-[19px]'} font-semibold`} style={{ color: metricColor }}>
+            {formatDisplayValue(metric.value)}
+          </span>
         </div>
         <div style={{ height: `${chartHeight}px` }} className="mt-1">
           <ResponsiveContainer width="100%" height="100%">
