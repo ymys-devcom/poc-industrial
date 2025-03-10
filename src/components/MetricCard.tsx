@@ -141,10 +141,6 @@ const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
     const randomVariation = (Math.random() * 0.1) - 0.05;
     let value = Math.round(baseValue * (1 + randomVariation));
     
-    if (metricId === "mission-time") {
-      value = Math.round(baseValue * 10) / 10;
-    }
-    
     return {
       name: type,
       value: value,

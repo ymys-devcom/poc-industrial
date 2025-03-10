@@ -1,3 +1,4 @@
+
 import { differenceInDays } from "date-fns";
 
 export type MetricData = {
@@ -78,7 +79,7 @@ const generateMetricsForRobot = (
       },
       {
         label: "Mission Time",
-        value: `${averageMissionTime.toFixed(1)}h`,
+        value: `${Math.round(averageMissionTime)}h`,
         trend: "down" as const,
         id: "mission-time",
         hourlyData: missionTimeHourlyData
@@ -113,7 +114,7 @@ const generateMetricsForRobot = (
       },
       {
         label: "Error Rate",
-        value: `${clampValue((baseErrorRate * (2 - multiplier)) / hospitalMultiplier, 5).toFixed(1)}%`,
+        value: `${Math.round(clampValue((baseErrorRate * (2 - multiplier)) / hospitalMultiplier, 5))}%`,
         trend: "down" as const,
         id: "error-rate",
         hourlyData: Array.from({ length: 24 }, (_, hour) => {
@@ -130,10 +131,10 @@ const generateMetricsForRobot = (
 };
 
 const generateHospitalData = (hospitalMultiplier: number, multiplier: number, timeRangeMultiplier: number = 1) => ({
-  "Injection Mold": generateMetricsForRobot(85, 2.4, 2, 1.6, 1250, 500, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "Thermoform": generateMetricsForRobot(80, 2.7, 3, 1.8, 1100, 450, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "RM Delivery": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
-  "WIP Transport": generateMetricsForRobot(75, 2.85, 4, 2.0, 950, 400, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Injection Mold": generateMetricsForRobot(85, 2.4, 2, 1.6, 125, 85, 6, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "Thermoform": generateMetricsForRobot(80, 2.7, 3, 1.8, 110, 75, 5, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "RM Delivery": generateMetricsForRobot(75, 2.85, 4, 2.0, 95, 65, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
+  "WIP Transport": generateMetricsForRobot(75, 2.85, 4, 2.0, 95, 65, 4, hospitalMultiplier, multiplier, timeRangeMultiplier),
 });
 
 export const generateMockDataForRange = (
