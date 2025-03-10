@@ -484,9 +484,7 @@ const MetricDetails = () => {
                   <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
                     {stat.isPercentage 
                       ? `${Math.round(stat.metricValue)}%` 
-                      : stat.metricValue >= 1000 
-                        ? `${(stat.metricValue / 1000).toFixed(0)}k` 
-                        : Math.round(stat.metricValue)}
+                      : Math.round(stat.metricValue)}
                   </p>
                 </div>
               </div>
