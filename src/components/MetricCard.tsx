@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -123,7 +124,7 @@ const getMetricBaseValue = (metricId: string, robotType: string) => {
 
 const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
   const generateMiniChartData = () => {
-    return Array.from({ length: 10 }, (_, i) => ({
+    return Array.from({ length: 25 }, (_, i) => ({
       value: Math.floor(Math.random() * 20) + 1
     }));
   };
