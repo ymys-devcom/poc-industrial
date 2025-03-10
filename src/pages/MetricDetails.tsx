@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -518,11 +519,18 @@ const MetricDetails = () => {
                         borderRadius: '4px',
                         color: 'white' 
                       }}
-                      formatter={(value: any) => {
+                      formatter={(value: any, name: string) => {
+                        // Format the value (k for thousands)
+                        let formattedValue = value;
                         if (value >= 1000) {
-                          return [`${(value / 1000).toFixed(1)}k`, ""];
+                          formattedValue = `${(value / 1000).toFixed(1)}k`;
                         }
-                        return [Math.round(value), ""];
+                        
+                        // Return an array with formatted value and the name (label)
+                        return [Math.round(value).toString(), name];
+                      }}
+                      labelFormatter={(label) => {
+                        return `Date: ${label}`;
                       }}
                     />
                     <Legend 
@@ -537,6 +545,7 @@ const MetricDetails = () => {
                           dataKey={type} 
                           stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : index === 3 ? "#FFC107" : "#E91E63"} 
                           strokeWidth={2}
+                          name={type}
                         />
                     ))}
                   </LineChart>
