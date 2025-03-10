@@ -393,6 +393,13 @@ const MetricDetails = () => {
 
   const availableRobotTypes = ["All Bots", "Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"];
 
+  const formatYAxisValue = (value: number): string => {
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(0)}k`;
+    }
+    return value.toString();
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
@@ -477,7 +484,9 @@ const MetricDetails = () => {
                   <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
                     {stat.isPercentage 
                       ? `${Math.round(stat.metricValue)}%` 
-                      : Math.round(stat.metricValue)}
+                      : stat.metricValue >= 1000 
+                        ? `${(stat.metricValue / 1000).toFixed(0)}k` 
+                        : Math.round(stat.metricValue)}
                   </p>
                 </div>
               </div>
@@ -502,6 +511,7 @@ const MetricDetails = () => {
                       stroke="rgba(255,255,255,0.5)"
                       tick={{ fill: 'rgba(255,255,255,0.5)' }}
                       width={40}
+                      tickFormatter={formatYAxisValue}
                     />
                     <Tooltip 
                       contentStyle={{ 
@@ -510,7 +520,12 @@ const MetricDetails = () => {
                         borderRadius: '4px',
                         color: 'white' 
                       }}
-                      formatter={(value: any) => [Math.round(value), ""]}
+                      formatter={(value: any) => {
+                        if (value >= 1000) {
+                          return [`${(value / 1000).toFixed(1)}k`, ""];
+                        }
+                        return [Math.round(value), ""];
+                      }}
                     />
                     <Legend 
                       wrapperStyle={{ color: 'white' }}
