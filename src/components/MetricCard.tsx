@@ -267,7 +267,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                             ? `${missionType.value}/h`
                             : missionType.value}
                   </span>
-                  <div className={`${isMobile ? 'w-[51px] h-[19px]' : 'w-[80px] h-[24px]'} ml-[10px]`}>
+                  <div className={`${isMobile ? 'w-[51px] h-[19px]' : 'w-[80px] h-[24px]'} ${isMobile ? 'ml-[3px]' : 'ml-[10px]'}`}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={missionType.miniChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                         <Bar dataKey="value" fill={metricColor} />
