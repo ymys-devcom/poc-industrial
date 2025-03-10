@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -185,7 +184,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-[13px] flex-1 pr-2' : 'text-[17px] max-w-[200px]'} truncate`} 
+                className={`${isMobile ? 'text-[13px] flex-1 pr-2' : 'text-[18px] max-w-[200px]'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -195,7 +194,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className={`${isMobile ? 'text-[15px] whitespace-nowrap' : 'text-[19px]'} font-semibold`} style={{ color: metricColor }}>
+          <span className={`${isMobile ? 'text-[15px] whitespace-nowrap' : 'text-[20px]'} font-semibold`} style={{ color: metricColor }}>
             {formatDisplayValue(metric.value)}
           </span>
         </div>
