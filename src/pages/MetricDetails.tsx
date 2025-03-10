@@ -476,7 +476,7 @@ const MetricDetails = () => {
               >
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
-                  <span className="text-base font-semibold text-white">{stat.total}</span>
+                  <span className="text-base font-semibold text-gray-400">{stat.total}</span>
                 </div>
                 <div className="border-t border-white/10 pt-2">
                   <p className="text-white/60 text-xs">
