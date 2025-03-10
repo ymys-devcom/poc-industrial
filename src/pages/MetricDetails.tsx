@@ -257,32 +257,32 @@ const MetricDetails = () => {
     
     const accumulativeValues: HospitalMetricValues = {
       "PolyPhorm Plant": {
-        "All Bots": { base: 9200, variation: 1500 },
-        "Injection Mold": { base: 5500, variation: 800 },
-        "Thermoform": { base: 1500, variation: 300 },
-        "RM Delivery": { base: 2200, variation: 400 },
-        "WIPTransport": { base: 2200, variation: 400 }
+        "All Bots": { base: 920, variation: 150 },
+        "Injection Mold": { base: 550, variation: 80 },
+        "Thermoform": { base: 150, variation: 30 },
+        "RM Delivery": { base: 220, variation: 40 },
+        "WIPTransport": { base: 220, variation: 40 }
       },
       "ThermoMolt Plant": {
-        "All Bots": { base: 7800, variation: 1200 },
-        "Injection Mold": { base: 4800, variation: 700 },
-        "Thermoform": { base: 1200, variation: 250 },
-        "RM Delivery": { base: 1800, variation: 350 },
-        "WIPTransport": { base: 1800, variation: 350 }
+        "All Bots": { base: 780, variation: 120 },
+        "Injection Mold": { base: 480, variation: 70 },
+        "Thermoform": { base: 120, variation: 25 },
+        "RM Delivery": { base: 180, variation: 35 },
+        "WIPTransport": { base: 180, variation: 35 }
       },
       "Mangurian building": {
-        "All Bots": { base: 6500, variation: 1000 },
-        "Injection Mold": { base: 4000, variation: 600 },
-        "Thermoform": { base: 1000, variation: 200 },
-        "RM Delivery": { base: 1500, variation: 300 },
-        "WIPTransport": { base: 1500, variation: 300 }
+        "All Bots": { base: 650, variation: 100 },
+        "Injection Mold": { base: 400, variation: 60 },
+        "Thermoform": { base: 100, variation: 20 },
+        "RM Delivery": { base: 150, variation: 30 },
+        "WIPTransport": { base: 150, variation: 30 }
       },
       "All": {
-        "All Bots": { base: 23500, variation: 3000 },
-        "Injection Mold": { base: 14300, variation: 2000 },
-        "Thermoform": { base: 3700, variation: 700 },
-        "RM Delivery": { base: 5500, variation: 900 },
-        "WIPTransport": { base: 5500, variation: 900 }
+        "All Bots": { base: 935, variation: 150 },
+        "Injection Mold": { base: 643, variation: 90 },
+        "Thermoform": { base: 370, variation: 70 },
+        "RM Delivery": { base: 550, variation: 90 },
+        "WIPTransport": { base: 550, variation: 90 }
       }
     };
     
@@ -477,9 +477,7 @@ const MetricDetails = () => {
                   <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
                     {stat.isPercentage 
                       ? `${Math.round(stat.metricValue)}%` 
-                      : stat.metricValue >= 1000 
-                        ? `${(stat.metricValue / 1000).toFixed(1)}k` 
-                        : Math.round(stat.metricValue)}
+                      : Math.round(stat.metricValue)}
                   </p>
                 </div>
               </div>
@@ -512,6 +510,7 @@ const MetricDetails = () => {
                         borderRadius: '4px',
                         color: 'white' 
                       }}
+                      formatter={(value: any) => [Math.round(value), ""]}
                     />
                     <Legend 
                       wrapperStyle={{ color: 'white' }}

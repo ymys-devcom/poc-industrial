@@ -82,18 +82,18 @@ const getMetricBaseValue = (metricId: string, robotType: string) => {
       "All Bots": 2.5
     },
     "miles-saved": {
-      "Injection Mold": 1250,
-      "Thermoform": 1100,
-      "RM Delivery": 950,
-      "WIP Transport": 950,
-      "All Bots": 1200
+      "Injection Mold": 125,
+      "Thermoform": 110,
+      "RM Delivery": 95,
+      "WIP Transport": 95,
+      "All Bots": 120
     },
     "hours-saved": {
-      "Injection Mold": 500,
-      "Thermoform": 450,
-      "RM Delivery": 400,
-      "WIP Transport": 400,
-      "All Bots": 480
+      "Injection Mold": 85,
+      "Thermoform": 75,
+      "RM Delivery": 65,
+      "WIP Transport": 65,
+      "All Bots": 80
     },
     "completed-missions": {
       "Injection Mold": 6,
