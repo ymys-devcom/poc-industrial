@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -426,39 +427,38 @@ const MetricDetails = () => {
     
     let allRobots: RobotData[] = [];
     
+    // For each facility, add only one robot per type
     facilitiesToUse.forEach(facility => {
       types.forEach((type, typeIndex) => {
-        const robotsCount = Math.floor(1 + Math.random() * 2);
+        // Only add one robot per type
+        const robotMetric = robotMetrics.find(r => r.type === type);
+        let metricValue = robotMetric ? robotMetric.metricValue : 0;
         
-        for (let i = 0; i < robotsCount; i++) {
-          const robotMetric = robotMetrics.find(r => r.type === type);
-          let metricValue = robotMetric ? robotMetric.metricValue : 0;
-          
-          const variation = (Math.random() * 0.2) - 0.1;
-          metricValue = Math.round(metricValue * (1 + variation));
-          
-          if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
-            metricValue = Math.min(metricValue, 100);
-          }
-          
-          const serialNumber = generateSerial(type, i);
-          
-          const isOnline = !((i + typeIndex) % 5 === 0);
-          
-          allRobots.push({
-            id: `${facility}-${type}-${i}`,
-            serialNumber: serialNumber,
-            missionType: type,
-            metricValue,
-            isOnline,
-            facility
-          });
+        const variation = (Math.random() * 0.2) - 0.1;
+        metricValue = Math.round(metricValue * (1 + variation));
+        
+        if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
+          metricValue = Math.min(metricValue, 100);
         }
+        
+        const serialNumber = generateSerial(type, typeIndex);
+        
+        const isOnline = !((typeIndex) % 5 === 0);
+        
+        allRobots.push({
+          id: `${facility}-${type}-0`,
+          serialNumber: serialNumber,
+          missionType: type,
+          metricValue,
+          isOnline,
+          facility
+        });
       });
     });
     
-    if (allRobots.length > 10) {
-      allRobots = allRobots.slice(0, 10);
+    // Limit to 6 robots maximum
+    if (allRobots.length > 6) {
+      allRobots = allRobots.slice(0, 6);
     }
     
     return allRobots;
