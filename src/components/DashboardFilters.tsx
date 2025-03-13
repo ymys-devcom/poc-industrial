@@ -36,7 +36,6 @@ interface DashboardFiltersProps {
   visibleMetrics?: string[];
   onMetricToggle?: (metricId: string) => void;
   metricOptions?: { id: string; label: string }[];
-  isMobile?: boolean;
 }
 
 export const DashboardFilters = ({
@@ -52,10 +51,8 @@ export const DashboardFilters = ({
   visibleMetrics = [],
   onMetricToggle,
   metricOptions = [],
-  isMobile,
 }: DashboardFiltersProps) => {
-  const isMobileDetected = useIsMobile();
-  const actualIsMobile = isMobile !== undefined ? isMobile : isMobileDetected;
+  const isMobile = useIsMobile();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const toggleMobileFilters = () => {
@@ -63,7 +60,7 @@ export const DashboardFilters = ({
   };
 
   // Adjust item height for mobile - adding 2px to the default height
-  const mobileItemClasses = actualIsMobile ? "py-[7.2px] px-2" : "px-2 py-1";
+  const mobileItemClasses = isMobile ? "py-[7.2px] px-2" : "px-2 py-1";
 
   return (
     <TooltipProvider>

@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -16,7 +17,6 @@ interface MetricCardProps {
   metric: MetricData;
   onMetricClick: (metricId: string) => void;
   selectedRobotTypes: string[];
-  disableHover?: boolean;
 }
 
 const getMaxValueForMetric = (metric: MetricData) => {
@@ -140,7 +140,7 @@ const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
   });
 };
 
-export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes, disableHover }: MetricCardProps) => {
+export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: MetricCardProps) => {
   const yAxisFormatter = getYAxisFormatter(metric.id);
   const maxValue = getMaxValueForMetric(metric);
   const metricColor = getMetricColor(metric.id);
