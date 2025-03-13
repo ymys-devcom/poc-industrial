@@ -175,7 +175,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-[16px] flex-1 pr-2 font-semibold' : 'text-[23px] max-w-[200px] font-semibold'} truncate`} 
+                className={`${isMobile ? 'text-[16px] flex-1 pr-2 font-semibold' : 'text-[22px] max-w-[200px] font-semibold'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -185,7 +185,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className={`${isMobile ? 'text-[17px] whitespace-nowrap' : 'text-[23px]'} font-semibold`} style={{ color: metricColor }}>
+          <span className={`${isMobile ? 'text-[17px] whitespace-nowrap' : 'text-[22px]'} font-semibold`} style={{ color: metricColor }}>
             {formatDisplayValue(metric.value)}
           </span>
         </div>
