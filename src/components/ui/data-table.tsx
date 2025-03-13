@@ -9,6 +9,7 @@ export interface RobotData {
   missionType: string;
   metricValue: number | string;
   isOnline: boolean;
+  facility: string;
   lastActive?: string;
 }
 
@@ -26,6 +27,7 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
           <TableRow className="border-white/10 bg-white/5">
             <TableHead className="text-white w-[180px]">Serial Number</TableHead>
             <TableHead className="text-white">Mission Type</TableHead>
+            <TableHead className="text-white">Facility</TableHead>
             <TableHead className="text-white text-right">{metricName}</TableHead>
             <TableHead className="text-white text-right">Status</TableHead>
           </TableRow>
@@ -33,7 +35,7 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
         <TableBody>
           {data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center text-white/60">
+              <TableCell colSpan={5} className="h-24 text-center text-white/60">
                 No robots found
               </TableCell>
             </TableRow>
@@ -44,6 +46,7 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
                   {robot.serialNumber}
                 </TableCell>
                 <TableCell className="text-white/80">{robot.missionType}</TableCell>
+                <TableCell className="text-white/80">{robot.facility}</TableCell>
                 <TableCell className="text-right text-white font-medium">
                   {isPercentage ? `${robot.metricValue}%` : robot.metricValue}
                 </TableCell>

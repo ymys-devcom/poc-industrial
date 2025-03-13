@@ -420,32 +420,39 @@ const MetricDetails = () => {
       ? ["Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"]
       : selectedRobotTypes;
     
-    return types.flatMap((type, typeIndex) => 
-      Array.from({ length: 2 + Math.floor(Math.random() * 3) }, (_, index) => {
-        const robotMetric = robotMetrics.find(r => r.type === type);
-        let metricValue = robotMetric ? robotMetric.metricValue : 0;
-        
-        const variation = (Math.random() * 0.2) - 0.1;
-        metricValue = Math.round(metricValue * (1 + variation));
-        
-        if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
-          metricValue = Math.min(metricValue, 100);
-        }
-        
-        const isOnline = Math.random() > 0.2;
-        
-        return {
-          id: `${type}-${typeIndex}-${index}`,
-          serialNumber: generateSerial(type, typeIndex * 10 + index),
-          missionType: type,
-          metricValue,
-          isOnline
-        };
-      })
+    const facilitiesToUse = selectedHospital === "All" 
+      ? mockHospitals.filter(h => h !== "All") 
+      : [selectedHospital];
+    
+    return facilitiesToUse.flatMap(facility => 
+      types.flatMap((type, typeIndex) => 
+        Array.from({ length: 2 + Math.floor(Math.random() * 3) }, (_, index) => {
+          const robotMetric = robotMetrics.find(r => r.type === type);
+          let metricValue = robotMetric ? robotMetric.metricValue : 0;
+          
+          const variation = (Math.random() * 0.2) - 0.1;
+          metricValue = Math.round(metricValue * (1 + variation));
+          
+          if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
+            metricValue = Math.min(metricValue, 100);
+          }
+          
+          const isOnline = Math.random() > 0.2;
+          
+          return {
+            id: `${facility}-${type}-${typeIndex}-${index}`,
+            serialNumber: generateSerial(type, typeIndex * 10 + index),
+            missionType: type,
+            metricValue,
+            isOnline,
+            facility
+          };
+        })
+      )
     );
   };
 
-  const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, robotMetrics]);
+  const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, selectedHospital, robotMetrics]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
@@ -614,4 +621,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-
