@@ -25,11 +25,11 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
       <Table>
         <TableHeader>
           <TableRow className="border-white/10 bg-white/5">
-            <TableHead className="text-white w-[180px]">Serial Number</TableHead>
-            <TableHead className="text-white">Mission Type</TableHead>
-            <TableHead className="text-white w-[30px]">Facility</TableHead>
-            <TableHead className="text-white text-left w-[140px]">{metricName}</TableHead>
-            <TableHead className="text-white text-left w-[120px]">Status</TableHead>
+            <TableHead className="text-white w-1/5">Serial Number</TableHead>
+            <TableHead className="text-white w-1/5">Mission Type</TableHead>
+            <TableHead className="text-white w-1/5">Facility</TableHead>
+            <TableHead className="text-white text-left w-1/5">{metricName}</TableHead>
+            <TableHead className="text-white text-left w-1/5">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
