@@ -323,12 +323,12 @@ export const DashboardFilters = ({
           // Desktop layout
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
-              {/* Hospital dropdown - 10px smaller width */}
+              {/* Hospital dropdown - 15px smaller width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[180px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[165px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedHospital === "All" ? "All Facilities" : selectedHospital}
@@ -363,12 +363,12 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Robot type dropdown - Same width as hospital dropdown */}
+              {/* Robot type dropdown - 15px smaller than original width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[180px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[165px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
@@ -423,13 +423,13 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* Metrics dropdown - 20px smaller than other dropdowns */}
+              {/* Metrics dropdown - 5px smaller than previous width */}
               {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full md:w-[170px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                      className="w-full md:w-[165px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="flex-1 text-left truncate">
                         {visibleMetrics.includes("all") 
@@ -481,8 +481,8 @@ export const DashboardFilters = ({
             {/* Date controls container */}
             <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
               <div className="flex w-full md:w-auto space-x-2">
-                {/* Date picker - Fixed width container - Updated to remove font-normal */}
-                <div className="w-[60%] md:w-[200px]">
+                {/* Date picker - 20px smaller width */}
+                <div className="w-[60%] md:w-[180px]">
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button 
@@ -521,7 +521,7 @@ export const DashboardFilters = ({
                   </Popover>
                 </div>
 
-                {/* Date range dropdown - increased to be 10% wider */}
+                {/* Date range dropdown - kept the same width */}
                 <div className="w-[40%] md:w-auto">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
