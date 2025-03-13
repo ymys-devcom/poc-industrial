@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -53,7 +52,11 @@ const MetricDetails = () => {
     if (hospitalFromUrl && mockHospitals.includes(hospitalFromUrl)) {
       setSelectedHospital(hospitalFromUrl);
     }
-  }, [hospitalFromUrl]);
+    
+    if (metricId === "downtime") {
+      navigate("/");
+    }
+  }, [hospitalFromUrl, metricId, navigate]);
 
   const getMetricDetails = (id: string) => {
     const metrics: Record<string, { title: string, isPercentage: boolean, isAccumulative: boolean }> = {
@@ -96,11 +99,6 @@ const MetricDetails = () => {
         title: "Completed Missions",
         isPercentage: false,
         isAccumulative: true
-      },
-      "downtime": {
-        title: "Downtime",
-        isPercentage: true,
-        isAccumulative: false
       }
     };
     return metrics[id || ""] || { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
@@ -520,13 +518,11 @@ const MetricDetails = () => {
                         color: 'white' 
                       }}
                       formatter={(value: any, name: string) => {
-                        // Format the value (k for thousands)
                         let formattedValue = value;
                         if (value >= 1000) {
                           formattedValue = `${(value / 1000).toFixed(1)}k`;
                         }
                         
-                        // Return an array with formatted value and the name (label)
                         return [Math.round(value).toString(), name];
                       }}
                       labelFormatter={(label) => {

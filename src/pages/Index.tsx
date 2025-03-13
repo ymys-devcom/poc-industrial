@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -191,7 +192,6 @@ const Index = () => {
     { id: "miles-saved", label: "Miles Saved" },
     { id: "hours-saved", label: "Hours Saved" },
     { id: "completed-missions", label: "Completed Missions" },
-    { id: "downtime", label: "Downtime" },
     { id: "error-rate", label: "Error Rate" },
   ];
 
@@ -214,7 +214,7 @@ const Index = () => {
           metricOptions={metricOptions}
         />
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
-          {filteredMetrics.map((metric) => (
+          {filteredMetrics.filter(metric => metric.id !== "downtime").map((metric) => (
             <MetricCard
               key={metric.id}
               metric={metric}

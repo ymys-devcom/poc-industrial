@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -21,7 +22,7 @@ interface MetricCardProps {
 const getMaxValueForMetric = (metric: MetricData) => {
   if (!metric.hourlyData) return 100;
   
-  if (metric.id === "error-rate" || metric.id === "downtime") {
+  if (metric.id === "error-rate") {
     return 100;
   }
   
@@ -34,7 +35,6 @@ const getYAxisFormatter = (metricId: string) => {
     case "mission-time":
       return (value: number) => `${value}h`;
     case "utilization":
-    case "downtime":
     case "error-rate":
       return (value: number) => `${value}%`;
     case "completed-missions":
@@ -56,8 +56,6 @@ const getMetricColor = (metricId: string) => {
       return "#2FD96D";
     case "completed-missions":
       return "#D789FB";
-    case "downtime":
-      return "#F9CF51";
     case "error-rate":
       return "#F96751";
     default:
@@ -101,13 +99,6 @@ const getMetricBaseValue = (metricId: string, robotType: string) => {
       "RM Delivery": 4,
       "WIP Transport": 4,
       "All Bots": 5
-    },
-    "downtime": {
-      "Injection Mold": 3,
-      "Thermoform": 4,
-      "RM Delivery": 4.5,
-      "WIP Transport": 4.5,
-      "All Bots": 3
     },
     "error-rate": {
       "Injection Mold": 2.5,
@@ -234,7 +225,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                   }}
                   formatter={(value: number, name: string, props: any) => {
                     const roundedValue = Math.round(value * 10) / 10;
-                    if (metric.id === "error-rate" || metric.id === "downtime") {
+                    if (metric.id === "error-rate") {
                       return [`${roundedValue}%`, metric.label];
                     }
                     return [yAxisFormatter(roundedValue), metric.label];
@@ -256,7 +247,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                 </span>
                 <div className="flex items-center gap-2">
                   <span className={`${isMobile ? 'text-[13px]' : 'text-[17px]'} font-medium`} style={{ color: metricColor }}>
-                    {metric.id === "utilization" || metric.id === "downtime" || metric.id === "error-rate" 
+                    {metric.id === "utilization" || metric.id === "error-rate" 
                       ? `${missionType.value}%` 
                       : metric.id === "mission-time" || metric.id === "hours-saved" 
                         ? `${missionType.value}h`
