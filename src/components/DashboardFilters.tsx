@@ -1,3 +1,4 @@
+
 import { Calendar, ChevronDown, CheckCircle, Filter, FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -322,12 +323,12 @@ export const DashboardFilters = ({
           // Desktop layout
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
-              {/* Hospital dropdown */}
+              {/* Hospital dropdown - 10px smaller width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[200px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[190px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedHospital === "All" ? "All Facilities" : selectedHospital}
@@ -362,12 +363,12 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Robot type dropdown - adjusted width to fit content */}
+              {/* Robot type dropdown - Same width as hospital dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[190px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
@@ -422,13 +423,13 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* Metrics dropdown - adjusted width to fit content */}
+              {/* Metrics dropdown - Same width as other dropdowns */}
               {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full md:w-auto flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                      className="w-full md:w-[190px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="flex-1 text-left truncate">
                         {visibleMetrics.includes("all") 
