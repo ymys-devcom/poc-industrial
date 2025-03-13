@@ -328,7 +328,7 @@ export const DashboardFilters = ({
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[190px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[180px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedHospital === "All" ? "All Facilities" : selectedHospital}
@@ -368,7 +368,7 @@ export const DashboardFilters = ({
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[190px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[180px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
@@ -423,13 +423,13 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* Metrics dropdown - Same width as other dropdowns */}
+              {/* Metrics dropdown - 20px smaller than other dropdowns */}
               {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full md:w-[190px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                      className="w-full md:w-[170px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="flex-1 text-left truncate">
                         {visibleMetrics.includes("all") 
