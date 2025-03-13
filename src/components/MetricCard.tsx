@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -174,7 +175,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-[15px] flex-1 pr-2' : 'text-[19px] max-w-[200px]'} truncate`} 
+                className={`${isMobile ? 'text-[15px] flex-1 pr-2 font-semibold' : 'text-[19px] max-w-[200px] font-semibold'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -241,7 +242,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <div className="mt-3">
             {missionTypes.map((missionType, index) => (
               <div key={index} className="flex items-center justify-between mb-3 last:mb-0">
-                <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate max-w-[110px]`}>
+                <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate max-w-[110px] font-medium`}>
                   {missionType.name}
                 </span>
                 <div className="flex items-center gap-3">
