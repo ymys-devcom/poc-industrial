@@ -14,8 +14,11 @@ import {
   TooltipProvider
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const DashboardHeader = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <header className="px-6 h-[62px] md:h-[73px] flex justify-between items-center bg-[#14294B]">
       <div className="flex items-center space-x-3">
@@ -30,7 +33,7 @@ export const DashboardHeader = () => {
           <div className="flex items-center gap-4">
             <Badge 
               variant="outline" 
-              className="bg-[#00C851] text-[#14294B] rounded-full px-3 py-0.5 text-xs font-medium ml-6 border-0 pointer-events-none"
+              className={`bg-[#00C851] text-[#14294B] rounded-full ${isMobile ? 'text-[9px] px-2 py-0.5' : 'text-xs px-3 py-0.5'} font-medium ml-6 border-0 pointer-events-none`}
             >
               Online
             </Badge>
