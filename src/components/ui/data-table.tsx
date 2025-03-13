@@ -41,7 +41,7 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
             </TableRow>
           ) : (
             data.map((robot) => (
-              <TableRow key={robot.id} className="border-white/10">
+              <TableRow key={robot.id} className="border-white/10 hover:bg-white/5">
                 <TableCell className="font-medium text-white">
                   {robot.serialNumber}
                 </TableCell>
