@@ -27,10 +27,10 @@ export const DashboardHeader = () => {
       </div>
       <div className="flex items-center space-x-4">
         <TooltipProvider>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <Badge 
               variant="outline" 
-              className="bg-[#00C851] text-[#14294B] rounded-full px-3 py-0.5 text-xs font-medium"
+              className="bg-[#00C851] text-[#14294B] rounded-full px-3 py-0.5 text-xs font-medium -mr-6 border-0"
             >
               Online
             </Badge>
