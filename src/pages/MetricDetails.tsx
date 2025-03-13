@@ -428,7 +428,7 @@ const MetricDetails = () => {
     
     facilitiesToUse.forEach(facility => {
       types.forEach((type, typeIndex) => {
-        const robotsCount = Math.floor(3 + Math.random() * 3);
+        const robotsCount = Math.floor(1 + Math.random() * 2);
         
         for (let i = 0; i < robotsCount; i++) {
           const robotMetric = robotMetrics.find(r => r.type === type);
@@ -457,8 +457,8 @@ const MetricDetails = () => {
       });
     });
     
-    if (allRobots.length > 20) {
-      allRobots = allRobots.slice(0, 20);
+    if (allRobots.length > 10) {
+      allRobots = allRobots.slice(0, 10);
     }
     
     return allRobots;
