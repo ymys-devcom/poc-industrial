@@ -413,7 +413,7 @@ const MetricDetails = () => {
                     type === "Thermoform" ? "TF" : 
                     type === "RM Delivery" ? "RMD" : 
                     type === "WIPTransport" ? "WIP" : "BOT";
-      return `${prefix}-${String(index + 1000).substring(1)}`;
+      return `${prefix}-${String(Math.floor(1000 + Math.random() * 9000))}`;
     };
     
     const types = selectedRobotTypes.includes("All") 
@@ -424,9 +424,13 @@ const MetricDetails = () => {
       ? mockHospitals.filter(h => h !== "All") 
       : [selectedHospital];
     
-    return facilitiesToUse.flatMap(facility => 
-      types.flatMap((type, typeIndex) => 
-        Array.from({ length: 1 }, (_, index) => {
+    let allRobots: RobotData[] = [];
+    
+    facilitiesToUse.forEach(facility => {
+      types.forEach((type, typeIndex) => {
+        const robotsCount = Math.floor(3 + Math.random() * 3);
+        
+        for (let i = 0; i < robotsCount; i++) {
           const robotMetric = robotMetrics.find(r => r.type === type);
           let metricValue = robotMetric ? robotMetric.metricValue : 0;
           
@@ -437,19 +441,27 @@ const MetricDetails = () => {
             metricValue = Math.min(metricValue, 100);
           }
           
-          const isOnline = Math.random() > 0.2;
+          const serialNumber = generateSerial(type, i);
           
-          return {
-            id: `${facility}-${type}-${typeIndex}-${index}`,
-            serialNumber: generateSerial(type, typeIndex * 10 + index),
+          const isOnline = !((i + typeIndex) % 5 === 0);
+          
+          allRobots.push({
+            id: `${facility}-${type}-${i}`,
+            serialNumber: serialNumber,
             missionType: type,
             metricValue,
             isOnline,
             facility
-          };
-        })
-      )
-    );
+          });
+        }
+      });
+    });
+    
+    if (allRobots.length > 20) {
+      allRobots = allRobots.slice(0, 20);
+    }
+    
+    return allRobots;
   };
 
   const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, selectedHospital, robotMetrics]);
