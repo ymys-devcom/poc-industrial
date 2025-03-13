@@ -2,7 +2,6 @@
 import * as React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, XCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export interface RobotData {
   id: string;

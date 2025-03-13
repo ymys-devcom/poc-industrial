@@ -437,10 +437,7 @@ const MetricDetails = () => {
         return {
           id: `${type}-${typeIndex}-${index}`,
           serialNumber: generateSerial(type, typeIndex * 10 + index),
-          missionType: type === "RM Delivery" ? "Material Transport" : 
-                       type === "WIPTransport" ? "Work-In-Progress" :
-                       type === "Injection Mold" ? "Production" :
-                       type === "Thermoform" ? "Forming" : "General",
+          missionType: type,
           metricValue,
           isOnline
         };
@@ -617,3 +614,4 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
+
