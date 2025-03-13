@@ -9,6 +9,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { DataTable, RobotData } from "@/components/ui/data-table";
 
 interface MetricValue {
   base: number;
@@ -399,6 +400,56 @@ const MetricDetails = () => {
     return value.toString();
   };
 
+  const generateRobotData = (): RobotData[] => {
+    const metricDetails = getMetricDetails(metricId || "");
+    const isPercentage = metricDetails.isPercentage;
+    
+    if (!selectedRobotTypes.includes("All") && selectedRobotTypes.length === 0) {
+      return [];
+    }
+    
+    const generateSerial = (type: string, index: number): string => {
+      const prefix = type === "Injection Mold" ? "IM" : 
+                    type === "Thermoform" ? "TF" : 
+                    type === "RM Delivery" ? "RMD" : 
+                    type === "WIPTransport" ? "WIP" : "BOT";
+      return `${prefix}-${String(index + 1000).substring(1)}`;
+    };
+    
+    const types = selectedRobotTypes.includes("All") 
+      ? ["Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"]
+      : selectedRobotTypes;
+    
+    return types.flatMap((type, typeIndex) => 
+      Array.from({ length: 2 + Math.floor(Math.random() * 3) }, (_, index) => {
+        const robotMetric = robotMetrics.find(r => r.type === type);
+        let metricValue = robotMetric ? robotMetric.metricValue : 0;
+        
+        const variation = (Math.random() * 0.2) - 0.1;
+        metricValue = Math.round(metricValue * (1 + variation));
+        
+        if (isPercentage && metricId !== "error-rate" && metricId !== "downtime") {
+          metricValue = Math.min(metricValue, 100);
+        }
+        
+        const isOnline = Math.random() > 0.2;
+        
+        return {
+          id: `${type}-${typeIndex}-${index}`,
+          serialNumber: generateSerial(type, typeIndex * 10 + index),
+          missionType: type === "RM Delivery" ? "Material Transport" : 
+                       type === "WIPTransport" ? "Work-In-Progress" :
+                       type === "Injection Mold" ? "Production" :
+                       type === "Thermoform" ? "Forming" : "General",
+          metricValue,
+          isOnline
+        };
+      })
+    );
+  };
+
+  const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, robotMetrics]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
@@ -551,6 +602,15 @@ const MetricDetails = () => {
                 </ResponsiveContainer>
               </div>
             </div>
+            
+            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Robot Status</h3>
+              <DataTable 
+                data={robotData} 
+                metricName={currentMetricDetails.title}
+                isPercentage={currentMetricDetails.isPercentage}
+              />
+            </div>
           </div>
         </div>
       </main>
@@ -560,4 +620,3 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
-
