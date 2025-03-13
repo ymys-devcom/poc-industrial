@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import {
   Bar,
@@ -245,7 +244,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                 <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate max-w-[110px]`}>
                   {missionType.name}
                 </span>
-                <div className="flex items-center gap-0.5">
+                <div className="flex items-center gap-1.5">
                   <span className={`${isMobile ? 'text-[13px]' : 'text-[17px]'} font-medium`} style={{ color: metricColor }}>
                     {metric.id === "utilization" || metric.id === "error-rate" 
                       ? `${missionType.value}%` 
