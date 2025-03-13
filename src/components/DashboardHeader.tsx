@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 export const DashboardHeader = () => {
   return (
@@ -26,49 +27,57 @@ export const DashboardHeader = () => {
       </div>
       <div className="flex items-center space-x-4">
         <TooltipProvider>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:ring-0 data-[state=open]:outline-none">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-[#F8963A]">
-                  <span className="text-xs md:text-sm font-medium text-[#012D5A]">JD</span>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              align="end" 
-              fitToTriggerWidth 
-              className="w-[200px] bg-[#526189] text-white"
+          <div className="flex items-center gap-2">
+            <Badge 
+              variant="outline" 
+              className="bg-[#00C851] text-[#14294B] rounded-full px-3 py-0.5 text-xs font-medium"
             >
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span className="truncate">Settings</span>
-                  </DropdownMenuItem>
-                </TooltipTrigger>
-                <TooltipContent 
-                  className="bg-[#14294B] text-white border-white/10"
-                  side="left"
-                >
-                  Settings
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span className="truncate">Log out</span>
-                  </DropdownMenuItem>
-                </TooltipTrigger>
-                <TooltipContent 
-                  className="bg-[#14294B] text-white border-white/10"
-                  side="left"
-                >
-                  Log out
-                </TooltipContent>
-              </Tooltip>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              Online
+            </Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:ring-0 data-[state=open]:outline-none">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-[#F8963A]">
+                    <span className="text-xs md:text-sm font-medium text-[#012D5A]">JD</span>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end" 
+                fitToTriggerWidth 
+                className="w-[200px] bg-[#526189] text-white"
+              >
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span className="truncate">Settings</span>
+                    </DropdownMenuItem>
+                  </TooltipTrigger>
+                  <TooltipContent 
+                    className="bg-[#14294B] text-white border-white/10"
+                    side="left"
+                  >
+                    Settings
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuItem className="focus:bg-[#3E4F7C] hover:bg-[#3E4F7C] focus:text-white hover:text-white">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span className="truncate">Log out</span>
+                    </DropdownMenuItem>
+                  </TooltipTrigger>
+                  <TooltipContent 
+                    className="bg-[#14294B] text-white border-white/10"
+                    side="left"
+                  >
+                    Log out
+                  </TooltipContent>
+                </Tooltip>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </TooltipProvider>
       </div>
     </header>
