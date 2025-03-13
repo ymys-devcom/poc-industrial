@@ -13,6 +13,8 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const DashboardHeader = () => {
   return (
@@ -25,13 +27,20 @@ export const DashboardHeader = () => {
         />
       </div>
       <div className="flex items-center space-x-4">
+        <Badge 
+          variant="default" 
+          className="bg-[#F2FCE2] text-[#1F3366] border-none px-3 py-1 text-xs font-medium rounded-full mr-2"
+        >
+          Online
+        </Badge>
+        
         <TooltipProvider>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 p-0 rounded-full focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:ring-0 data-[state=open]:outline-none">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-[#F8963A]">
-                  <span className="text-xs md:text-sm font-medium text-[#012D5A]">JD</span>
-                </div>
+                <Avatar className="bg-[#F8963A] text-[#012D5A]">
+                  <AvatarFallback className="text-xs md:text-sm font-medium">JD</AvatarFallback>
+                </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
