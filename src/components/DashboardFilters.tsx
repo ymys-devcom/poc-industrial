@@ -59,6 +59,9 @@ export const DashboardFilters = ({
     setShowMobileFilters(!showMobileFilters);
   };
 
+  // Adjust item height for mobile - adding 2px to the default height
+  const mobileItemClasses = isMobile ? "py-[7.2px] px-2" : "px-2 py-1";
+
   return (
     <TooltipProvider>
       <div className="flex flex-col md:flex-col space-y-4 md:space-y-4 w-full max-w-full">
@@ -125,31 +128,31 @@ export const DashboardFilters = ({
                   >
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Today")}
-                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                     >
                       <span className="truncate">Today</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 7 Days")}
-                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                     >
                       <span className="truncate">Last 7 Days</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 30 Days")}
-                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                     >
                       <span className="truncate">Last 30 Days</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 90 Days")}
-                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                     >
                       <span className="truncate">Last 90 Days</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => onDateRangeChange("Last 180 Days")}
-                      className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                     >
                       <span className="truncate">Last 180 Days</span>
                     </DropdownMenuItem>
@@ -199,7 +202,7 @@ export const DashboardFilters = ({
                           <TooltipTrigger asChild>
                             <DropdownMenuItem
                               onClick={() => onHospitalChange(hospital)}
-                              className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden px-2 py-1"
+                              className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden ${mobileItemClasses}`}
                             >
                               <span className="truncate">
                                 {hospital === "All" ? "All Facilities" : hospital}
@@ -251,7 +254,7 @@ export const DashboardFilters = ({
                         <Tooltip key={type}>
                           <TooltipTrigger asChild>
                             <DropdownMenuItem
-                              className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                              className={`flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                               onClick={() => onRobotTypeChange(type)}
                             >
                               <span className="truncate">
@@ -312,7 +315,7 @@ export const DashboardFilters = ({
                           <Tooltip key={option.id}>
                             <TooltipTrigger asChild>
                               <DropdownMenuItem
-                                className="flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
+                                className={`flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
                                 onClick={() => onMetricToggle(option.id)}
                               >
                                 <span className="truncate">{option.label}</span>
