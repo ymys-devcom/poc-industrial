@@ -603,14 +603,11 @@ const MetricDetails = () => {
               </div>
             </div>
             
-            <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Robot Status</h3>
-              <DataTable 
-                data={robotData} 
-                metricName={currentMetricDetails.title}
-                isPercentage={currentMetricDetails.isPercentage}
-              />
-            </div>
+            <DataTable 
+              data={robotData} 
+              metricName={currentMetricDetails.title}
+              isPercentage={currentMetricDetails.isPercentage}
+            />
           </div>
         </div>
       </main>
