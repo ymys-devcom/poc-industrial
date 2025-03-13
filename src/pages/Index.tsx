@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -6,6 +5,7 @@ import { DashboardFilters } from "@/components/DashboardFilters";
 import { MetricCard } from "@/components/MetricCard";
 import { Footer } from "@/components/Footer";
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals, type MockData } from "@/utils/mockDataGenerator";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
@@ -21,6 +21,7 @@ const Index = () => {
   });
   const [visibleMetrics, setVisibleMetrics] = useState<string[]>(["all"]);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
@@ -212,6 +213,7 @@ const Index = () => {
           visibleMetrics={visibleMetrics}
           onMetricToggle={handleMetricToggle}
           metricOptions={metricOptions}
+          isMobile={isMobile}
         />
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
           {filteredMetrics.filter(metric => metric.id !== "downtime").map((metric) => (
@@ -220,6 +222,7 @@ const Index = () => {
               metric={metric}
               onMetricClick={handleMetricClick}
               selectedRobotTypes={selectedRobotTypes}
+              disableHover={isMobile}
             />
           ))}
         </div>
