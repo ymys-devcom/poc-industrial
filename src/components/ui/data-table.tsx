@@ -21,15 +21,15 @@ interface DataTableProps {
 
 export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
   return (
-    <div className="rounded-md border border-white/10 bg-mayo-card backdrop-blur-md overflow-hidden">
+    <div className="rounded-md border border-white/10 bg-mayo-card backdrop-blur-md">
       <Table>
         <TableHeader>
           <TableRow className="border-white/10 bg-white/5">
             <TableHead className="text-white w-[180px]">Serial Number</TableHead>
             <TableHead className="text-white">Mission Type</TableHead>
-            <TableHead className="text-white w-[30px]">Facility</TableHead>
+            <TableHead className="text-white">Facility</TableHead>
             <TableHead className="text-white text-left w-[140px]">{metricName}</TableHead>
-            <TableHead className="text-white text-left w-[120px]">Status</TableHead>
+            <TableHead className="text-white text-right w-[120px]">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,8 +50,8 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
                 <TableCell className="text-left text-white font-medium">
                   {isPercentage ? `${robot.metricValue}%` : robot.metricValue}
                 </TableCell>
-                <TableCell className="text-left">
-                  <div className="flex items-center gap-2">
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end gap-2">
                     {robot.isOnline ? (
                       <>
                         <span className="text-green-400">Online</span>
