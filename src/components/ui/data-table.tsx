@@ -21,7 +21,7 @@ interface DataTableProps {
 
 export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
   return (
-    <div className="rounded-md border border-white/10">
+    <div className="rounded-md border border-white/10 bg-mayo-card backdrop-blur-md">
       <Table>
         <TableHeader>
           <TableRow className="border-white/10 bg-white/5">
