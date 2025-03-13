@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -427,10 +426,8 @@ const MetricDetails = () => {
     
     let allRobots: RobotData[] = [];
     
-    // For each facility, add only one robot per type
     facilitiesToUse.forEach(facility => {
       types.forEach((type, typeIndex) => {
-        // Only add one robot per type
         const robotMetric = robotMetrics.find(r => r.type === type);
         let metricValue = robotMetric ? robotMetric.metricValue : 0;
         
@@ -456,7 +453,6 @@ const MetricDetails = () => {
       });
     });
     
-    // Limit to 6 robots maximum
     if (allRobots.length > 6) {
       allRobots = allRobots.slice(0, 6);
     }
@@ -469,7 +465,7 @@ const MetricDetails = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
-      <main className={`px-6 pb-6 ${isMobile ? 'pt-[10px]' : 'pt-6'} flex-1`}>
+      <main className={`px-6 pb-6 ${isMobile ? 'pt-[10px]' : 'pt-6'} flex-1 overflow-auto`}>
         {isMobile && (
           <h1 className="text-xl font-bold text-white flex items-center mb-[10px]">
             <Button 
