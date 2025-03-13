@@ -242,10 +242,10 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <div className="mt-3">
             {missionTypes.map((missionType, index) => (
               <div key={index} className="flex items-center justify-between mb-3 last:mb-0">
-                <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate max-w-[110px] font-medium`}>
+                <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate flex-1 max-w-none font-medium`}>
                   {missionType.name}
                 </span>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1 md:gap-3">
                   <span className={`${isMobile ? 'text-[13px]' : 'text-[17px]'} font-medium`} style={{ color: metricColor }}>
                     {metric.id === "utilization" || metric.id === "error-rate" 
                       ? `${missionType.value}%` 
@@ -257,7 +257,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                             ? `${missionType.value}/h`
                             : missionType.value}
                   </span>
-                  <div className={`${isMobile ? 'w-[51px] h-[19px]' : 'w-[80px] h-[24px]'}`}>
+                  <div className={`${isMobile ? 'w-[38px] h-[19px]' : 'w-[80px] h-[24px]'}`}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={missionType.miniChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                         <Bar dataKey="value" fill={metricColor} />
