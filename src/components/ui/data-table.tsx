@@ -24,7 +24,7 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
     <div className="rounded-md border border-white/10 bg-mayo-card backdrop-blur-md">
       <Table>
         <TableHeader>
-          <TableRow className="border-white/10 bg-white/5 hover:bg-transparent">
+          <TableRow className="border-white/10 bg-white/5">
             <TableHead className="text-white w-[180px]">Serial Number</TableHead>
             <TableHead className="text-white">Mission Type</TableHead>
             <TableHead className="text-white">Facility</TableHead>
