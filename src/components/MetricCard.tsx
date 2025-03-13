@@ -245,7 +245,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                 <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate max-w-[110px]`}>
                   {missionType.name}
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-0.5">
                   <span className={`${isMobile ? 'text-[13px]' : 'text-[17px]'} font-medium`} style={{ color: metricColor }}>
                     {metric.id === "utilization" || metric.id === "error-rate" 
                       ? `${missionType.value}%` 
@@ -257,7 +257,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                             ? `${missionType.value}/h`
                             : missionType.value}
                   </span>
-                  <div className={`${isMobile ? 'w-[51px] h-[19px]' : 'w-[80px] h-[24px]'} ${isMobile ? 'ml-[0.75px]' : 'ml-[10px]'}`}>
+                  <div className={`${isMobile ? 'w-[51px] h-[19px]' : 'w-[80px] h-[24px]'}`}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={missionType.miniChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                         <Bar dataKey="value" fill={metricColor} />
