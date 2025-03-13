@@ -49,22 +49,24 @@ export const Footer = () => {
               </DialogHeader>
               <DialogDescription>
                 <div className="space-y-4 text-left">
-                  <p>Chang Robotics is a leader in healthcare automation solutions. Our mission is to enhance healthcare delivery through innovative robotic technologies.</p>
+                  <p>Chang Robotics is a leader in manufacturing automation solutions. Our mission is to enhance production efficiency through innovative robotic technologies.</p>
                   
                   <h3 className="text-lg font-semibold">Our Vision</h3>
-                  <p>We envision a future where healthcare professionals can focus more on patient care by automating routine tasks with our reliable robotic solutions.</p>
+                  <p>We envision a future where manufacturing professionals can focus more on product innovation and quality control by automating routine production tasks with our reliable robotic solutions.</p>
                   
                   <h3 className="text-lg font-semibold">What We Do</h3>
-                  <p>Chang Robotics develops autonomous mobile robots (AMRs) that assist healthcare facilities with various tasks including:</p>
+                  <p>Chang Robotics develops autonomous mobile robots (AMRs) that assist manufacturing facilities with various tasks including:</p>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Medication and supply delivery</li>
-                    <li>Equipment transportation</li>
-                    <li>Waste management</li>
-                    <li>Environmental monitoring</li>
+                    <li>Raw material delivery and transport</li>
+                    <li>Injection molding automation</li>
+                    <li>Thermoforming process assistance</li>
+                    <li>Work-in-progress (WIP) handling</li>
+                    <li>Quality control support</li>
+                    <li>Inventory management</li>
                   </ul>
                   
                   <h3 className="text-lg font-semibold">Our Commitment</h3>
-                  <p>We are committed to creating solutions that improve operational efficiency while maintaining the highest standards of safety and reliability in healthcare environments.</p>
+                  <p>We are committed to creating solutions that improve manufacturing efficiency while maintaining the highest standards of safety and reliability in industrial environments.</p>
                 </div>
               </DialogDescription>
             </DialogContent>
