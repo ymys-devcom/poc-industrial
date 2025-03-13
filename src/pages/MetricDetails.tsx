@@ -426,7 +426,7 @@ const MetricDetails = () => {
     
     return facilitiesToUse.flatMap(facility => 
       types.flatMap((type, typeIndex) => 
-        Array.from({ length: 2 + Math.floor(Math.random() * 3) }, (_, index) => {
+        Array.from({ length: 1 }, (_, index) => {
           const robotMetric = robotMetrics.find(r => r.type === type);
           let metricValue = robotMetric ? robotMetric.metricValue : 0;
           
