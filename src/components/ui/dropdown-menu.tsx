@@ -60,7 +60,7 @@ const DropdownMenuContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
     fitToTriggerWidth?: boolean
   }
->(({ className, sideOffset = 4, fitToTriggerWidth = true, ...props }, ref) => (
+>(({ className, sideOffset = 4, fitToTriggerWidth = false, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
