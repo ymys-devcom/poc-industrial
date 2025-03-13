@@ -30,7 +30,7 @@ export const DashboardHeader = () => {
           <div className="flex items-center gap-4">
             <Badge 
               variant="outline" 
-              className="bg-[#00C851] text-[#14294B] rounded-full px-3 py-0.5 text-xs font-medium -mr-6 border-0"
+              className="bg-[#00C851] text-[#14294B] rounded-full px-3 py-0.5 text-xs font-medium ml-6 border-0"
             >
               Online
             </Badge>
