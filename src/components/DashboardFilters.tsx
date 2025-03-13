@@ -1,4 +1,3 @@
-
 import { Calendar, ChevronDown, CheckCircle, Filter, FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +18,7 @@ import { format } from "date-fns";
 import { mockHospitals, getMockRobotTypes } from "@/utils/mockDataGenerator";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileAwareDropdownItem } from "@/components/MobileAwareDropdownItem";
 
 interface DashboardFiltersProps {
   selectedHospital: string;
@@ -36,6 +36,7 @@ interface DashboardFiltersProps {
   visibleMetrics?: string[];
   onMetricToggle?: (metricId: string) => void;
   metricOptions?: { id: string; label: string }[];
+  isMobile?: boolean;
 }
 
 export const DashboardFilters = ({
@@ -51,8 +52,10 @@ export const DashboardFilters = ({
   visibleMetrics = [],
   onMetricToggle,
   metricOptions = [],
+  isMobile: propIsMobile,
 }: DashboardFiltersProps) => {
-  const isMobile = useIsMobile();
+  const hookIsMobile = useIsMobile();
+  const isMobile = propIsMobile !== undefined ? propIsMobile : hookIsMobile;
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const toggleMobileFilters = () => {
@@ -198,24 +201,14 @@ export const DashboardFilters = ({
                       className="bg-[#526189] text-white"
                     >
                       {mockHospitals.map((hospital) => (
-                        <Tooltip key={hospital}>
-                          <TooltipTrigger asChild>
-                            <DropdownMenuItem
-                              onClick={() => onHospitalChange(hospital)}
-                              className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden ${mobileItemClasses}`}
-                            >
-                              <span className="truncate">
-                                {hospital === "All" ? "All Facilities" : hospital}
-                              </span>
-                            </DropdownMenuItem>
-                          </TooltipTrigger>
-                          <TooltipContent 
-                            className="bg-[#14294B] text-white border-white/10"
-                            side="right"
-                          >
-                            {hospital === "All" ? "All Facilities" : hospital}
-                          </TooltipContent>
-                        </Tooltip>
+                        <MobileAwareDropdownItem
+                          key={hospital}
+                          tooltipContent={hospital === "All" ? "All Facilities" : hospital}
+                          onClick={() => onHospitalChange(hospital)}
+                          className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer overflow-hidden ${mobileItemClasses}`}
+                        >
+                          {hospital === "All" ? "All Facilities" : hospital}
+                        </MobileAwareDropdownItem>
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -251,33 +244,25 @@ export const DashboardFilters = ({
                       className="bg-[#526189] text-white"
                     >
                       {getMockRobotTypes(selectedHospital).map((type) => (
-                        <Tooltip key={type}>
-                          <TooltipTrigger asChild>
-                            <DropdownMenuItem
-                              className={`flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                              onClick={() => onRobotTypeChange(type)}
-                            >
-                              <span className="truncate">
-                                {type === "All" ? "All Mission Types" : type}
-                              </span>
-                              {selectedRobotTypes.includes(type) && (
-                                <CheckCircle
-                                  className="h-4 w-4 text-white flex-shrink-0 ml-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRemoveRobotType(type);
-                                  }}
-                                />
-                              )}
-                            </DropdownMenuItem>
-                          </TooltipTrigger>
-                          <TooltipContent 
-                            className="bg-[#14294B] text-white border-white/10"
-                            side="right"
-                          >
+                        <MobileAwareDropdownItem
+                          key={type}
+                          tooltipContent={type === "All" ? "All Mission Types" : type}
+                          className={`flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
+                          onClick={() => onRobotTypeChange(type)}
+                        >
+                          <span className="truncate">
                             {type === "All" ? "All Mission Types" : type}
-                          </TooltipContent>
-                        </Tooltip>
+                          </span>
+                          {selectedRobotTypes.includes(type) && (
+                            <CheckCircle
+                              className="h-4 w-4 text-white flex-shrink-0 ml-2"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onRemoveRobotType(type);
+                              }}
+                            />
+                          )}
+                        </MobileAwareDropdownItem>
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -312,27 +297,19 @@ export const DashboardFilters = ({
                         className="bg-[#526189] text-white"
                       >
                         {metricOptions.map((option) => (
-                          <Tooltip key={option.id}>
-                            <TooltipTrigger asChild>
-                              <DropdownMenuItem
-                                className={`flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                                onClick={() => onMetricToggle(option.id)}
-                              >
-                                <span className="truncate">{option.label}</span>
-                                {visibleMetrics.includes(option.id) && (
-                                  <CheckCircle
-                                    className="h-4 w-4 text-white flex-shrink-0 ml-2"
-                                  />
-                                )}
-                              </DropdownMenuItem>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              className="bg-[#14294B] text-white border-white/10"
-                              side="right"
-                            >
-                              {option.label}
-                            </TooltipContent>
-                          </Tooltip>
+                          <MobileAwareDropdownItem
+                            key={option.id}
+                            tooltipContent={option.label}
+                            className={`flex items-center justify-between text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
+                            onClick={() => onMetricToggle(option.id)}
+                          >
+                            <span className="truncate">{option.label}</span>
+                            {visibleMetrics.includes(option.id) && (
+                              <CheckCircle
+                                className="h-4 w-4 text-white flex-shrink-0 ml-2"
+                              />
+                            )}
+                          </MobileAwareDropdownItem>
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -342,7 +319,7 @@ export const DashboardFilters = ({
             )}
           </div>
         ) : (
-          // Desktop layout - also update with smaller text and padding
+          // Desktop layout
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
               {/* Hospital dropdown */}

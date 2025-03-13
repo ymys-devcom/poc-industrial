@@ -6,8 +6,10 @@ import { DashboardFilters } from "@/components/DashboardFilters";
 import { MetricCard } from "@/components/MetricCard";
 import { Footer } from "@/components/Footer";
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals, type MockData } from "@/utils/mockDataGenerator";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
+  const isMobile = useIsMobile();
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
   const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
@@ -212,6 +214,7 @@ const Index = () => {
           visibleMetrics={visibleMetrics}
           onMetricToggle={handleMetricToggle}
           metricOptions={metricOptions}
+          isMobile={isMobile}
         />
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
           {filteredMetrics.filter(metric => metric.id !== "downtime").map((metric) => (
