@@ -175,7 +175,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <Popover>
             <PopoverTrigger asChild>
               <span 
-                className={`${isMobile ? 'text-[16px] flex-1 pr-2 font-semibold' : 'text-[21px] max-w-[200px] font-semibold'} truncate`} 
+                className={`${isMobile ? 'text-[18px] flex-1 pr-2 font-semibold' : 'text-[23px] max-w-[200px] font-semibold'} truncate`} 
                 style={{ color: metricColor }}
               >
                 {metric.label}
@@ -185,7 +185,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
               {metric.label}
             </PopoverContent>
           </Popover>
-          <span className={`${isMobile ? 'text-[17px] whitespace-nowrap' : 'text-[21px]'} font-semibold`} style={{ color: metricColor }}>
+          <span className={`${isMobile ? 'text-[19px] whitespace-nowrap' : 'text-[23px]'} font-semibold`} style={{ color: metricColor }}>
             {formatDisplayValue(metric.value)}
           </span>
         </div>
@@ -246,7 +246,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
                   {missionType.name}
                 </span>
                 <div className="flex items-center gap-1 md:gap-3">
-                  <span className={`${isMobile ? 'text-[13px]' : 'text-[17px]'} font-medium`} style={{ color: metricColor }}>
+                  <span className={`${isMobile ? 'text-[15px]' : 'text-[19px]'} font-medium`} style={{ color: metricColor }}>
                     {metric.id === "utilization" || metric.id === "error-rate" 
                       ? `${missionType.value}%` 
                       : metric.id === "mission-time" || metric.id === "hours-saved" 
