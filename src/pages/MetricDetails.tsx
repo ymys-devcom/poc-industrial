@@ -457,7 +457,7 @@ const MetricDetails = () => {
           <div className="backdrop-blur-md border-white/10 rounded-lg">
             <div className="flex items-center justify-between pb-4">
               {!isMobile && (
-                <h1 className="text-2xl font-extrabold text-white flex items-center">
+                <h1 className="text-2xl font-bold text-white flex items-center">
                   {currentMetricDetails.title}
                   {selectedHospital !== "All" 
                     ? ` - ${selectedHospital}` 
@@ -491,7 +491,7 @@ const MetricDetails = () => {
           </div>
 
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
-              <h3 className="text-lg font-extrabold text-white mb-4">Performance Over Time</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className="h-[276px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart 
