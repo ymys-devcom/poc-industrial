@@ -167,10 +167,10 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
 
   return (
     <Card
-      className={`bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white ${isMobile ? 'p-1' : 'p-3'}`}
+      className={`bg-mayo-card backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#14294B] transition-colors text-white w-full ${isMobile ? 'p-1' : 'p-3'}`}
       onClick={() => onMetricClick(metric.id)}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <div className="flex justify-between items-center mb-1">
           <Popover>
             <PopoverTrigger asChild>
@@ -239,9 +239,9 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="mt-3">
+          <div className="mt-3 w-full">
             {missionTypes.map((missionType, index) => (
-              <div key={index} className="flex items-center justify-between mb-3 last:mb-0">
+              <div key={index} className="flex items-center justify-between mb-3 last:mb-0 w-full">
                 <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate flex-1 max-w-none font-medium`}>
                   {missionType.name}
                 </span>
