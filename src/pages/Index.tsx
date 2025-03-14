@@ -7,7 +7,6 @@ import { MetricCard } from "@/components/MetricCard";
 import { Footer } from "@/components/Footer";
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals, type MockData } from "@/utils/mockDataGenerator";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -198,49 +197,35 @@ const Index = () => {
     { id: "error-rate", label: "Error Rate" },
   ];
 
-  const renderContent = () => (
-    <>
-      <DashboardFilters
-        selectedHospital={selectedHospital}
-        selectedRobotTypes={selectedRobotTypes}
-        dateRange={dateRange}
-        date={date}
-        onHospitalChange={handleHospitalChange}
-        onRobotTypeChange={handleRobotTypeChange}
-        onRemoveRobotType={removeRobotType}
-        onDateRangeChange={handleDateRangeChange}
-        onCustomDateChange={handleCustomDateChange}
-        visibleMetrics={visibleMetrics}
-        onMetricToggle={handleMetricToggle}
-        metricOptions={metricOptions}
-        isMobile={isMobile}
-      />
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
-        {filteredMetrics.filter(metric => metric.id !== "downtime").map((metric) => (
-          <MetricCard
-            key={metric.id}
-            metric={metric}
-            onMetricClick={handleMetricClick}
-            selectedRobotTypes={selectedRobotTypes}
-          />
-        ))}
-      </div>
-    </>
-  );
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)] flex flex-col overflow-hidden">
       <DashboardHeader />
-      <main className="p-6 flex-grow overflow-auto">
-        {isMobile ? (
-          <div className="overflow-y-auto">
-            {renderContent()}
-          </div>
-        ) : (
-          <ScrollArea className="h-[calc(100vh-128px)]">
-            {renderContent()}
-          </ScrollArea>
-        )}
+      <main className="p-6 flex-grow overflow-y-auto overflow-x-hidden">
+        <DashboardFilters
+          selectedHospital={selectedHospital}
+          selectedRobotTypes={selectedRobotTypes}
+          dateRange={dateRange}
+          date={date}
+          onHospitalChange={handleHospitalChange}
+          onRobotTypeChange={handleRobotTypeChange}
+          onRemoveRobotType={removeRobotType}
+          onDateRangeChange={handleDateRangeChange}
+          onCustomDateChange={handleCustomDateChange}
+          visibleMetrics={visibleMetrics}
+          onMetricToggle={handleMetricToggle}
+          metricOptions={metricOptions}
+          isMobile={isMobile}
+        />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
+          {filteredMetrics.filter(metric => metric.id !== "downtime").map((metric) => (
+            <MetricCard
+              key={metric.id}
+              metric={metric}
+              onMetricClick={handleMetricClick}
+              selectedRobotTypes={selectedRobotTypes}
+            />
+          ))}
+        </div>
       </main>
       <Footer />
     </div>
