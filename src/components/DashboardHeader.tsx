@@ -33,7 +33,7 @@ export const DashboardHeader = () => {
           <div className="flex items-center gap-4">
             <Badge 
               variant="outline" 
-              className={`bg-[#2FD96D] text-[#14294B] rounded-full ${isMobile ? 'text-[9px] px-2 py-0.5' : 'text-xs px-3 py-0.5'} font-medium ml-6 border-0 pointer-events-none`}
+              className={`bg-[#2FD96D] text-[#14294B] rounded-full ${isMobile ? 'text-[7px] px-1.5 py-0.5 scale-80' : 'text-[10px] px-2.5 py-0.5 scale-80'} font-medium ml-6 border-0 pointer-events-none`}
             >
               Online
             </Badge>
