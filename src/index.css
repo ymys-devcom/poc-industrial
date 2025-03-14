@@ -81,18 +81,24 @@
     /* Fix for double scrolling issue */
     overflow-y: hidden;
     height: 100vh;
+    margin: 0;
+    padding: 0;
   }
   
   html {
     overflow-x: hidden; /* Ensure html element also doesn't scroll horizontally */
     max-width: 100vw;
     scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
   }
 
   /* Create a proper scrollable container for the app content */
   #root {
-    height: 100vh;
+    height: calc(100vh - 3px); /* Cut 3px from the bottom */
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
 }
 
