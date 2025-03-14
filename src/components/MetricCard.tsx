@@ -242,7 +242,7 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
           <div className="mt-3">
             {missionTypes.map((missionType, index) => (
               <div key={index} className="flex items-center justify-between mb-3 last:mb-0">
-                <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm'} truncate flex-1 max-w-none font-medium`}>
+                <span className={`text-white ${isMobile ? 'text-[11px] font-normal' : 'text-sm'} truncate flex-1 max-w-none font-medium`}>
                   {missionType.name}
                 </span>
                 <div className="flex items-center gap-1 md:gap-3">
@@ -273,3 +273,4 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
     </Card>
   );
 };
+
