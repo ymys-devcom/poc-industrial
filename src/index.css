@@ -74,15 +74,22 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    overflow: hidden; /* Prevent body scrolling - changed from overflow-x: hidden */
-    width: 100%;
-    position: relative;
-    max-width: 100vw;
   }
   
-  html {
-    overflow: hidden; /* Prevent html scrolling - changed from overflow-x: hidden */
-    max-width: 100vw;
+  /* Modify scrolling behavior based on screen size */
+  @media (max-width: 768px) {
+    body, html {
+      overflow-x: hidden; /* Prevent horizontal scrolling on mobile */
+      max-width: 100vw;
+    }
+  }
+  
+  /* Only hide overflow on desktop */
+  @media (min-width: 769px) {
+    body, html {
+      overflow: hidden; /* Prevent scrolling on desktop only */
+      max-width: 100vw;
+    }
   }
 }
 
