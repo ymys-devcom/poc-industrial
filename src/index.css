@@ -74,30 +74,14 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    /* Restore overflow behavior for mobile */
-    @media (max-width: 768px) {
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-    /* Keep desktop fix */
-    @media (min-width: 769px) {
-      overflow: hidden;
-    }
+    overflow: hidden; /* Prevent body scrolling - changed from overflow-x: hidden */
     width: 100%;
     position: relative;
     max-width: 100vw;
   }
   
   html {
-    /* Restore overflow behavior for mobile */
-    @media (max-width: 768px) {
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-    /* Keep desktop fix */
-    @media (min-width: 769px) {
-      overflow: hidden;
-    }
+    overflow: hidden; /* Prevent html scrolling - changed from overflow-x: hidden */
     max-width: 100vw;
   }
 }
