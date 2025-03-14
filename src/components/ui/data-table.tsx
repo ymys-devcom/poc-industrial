@@ -76,9 +76,9 @@ export function DataTable({ data, metricName, isPercentage }: DataTableProps) {
   );
 
   return (
-    <div className="rounded-md border border-white/10 bg-mayo-card backdrop-blur-md overflow-hidden w-full">
+    <div className="rounded-md border border-white/10 bg-mayo-card backdrop-blur-md overflow-hidden max-w-full">
       {isMobile ? (
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto max-w-[100vw]">
           <div className="min-w-[600px]">{tableContent}</div>
         </div>
       ) : (
