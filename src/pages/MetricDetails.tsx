@@ -467,7 +467,7 @@ const MetricDetails = () => {
     <div className="h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       {isMobile ? (
-        <main className="px-4 pb-6 pt-[10px] overflow-auto flex-1">
+        <main className="px-4 pb-6 pt-[10px] overflow-y-auto flex-1">
           <h1 className="text-xl font-bold text-white flex items-center mb-[10px]">
             <Button 
               variant="ghost" 
@@ -750,3 +750,4 @@ const MetricDetails = () => {
 };
 
 export default MetricDetails;
+

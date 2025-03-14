@@ -233,7 +233,7 @@ const Index = () => {
       <DashboardHeader />
       <main className="p-6 flex-grow overflow-auto">
         {isMobile ? (
-          <div className="overflow-auto">
+          <div className="overflow-y-auto">
             {renderContent()}
           </div>
         ) : (

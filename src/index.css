@@ -80,6 +80,7 @@
   @media (max-width: 768px) {
     body, html {
       overflow-x: hidden; /* Prevent horizontal scrolling on mobile */
+      overflow-y: auto; /* Enable vertical scrolling on mobile */
       max-width: 100vw;
     }
   }
