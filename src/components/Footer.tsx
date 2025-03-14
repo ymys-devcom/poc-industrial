@@ -25,7 +25,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#1F3366] text-white h-[34px] px-6 mt-auto flex justify-between items-center">
+    <footer className="bg-[#1F3366] text-white h-[34px] px-6 mt-auto flex justify-between items-center relative z-10">
       <div className="flex items-center">
         <img 
           src="/lovable-uploads/036be44f-66bd-4ac5-8b63-f64bf8579ff2.png" 
