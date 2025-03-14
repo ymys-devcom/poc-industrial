@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -467,7 +468,7 @@ const MetricDetails = () => {
     <div className="h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
       <ScrollArea className="flex-1">
-        <main className={`px-6 pb-6 ${isMobile ? 'pt-[10px]' : 'pt-6'} overflow-auto`}>
+        <main className={`px-6 pb-6 ${isMobile ? 'pt-[10px]' : 'pt-6'} w-full overflow-hidden content-container`}>
           {isMobile && (
             <h1 className="text-xl font-bold text-white flex items-center mb-[10px]">
               <Button 
@@ -518,8 +519,8 @@ const MetricDetails = () => {
             </Button>
           )}
 
-          <div className="space-y-6">
-            <div className="backdrop-blur-md border-white/10 rounded-lg">
+          <div className="space-y-6 w-full">
+            <div className="backdrop-blur-md border-white/10 rounded-lg w-full">
               <div className="flex items-center justify-between pb-4">
                 {!isMobile && (
                   <h1 className="text-2xl font-bold text-white flex items-center">
@@ -531,7 +532,7 @@ const MetricDetails = () => {
                 )}
               </div>
 
-              <div className="flex flex-row flex-wrap gap-3 mb-8">
+              <div className="flex flex-row flex-wrap gap-3 mb-8 w-full">
                 {robotMetrics.map((stat) => (
                   <div 
                     key={stat.type} 
@@ -555,9 +556,9 @@ const MetricDetails = () => {
                 ))}
               </div>
 
-              <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
+              <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6 w-full">
                 <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
-                <div className={`${isMobile ? 'h-[221px]' : 'h-[292px]'}`}>
+                <div className={`${isMobile ? 'h-[221px]' : 'h-[292px]'} w-full overflow-hidden`}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart 
                       data={chartData}
@@ -617,11 +618,13 @@ const MetricDetails = () => {
                 </div>
               </div>
               
-              <DataTable 
-                data={robotData} 
-                metricName={currentMetricDetails.title}
-                isPercentage={currentMetricDetails.isPercentage}
-              />
+              <div className="w-full">
+                <DataTable 
+                  data={robotData} 
+                  metricName={currentMetricDetails.title}
+                  isPercentage={currentMetricDetails.isPercentage}
+                />
+              </div>
             </div>
           </div>
         </main>
