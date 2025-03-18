@@ -1,4 +1,5 @@
-import { Calendar, ChevronDown, CheckCircle, Filter, FilterX } from "lucide-react";
+
+import { ChevronDown, CheckCircle, Filter, FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -6,19 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider
 } from "@/components/ui/tooltip";
-import { format } from "date-fns";
 import { mockHospitals, getMockRobotTypes } from "@/utils/mockDataGenerator";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileAwareDropdownItem } from "@/components/MobileAwareDropdownItem";
+import { DatePickerWithPresets } from "@/components/DatePickerWithPresets";
 
 interface DashboardFiltersProps {
   selectedHospital: string;
@@ -70,92 +69,14 @@ export const DashboardFilters = ({
         {isMobile ? (
           <div className="flex flex-col space-y-4 w-full">
             <div className="flex space-x-2 w-full">
-              <div className="w-[55%]">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex justify-start text-left text-xs bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden px-2 py-1"
-                    >
-                      <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
-                      <div className="flex-1 overflow-hidden">
-                        <span className="block truncate w-full">
-                          {date.from ? (
-                            date.to ? (
-                              <>
-                                {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                              </>
-                            ) : (
-                              format(date.from, "LLL dd, y")
-                            )
-                          ) : (
-                            "Pick a date range"
-                          )}
-                        </span>
-                      </div>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
-                    <CalendarComponent
-                      initialFocus
-                      mode="range"
-                      defaultMonth={date.from}
-                      selected={{ from: date.from, to: date.to }}
-                      onSelect={onCustomDateChange}
-                      numberOfMonths={1}
-                      className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="w-[35%]">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
-                    >
-                      <span className="truncate">{dateRange}</span>
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent 
-                    fitToTriggerWidth
-                    className="bg-[#526189] text-white"
-                  >
-                    <DropdownMenuItem 
-                      onClick={() => onDateRangeChange("Today")}
-                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                    >
-                      <span className="truncate">Today</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => onDateRangeChange("Last 7 Days")}
-                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                    >
-                      <span className="truncate">Last 7 Days</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => onDateRangeChange("Last 30 Days")}
-                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                    >
-                      <span className="truncate">Last 30 Days</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => onDateRangeChange("Last 90 Days")}
-                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                    >
-                      <span className="truncate">Last 90 Days</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => onDateRangeChange("Last 180 Days")}
-                      className={`text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer ${mobileItemClasses}`}
-                    >
-                      <span className="truncate">Last 180 Days</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="w-[90%]">
+                <DatePickerWithPresets
+                  date={date}
+                  onCustomDateChange={onCustomDateChange}
+                  onDateRangeChange={onDateRangeChange}
+                  dateRange={dateRange}
+                  isMobile={true}
+                />
               </div>
 
               <div className="w-[10%]">
@@ -463,96 +384,14 @@ export const DashboardFilters = ({
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
-              <div className="flex w-full md:w-auto space-x-2">
-                <div className="w-[60%] md:w-[180px]">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className="w-full flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1"
-                      >
-                        <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
-                        <div className="flex-1 overflow-hidden">
-                          <span className="block truncate w-full">
-                            {date.from ? (
-                              date.to ? (
-                                <>
-                                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                                </>
-                              ) : (
-                                format(date.from, "LLL dd, y")
-                              )
-                            ) : (
-                              "Pick a date range"
-                            )}
-                          </span>
-                        </div>
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-[#526189] text-white" align="start">
-                      <CalendarComponent
-                        initialFocus
-                        mode="range"
-                        defaultMonth={date.from}
-                        selected={{ from: date.from, to: date.to }}
-                        onSelect={onCustomDateChange}
-                        numberOfMonths={1}
-                        className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                <div className="w-[40%] md:w-auto">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className="w-full min-w-[110px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
-                      >
-                        <span className="truncate">{dateRange}</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent 
-                      fitToTriggerWidth
-                      className="bg-[#526189] text-white"
-                    >
-                      <DropdownMenuItem 
-                        onClick={() => onDateRangeChange("Today")}
-                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
-                      >
-                        <span className="truncate">Today</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => onDateRangeChange("Last 7 Days")}
-                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
-                      >
-                        <span className="truncate">Last 7 Days</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => onDateRangeChange("Last 30 Days")}
-                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
-                      >
-                        <span className="truncate">Last 30 Days</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => onDateRangeChange("Last 90 Days")}
-                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
-                      >
-                        <span className="truncate">Last 90 Days</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => onDateRangeChange("Last 180 Days")}
-                        className="text-xs text-white hover:bg-[#3E4F7C] hover:text-white focus:bg-[#3E4F7C] focus:text-white cursor-pointer px-2 py-1"
-                      >
-                        <span className="truncate">Last 180 Days</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
+            <div className="flex w-full md:w-auto">
+              <DatePickerWithPresets
+                date={date}
+                onCustomDateChange={onCustomDateChange}
+                onDateRangeChange={onDateRangeChange}
+                dateRange={dateRange}
+                className="w-full md:w-[300px]"
+              />
             </div>
           </div>
         )}
