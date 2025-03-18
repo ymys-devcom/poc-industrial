@@ -86,9 +86,8 @@ export function DatePickerWithPresets({
             numberOfMonths={1}
             className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
           />
-          <div className={`p-3 border-t border-white/10 md:border-t-0 md:border-l md:pl-6 ${isMobile ? "" : "min-w-[150px]"}`}>
+          <div className={`p-3 border-t border-white/10 md:border-t-0 md:border-l md:pl-4 ${isMobile ? "" : "min-w-[120px]"}`}>
             <div className="space-y-2">
-              <div className="font-medium text-xs md:text-sm">Presets</div>
               <div className="flex flex-col space-y-2">
                 {presets.map((preset) => (
                   <Button
