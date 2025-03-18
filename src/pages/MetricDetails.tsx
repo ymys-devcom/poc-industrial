@@ -543,7 +543,7 @@ const MetricDetails = () => {
                   <p className="text-white/60 text-xs">
                     {currentMetricDetails.isAccumulative ? "Total" : "Average"}
                   </p>
-                  <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All Bots" ? "#FF9143" : "#FFFFFF" }}>
+                  <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All" ? "#FF9143" : "#FFFFFF" }}>
                     {stat.isPercentage 
                       ? `${Math.round(stat.metricValue)}%` 
                       : Math.round(stat.metricValue)}
@@ -605,7 +605,7 @@ const MetricDetails = () => {
                           key={type}
                           type="monotone" 
                           dataKey={type} 
-                          stroke={type === "All Bots" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : index === 3 ? "#FFC107" : "#E91E63"} 
+                          stroke={type === "All" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : index === 3 ? "#FFC107" : "#E91E63"} 
                           strokeWidth={2}
                           name={type}
                         />
