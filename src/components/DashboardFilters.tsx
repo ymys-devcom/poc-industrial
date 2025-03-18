@@ -1,4 +1,3 @@
-
 import { Calendar, ChevronDown, CheckCircle, Filter, FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,18 +62,14 @@ export const DashboardFilters = ({
     setShowMobileFilters(!showMobileFilters);
   };
 
-  // Adjust item height for mobile - adding 2px to the default height
   const mobileItemClasses = isMobile ? "py-[7.2px] px-2" : "px-2 py-1";
 
   return (
     <TooltipProvider>
       <div className="flex flex-col md:flex-col space-y-4 md:space-y-4 w-full max-w-full">
         {isMobile ? (
-          // Mobile layout
           <div className="flex flex-col space-y-4 w-full">
-            {/* First row - always visible */}
             <div className="flex space-x-2 w-full">
-              {/* Date picker - 60% width */}
               <div className="w-[55%]">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -114,7 +109,6 @@ export const DashboardFilters = ({
                 </Popover>
               </div>
 
-              {/* Date range presets - increased to 35% width (10% wider) */}
               <div className="w-[35%]">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -164,7 +158,6 @@ export const DashboardFilters = ({
                 </DropdownMenu>
               </div>
 
-              {/* Filter toggle button - 10% width */}
               <div className="w-[10%]">
                 <Button
                   variant="ghost"
@@ -180,10 +173,8 @@ export const DashboardFilters = ({
               </div>
             </div>
 
-            {/* Additional filters - toggle visibility */}
             {showMobileFilters && (
               <>
-                {/* Site dropdown - full width */}
                 <div className="w-full">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -215,7 +206,6 @@ export const DashboardFilters = ({
                   </DropdownMenu>
                 </div>
 
-                {/* Robot type dropdown - full width */}
                 <div className="w-full">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -269,7 +259,6 @@ export const DashboardFilters = ({
                   </DropdownMenu>
                 </div>
 
-                {/* Metrics dropdown - if applicable */}
                 {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                   <div className="w-full">
                     <DropdownMenu>
@@ -320,15 +309,13 @@ export const DashboardFilters = ({
             )}
           </div>
         ) : (
-          // Desktop layout
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 w-full max-w-full">
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-auto">
-              {/* Hospital dropdown - 15px smaller width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[165px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[175px] flex items-center justify-between bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedHospital === "All" ? "All Facilities" : selectedHospital}
@@ -363,12 +350,11 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Robot type dropdown - 15px smaller than original width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full md:w-[165px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                    className="w-full md:w-[175px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                   >
                     <span className="flex-1 text-left truncate">
                       {selectedRobotTypes.includes("All")
@@ -423,13 +409,12 @@ export const DashboardFilters = ({
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* Metrics dropdown - 5px smaller than previous width */}
               {metricOptions && metricOptions.length > 0 && onMetricToggle && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full md:w-[165px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
+                      className="w-full md:w-[175px] flex items-center justify-between gap-2 bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer text-xs px-2 py-1"
                     >
                       <span className="flex-1 text-left truncate">
                         {visibleMetrics.includes("all") 
@@ -478,10 +463,8 @@ export const DashboardFilters = ({
               )}
             </div>
 
-            {/* Date controls container */}
             <div className="flex flex-col md:flex-row w-full md:w-auto items-center space-y-4 md:space-y-0 md:space-x-2">
               <div className="flex w-full md:w-auto space-x-2">
-                {/* Date picker - 20px smaller width */}
                 <div className="w-[60%] md:w-[180px]">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -521,7 +504,6 @@ export const DashboardFilters = ({
                   </Popover>
                 </div>
 
-                {/* Date range dropdown - kept the same width */}
                 <div className="w-[40%] md:w-auto">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
