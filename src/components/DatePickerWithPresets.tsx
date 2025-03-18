@@ -49,7 +49,7 @@ export function DatePickerWithPresets({
         <Button 
           variant="outline" 
           className={cn(
-            "w-full flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1",
+            "w-[85%] flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1",
             className
           )}
         >

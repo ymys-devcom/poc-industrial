@@ -69,7 +69,7 @@ export const DashboardFilters = ({
         {isMobile ? (
           <div className="flex flex-col space-y-4 w-full">
             <div className="flex space-x-2 w-full">
-              <div className="w-[90%]">
+              <div className="w-[85%]">
                 <DatePickerWithPresets
                   date={date}
                   onCustomDateChange={onCustomDateChange}
@@ -79,7 +79,7 @@ export const DashboardFilters = ({
                 />
               </div>
 
-              <div className="w-[10%]">
+              <div className="w-[15%]">
                 <Button
                   variant="ghost"
                   onClick={toggleMobileFilters}
@@ -390,7 +390,7 @@ export const DashboardFilters = ({
                 onCustomDateChange={onCustomDateChange}
                 onDateRangeChange={onDateRangeChange}
                 dateRange={dateRange}
-                className="w-full md:w-[300px]"
+                className="w-[85%] md:w-[255px]"
               />
             </div>
           </div>
