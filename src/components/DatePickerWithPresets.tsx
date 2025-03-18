@@ -80,7 +80,7 @@ export function DatePickerWithPresets({
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-auto p-0 bg-[#526189] text-white" 
+        className="w-auto p-0 bg-[#526189] text-white z-50" 
         align={align}
         side={isMobile ? "bottom" : "bottom"}
       >
@@ -97,8 +97,11 @@ export function DatePickerWithPresets({
                 to: newDate?.to
               });
               
+              // Set isCustomRange to true only if both from and to dates are selected
               if (newDate?.from && newDate?.to) {
                 setIsCustomRange(true);
+                // Close the popover when a complete range is selected
+                setTimeout(() => setOpen(false), 300);
               }
             }}
             numberOfMonths={1}
