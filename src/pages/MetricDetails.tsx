@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
-import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
+import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes, parseISO } from "date-fns";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DataTable, RobotData } from "@/components/ui/data-table";
 
@@ -56,8 +55,8 @@ const MetricDetails = () => {
     from: Date | undefined;
     to: Date | undefined;
   }>({
-    from: dateFromStr ? new Date(dateFromStr) : undefined,
-    to: dateToStr ? new Date(dateToStr) : undefined,
+    from: dateFromStr ? parseISO(dateFromStr) : undefined,
+    to: dateToStr ? parseISO(dateToStr) : undefined,
   });
 
   useEffect(() => {
@@ -69,6 +68,93 @@ const MetricDetails = () => {
       navigate("/");
     }
   }, [hospitalFromUrl, metricId, navigate]);
+
+  const handleDateRangeChange = (range: string) => {
+    setDateRange(range);
+    setDate({ from: undefined, to: undefined });
+    
+    const params = new URLSearchParams(location.search);
+    params.set('dateRange', range);
+    params.delete('dateFrom');
+    params.delete('dateTo');
+    navigate(`/metrics/${metricId}?${params.toString()}`);
+  };
+
+  const handleCustomDateChange = (range: { from: Date | undefined; to: Date | undefined }) => {
+    setDate(range);
+    
+    if (range.from && range.to) {
+      setDateRange("Custom");
+      
+      const params = new URLSearchParams(location.search);
+      params.set('dateRange', 'Custom');
+      
+      if (range.from) {
+        params.set('dateFrom', range.from.toISOString());
+      } else {
+        params.delete('dateFrom');
+      }
+      
+      if (range.to) {
+        params.set('dateTo', range.to.toISOString());
+      } else {
+        params.delete('dateTo');
+      }
+      
+      navigate(`/metrics/${metricId}?${params.toString()}`);
+    }
+  };
+
+  const handleHospitalChange = (hospital: string) => {
+    setSelectedHospital(hospital);
+    
+    const params = new URLSearchParams(location.search);
+    params.set('facility', hospital);
+    navigate(`/metrics/${metricId}?${params.toString()}`);
+  };
+
+  const handleRobotTypeChange = (robotType: string) => {
+    let newRobotTypes: string[];
+    
+    if (robotType === "All") {
+      newRobotTypes = ["All"];
+    } else {
+      const currentTypes = selectedRobotTypes.filter(t => t !== "All");
+      if (currentTypes.includes(robotType)) {
+        newRobotTypes = currentTypes.filter(t => t !== robotType);
+        if (newRobotTypes.length === 0) {
+          newRobotTypes = ["All"];
+        }
+      } else {
+        newRobotTypes = [...currentTypes, robotType];
+      }
+    }
+    
+    setSelectedRobotTypes(newRobotTypes);
+    
+    const params = new URLSearchParams(location.search);
+    params.delete('robotType');
+    newRobotTypes.forEach(type => {
+      params.append('robotType', type);
+    });
+    
+    navigate(`/metrics/${metricId}?${params.toString()}`);
+  };
+
+  const removeRobotType = (robotType: string) => {
+    if (robotType === "All") return;
+    
+    const newRobotTypes = selectedRobotTypes.filter(t => t !== robotType);
+    setSelectedRobotTypes(newRobotTypes.length > 0 ? newRobotTypes : ["All"]);
+    
+    const params = new URLSearchParams(location.search);
+    params.delete('robotType');
+    (newRobotTypes.length > 0 ? newRobotTypes : ["All"]).forEach(type => {
+      params.append('robotType', type);
+    });
+    
+    navigate(`/metrics/${metricId}?${params.toString()}`);
+  };
 
   const getMetricDetails = (id: string) => {
     const metrics: Record<string, { title: string, isPercentage: boolean, isAccumulative: boolean }> = {
@@ -496,23 +582,11 @@ const MetricDetails = () => {
           selectedRobotTypes={selectedRobotTypes}
           dateRange={dateRange}
           date={date}
-          onHospitalChange={setSelectedHospital}
-          onRobotTypeChange={(type) => {
-            if (type === "All") {
-              setSelectedRobotTypes(["All"]);
-            } else {
-              const newTypes = selectedRobotTypes.includes(type)
-                ? selectedRobotTypes.filter(t => t !== type)
-                : [...selectedRobotTypes.filter(t => t !== "All"), type];
-              setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
-            }
-          }}
-          onRemoveRobotType={(type) => {
-            const newTypes = selectedRobotTypes.filter(t => t !== type);
-            setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
-          }}
-          onDateRangeChange={setDateRange}
-          onCustomDateChange={setDate}
+          onHospitalChange={handleHospitalChange}
+          onRobotTypeChange={handleRobotTypeChange}
+          onRemoveRobotType={removeRobotType}
+          onDateRangeChange={handleDateRangeChange}
+          onCustomDateChange={handleCustomDateChange}
         />
 
         {!isMobile && (

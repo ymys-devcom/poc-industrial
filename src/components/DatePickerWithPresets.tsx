@@ -48,7 +48,17 @@ export function DatePickerWithPresets({
   useEffect(() => {
     const isPreset = presets.some(preset => preset.value === dateRange);
     setIsCustomRange(!isPreset && (date.from !== undefined || date.to !== undefined));
-  }, [dateRange, date]);
+  }, [dateRange, date, presets]);
+
+  // Format the date range for display
+  const formatDisplayText = () => {
+    if (date.from && date.to) {
+      return `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`;
+    } else if (date.from) {
+      return format(date.from, "LLL dd, y");
+    }
+    return dateRange || "Pick a date range";
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -64,17 +74,7 @@ export function DatePickerWithPresets({
           <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
           <div className="flex-1 overflow-hidden">
             <span className="block truncate w-full">
-              {date.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                  </>
-                ) : (
-                  format(date.from, "LLL dd, y")
-                )
-              ) : (
-                dateRange || "Pick a date range"
-              )}
+              {formatDisplayText()}
             </span>
           </div>
         </Button>
