@@ -91,8 +91,13 @@ export function DatePickerWithPresets({
             defaultMonth={date.from}
             selected={{ from: date.from, to: date.to }}
             onSelect={(newDate) => {
-              onCustomDateChange(newDate);
-              if (newDate.from && newDate.to) {
+              // Fix for the type error - ensure we're passing the correct type
+              onCustomDateChange({
+                from: newDate?.from,
+                to: newDate?.to
+              });
+              
+              if (newDate?.from && newDate?.to) {
                 setIsCustomRange(true);
               }
             }}
