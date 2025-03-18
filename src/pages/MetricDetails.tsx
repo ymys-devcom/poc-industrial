@@ -126,7 +126,7 @@ const MetricDetails = () => {
         { type: "WIPTransport", active: 12, total: 15 },
       ],
       "All": [
-        { type: "All Bots", active: 309, total: 334 },
+        { type: "All", active: 309, total: 334 },
         { type: "Injection Mold", active: 227, total: 240 },
         { type: "Thermoform", active: 28, total: 34 },
         { type: "RM Delivery", active: 54, total: 60 },
@@ -195,28 +195,28 @@ const MetricDetails = () => {
     
     const baseValues: HospitalMetricValues = {
       "PolyPhorm Plant": {
-        "All Bots": { base: 50, variation: 10 },
+        "All": { base: 50, variation: 10 },
         "Injection Mold": { base: 45, variation: 10 },
         "Thermoform": { base: 40, variation: 8 },
         "RM Delivery": { base: 35, variation: 7 },
         "WIPTransport": { base: 35, variation: 7 }
       },
       "ThermoMolt Plant": {
-        "All Bots": { base: 45, variation: 10 },
+        "All": { base: 45, variation: 10 },
         "Injection Mold": { base: 40, variation: 8 },
         "Thermoform": { base: 35, variation: 7 },
         "RM Delivery": { base: 30, variation: 6 },
         "WIPTransport": { base: 30, variation: 6 }
       },
       "Mangurian building": {
-        "All Bots": { base: 40, variation: 8 },
+        "All": { base: 40, variation: 8 },
         "Injection Mold": { base: 35, variation: 7 },
         "Thermoform": { base: 30, variation: 6 },
         "RM Delivery": { base: 25, variation: 5 },
         "WIPTransport": { base: 25, variation: 5 }
       },
       "All": {
-        "All Bots": { base: 50, variation: 10 },
+        "All": { base: 50, variation: 10 },
         "Injection Mold": { base: 45, variation: 10 },
         "Thermoform": { base: 40, variation: 8 },
         "RM Delivery": { base: 35, variation: 7 },
@@ -226,28 +226,28 @@ const MetricDetails = () => {
 
     const errorRateValues: HospitalMetricValues = {
       "PolyPhorm Plant": {
-        "All Bots": { base: 3, variation: 1.5 },
+        "All": { base: 3, variation: 1.5 },
         "Injection Mold": { base: 3, variation: 1.5 },
         "Thermoform": { base: 4, variation: 2 },
         "RM Delivery": { base: 4.5, variation: 2.5 },
         "WIPTransport": { base: 4.5, variation: 2.5 }
       },
       "ThermoMolt Plant": {
-        "All Bots": { base: 3, variation: 1.5 },
+        "All": { base: 3, variation: 1.5 },
         "Injection Mold": { base: 2.5, variation: 1.2 },
         "Thermoform": { base: 3.5, variation: 1.8 },
         "RM Delivery": { base: 4, variation: 2 },
         "WIPTransport": { base: 4, variation: 2 }
       },
       "Mangurian building": {
-        "All Bots": { base: 2.5, variation: 1.2 },
+        "All": { base: 2.5, variation: 1.2 },
         "Injection Mold": { base: 2, variation: 1 },
         "Thermoform": { base: 3, variation: 1.5 },
         "RM Delivery": { base: 3.5, variation: 1.8 },
         "WIPTransport": { base: 3.5, variation: 1.8 }
       },
       "All": {
-        "All Bots": { base: 2.8, variation: 1.2 },
+        "All": { base: 2.8, variation: 1.2 },
         "Injection Mold": { base: 2.5, variation: 1.2 },
         "Thermoform": { base: 3.5, variation: 1.8 },
         "RM Delivery": { base: 4, variation: 2 },
@@ -257,28 +257,28 @@ const MetricDetails = () => {
     
     const accumulativeValues: HospitalMetricValues = {
       "PolyPhorm Plant": {
-        "All Bots": { base: 920, variation: 150 },
+        "All": { base: 920, variation: 150 },
         "Injection Mold": { base: 550, variation: 80 },
         "Thermoform": { base: 150, variation: 30 },
         "RM Delivery": { base: 220, variation: 40 },
         "WIPTransport": { base: 220, variation: 40 }
       },
       "ThermoMolt Plant": {
-        "All Bots": { base: 780, variation: 120 },
+        "All": { base: 780, variation: 120 },
         "Injection Mold": { base: 480, variation: 70 },
         "Thermoform": { base: 120, variation: 25 },
         "RM Delivery": { base: 180, variation: 35 },
         "WIPTransport": { base: 180, variation: 35 }
       },
       "Mangurian building": {
-        "All Bots": { base: 650, variation: 100 },
+        "All": { base: 650, variation: 100 },
         "Injection Mold": { base: 400, variation: 60 },
         "Thermoform": { base: 100, variation: 20 },
         "RM Delivery": { base: 150, variation: 30 },
         "WIPTransport": { base: 150, variation: 30 }
       },
       "All": {
-        "All Bots": { base: 935, variation: 150 },
+        "All": { base: 935, variation: 150 },
         "Injection Mold": { base: 643, variation: 90 },
         "Thermoform": { base: 370, variation: 70 },
         "RM Delivery": { base: 550, variation: 90 },
@@ -391,7 +391,7 @@ const MetricDetails = () => {
 
   const currentMetricDetails = metricId ? getMetricDetails(metricId) : { title: "Unknown Metric", isPercentage: false, isAccumulative: false };
 
-  const availableRobotTypes = ["All Bots", "Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"];
+  const availableRobotTypes = ["All", "Injection Mold", "Thermoform", "RM Delivery", "WIPTransport"];
 
   const formatYAxisValue = (value: number): string => {
     if (value >= 1000) {
