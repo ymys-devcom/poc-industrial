@@ -84,7 +84,7 @@ export function DatePickerWithPresets({
             selected={{ from: date.from, to: date.to }}
             onSelect={onCustomDateChange}
             numberOfMonths={1}
-            className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C] [&_.rdp-day_button:focus]:bg-[#3E4F7C]"
+            className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C]/70 [&_.rdp-day_button:focus]:bg-[#3E4F7C]/70"
           />
           <div className={`p-3 border-t border-white/10 md:border-t-0 md:border-l md:pl-4 ${isMobile ? "" : "min-w-[120px]"}`}>
             <div className="space-y-2">
