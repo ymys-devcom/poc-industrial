@@ -84,7 +84,7 @@ export function DatePickerWithPresets({
             selected={{ from: date.from, to: date.to }}
             onSelect={onCustomDateChange}
             numberOfMonths={1}
-            className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#3E4F7C]/70 [&_.rdp-day_button:focus]:bg-[#3E4F7C]/70"
+            className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#304773]/70 [&_.rdp-day_button:focus]:bg-[#304773]/70"
           />
           <div className={`p-3 border-t border-white/10 md:border-t-0 md:border-l md:pl-4 ${isMobile ? "" : "min-w-[120px]"}`}>
             <div className="space-y-2">
@@ -99,8 +99,8 @@ export function DatePickerWithPresets({
                     variant={dateRange === preset.value ? "secondary" : "outline"}
                     className={`text-white text-xs md:text-xs justify-start ${
                       dateRange === preset.value 
-                        ? "bg-[#3E4F7C] hover:bg-[#304773]" 
-                        : "bg-transparent hover:bg-[#3E4F7C]/50 border-white/20"
+                        ? "bg-[#304773] hover:bg-[#253a60]" 
+                        : "bg-transparent hover:bg-[#304773]/50 border-white/20"
                     }`}
                     size="sm"
                   >
