@@ -43,8 +43,8 @@ export function DatePickerWithPresets({
     { label: "Last 180 Days", value: "Last 180 Days" },
   ];
 
-  // Check if a preset is selected or if it's a custom date range
-  const isPresetSelected = dateRange && presets.some(preset => preset.value === dateRange);
+  // Check if the current dateRange is one of our presets
+  const isPresetSelected = presets.some(preset => preset.value === dateRange);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
