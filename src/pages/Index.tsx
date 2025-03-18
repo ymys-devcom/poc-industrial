@@ -67,7 +67,24 @@ const Index = () => {
   };
 
   const handleMetricClick = (metricId: string) => {
-    navigate(`/metrics/${metricId}?facility=${selectedHospital}`);
+    const params = new URLSearchParams();
+    params.append('facility', selectedHospital);
+    
+    params.append('dateRange', dateRange);
+    
+    if (date.from) {
+      params.append('dateFrom', date.from.toISOString());
+    }
+    
+    if (date.to) {
+      params.append('dateTo', date.to.toISOString());
+    }
+    
+    selectedRobotTypes.forEach(type => {
+      params.append('robotType', type);
+    });
+    
+    navigate(`/metrics/${metricId}?${params.toString()}`);
   };
 
   const handleMetricToggle = (metricId: string) => {

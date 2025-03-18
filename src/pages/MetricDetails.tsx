@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -33,20 +34,30 @@ const MetricDetails = () => {
   const isMobile = useIsMobile();
   
   const queryParams = new URLSearchParams(location.search);
-  const hospitalFromUrl = queryParams.get('hospital');
+  const hospitalFromUrl = queryParams.get('facility');
+  const dateRangeFromUrl = queryParams.get('dateRange');
+  const dateFromStr = queryParams.get('dateFrom');
+  const dateToStr = queryParams.get('dateTo');
+  const robotTypesFromUrl = queryParams.getAll('robotType');
   
   const [selectedHospital, setSelectedHospital] = useState(
     hospitalFromUrl || mockHospitals[0]
   );
   
-  const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
-  const [dateRange, setDateRange] = useState("Last 7 Days");
+  const [selectedRobotTypes, setSelectedRobotTypes] = useState(
+    robotTypesFromUrl.length > 0 ? robotTypesFromUrl : ["All"]
+  );
+  
+  const [dateRange, setDateRange] = useState(
+    dateRangeFromUrl || "Last 7 Days"
+  );
+  
   const [date, setDate] = useState<{
     from: Date | undefined;
     to: Date | undefined;
   }>({
-    from: undefined,
-    to: undefined,
+    from: dateFromStr ? new Date(dateFromStr) : undefined,
+    to: dateToStr ? new Date(dateToStr) : undefined,
   });
 
   useEffect(() => {
