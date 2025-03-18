@@ -53,7 +53,7 @@ export function DatePickerWithPresets({
           variant="outline" 
           className={cn(
             "flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1",
-            isPresetSelected ? "w-[40%]" : "w-[85%]",
+            isPresetSelected ? "w-[140px]" : "w-[255px]",
             className
           )}
         >
