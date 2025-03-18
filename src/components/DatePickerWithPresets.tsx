@@ -99,8 +99,8 @@ export function DatePickerWithPresets({
                     variant={dateRange === preset.value ? "secondary" : "outline"}
                     className={`text-white text-xs md:text-xs justify-start ${
                       dateRange === preset.value 
-                        ? "bg-[#253a60] hover:bg-[#1A1F2C]" 
-                        : "bg-transparent hover:bg-[#253a60]/50 border-white/20"
+                        ? "bg-[#253a60] hover:bg-[#1A1F2C] w-auto inline-block" 
+                        : "bg-transparent hover:bg-[#253a60]/50 border-white/20 w-full"
                     }`}
                     size="sm"
                   >
