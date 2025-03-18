@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -68,7 +67,7 @@ const Index = () => {
   };
 
   const handleMetricClick = (metricId: string) => {
-    navigate(`/metrics/${metricId}?hospital=${selectedHospital}`);
+    navigate(`/metrics/${metricId}?facility=${selectedHospital}`);
   };
 
   const handleMetricToggle = (metricId: string) => {
