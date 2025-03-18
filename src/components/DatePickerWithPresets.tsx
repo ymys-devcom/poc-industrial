@@ -43,13 +43,17 @@ export function DatePickerWithPresets({
     { label: "Last 180 Days", value: "Last 180 Days" },
   ];
 
+  // Check if a preset is selected or if it's a custom date range
+  const isPresetSelected = dateRange && presets.some(preset => preset.value === dateRange);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button 
           variant="outline" 
           className={cn(
-            "w-[85%] flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1",
+            "flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1",
+            isPresetSelected ? "w-[40%]" : "w-[85%]",
             className
           )}
         >
