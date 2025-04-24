@@ -60,11 +60,14 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
   // Add 1 to include both the start and end dates
   numberOfPoints = dateDiff + 1;
   
-  const url = `https://cr-metrics-api.devcom.com/Metrics/getDetailedInfo?missionTypes=2&missionTypes=3&metricType=1&dateFrom=${dateFrom}&dateTo=${dateTo}&pointsAmount=${numberOfPoints}`;
+  // Use the passed pointsAmount if provided, otherwise use calculated value
+  const pointsToUse = pointsAmount || numberOfPoints;
+  
+  const url = `https://cr-metrics-api.devcom.com/Metrics/getDetailedInfo?missionTypes=2&missionTypes=3&metricType=1&dateFrom=${dateFrom}&dateTo=${dateTo}&pointsAmount=${pointsToUse}`;
   
   try {
     console.log('Fetching data from:', url);
-    console.log(`Date range: ${dateFrom} to ${dateTo} with ${numberOfPoints} points`);
+    console.log(`Date range: ${dateFrom} to ${dateTo} with ${pointsToUse} points`);
     
     const response = await fetch(url, {
       method: 'GET',
@@ -99,6 +102,6 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     console.error('Error fetching mission time metric:', error);
     
     // Return mock data in case of error for better UX
-    return generateMockData(dateFrom, dateTo, numberOfPoints);
+    return generateMockData(dateFrom, dateTo, pointsToUse);
   }
 };

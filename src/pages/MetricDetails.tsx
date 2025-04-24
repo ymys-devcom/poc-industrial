@@ -565,7 +565,7 @@ const MetricDetails = () => {
   const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, selectedHospital, robotMetrics]);
 
   const { data: metricData, isLoading: isMetricDataLoading, error: metricDataError } = useQuery({
-    queryKey: ['missionTime', date.from, date.to],
+    queryKey: ['missionTime', date.from, date.to, dateRange],
     queryFn: () => {
       let fromDate: Date, toDate: Date;
       
@@ -597,10 +597,10 @@ const MetricDetails = () => {
         }
       }
       
-      return fetchMissionTimeMetric(
-        fromDate.toISOString(),
-        toDate.toISOString()
-      );
+      const dateFrom = format(fromDate, 'yyyy-MM-dd');
+      const dateTo = format(toDate, 'yyyy-MM-dd');
+      
+      return fetchMissionTimeMetric(dateFrom, dateTo);
     },
     enabled: metricId === 'mission-time'
   });
