@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -9,8 +8,7 @@ import { mockHospitals, getMockRobotTypes } from "@/utils/mockDataGenerator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fetchMissionTimeMetric } from "@/services/metricsApi";
 import { useQuery } from "@tanstack/react-query";
-import { format, subDays } from "date-fns";
-import { toast } from "@/components/ui/use-toast";
+import { format, subDays, isValid, parseISO } from "date-fns";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -28,21 +26,38 @@ const Index = () => {
   const navigate = useNavigate();
 
   // Make sure we have valid dates before querying
-  const isValidDateRange = date.from instanceof Date && date.to instanceof Date;
+  const isValidDateRange = date.from instanceof Date && 
+                           date.to instanceof Date && 
+                           isValid(date.from) && 
+                           isValid(date.to);
 
   const { data: missionTimeData, isLoading, error } = useQuery({
     queryKey: ['missionTime', date.from?.toISOString(), date.to?.toISOString()],
     queryFn: async () => {
-      if (!isValidDateRange) return null;
+      if (!isValidDateRange) {
+        console.warn('Invalid date range, using default');
+        return null;
+      }
       
       const dateFrom = format(date.from as Date, 'yyyy-MM-dd');
       const dateTo = format(date.to as Date, 'yyyy-MM-dd');
-      const daysDiff = Math.ceil(((date.to as Date).getTime() - (date.from as Date).getTime()) / (1000 * 60 * 60 * 24));
-      const pointsAmount = Math.max(daysDiff + 1, 1); // Ensure at least 1 point
+      
+      // Calculate days difference, ensuring at least 1
+      let daysDiff = Math.ceil(((date.to as Date).getTime() - (date.from as Date).getTime()) / (1000 * 60 * 60 * 24));
+      daysDiff = Math.max(daysDiff, 1);
+      
+      // Ensure we have at least 2 points for chart display
+      const pointsAmount = Math.max(daysDiff, 2);
       
       console.log(`Fetching mission time data from ${dateFrom} to ${dateTo} with ${pointsAmount} points`);
+      
       try {
         const response = await fetchMissionTimeMetric(dateFrom, dateTo, pointsAmount);
+        
+        if (!response || !response.chartPointGroups || response.chartPointGroups.length === 0) {
+          console.warn('No chart point groups in response');
+          return null;
+        }
         
         // Calculate trend based on the first chart point group's data
         const firstGroup = response.chartPointGroups[0];
@@ -55,8 +70,9 @@ const Index = () => {
         const points = firstGroup.points;
         const firstValue = points[0]?.value || 0;
         const lastValue = points[points.length - 1]?.value || 0;
-        const trend = firstValue < lastValue ? "up" as const : firstValue > lastValue ? "down" as const : "stable" as const;
+        const trend = firstValue < lastValue ? "up" : firstValue > lastValue ? "down" : "stable";
         
+        // Format data for the MetricCard component
         return {
           id: "mission-time",
           label: response.name,
@@ -83,7 +99,7 @@ const Index = () => {
     },
     enabled: isValidDateRange,
     retry: 1,
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    staleTime: 1 * 60 * 1000 // 1 minute
   });
 
   const handleHospitalChange = (hospital: string) => {
