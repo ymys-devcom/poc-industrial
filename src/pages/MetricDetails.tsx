@@ -561,7 +561,7 @@ const MetricDetails = () => {
 
   const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, selectedHospital, robotMetrics]);
 
-  const { data: metricData } = useQuery({
+  const { data: metricData, isLoading: isMetricDataLoading, error: metricDataError } = useQuery({
     queryKey: ['missionTime', date.from, date.to],
     queryFn: () => fetchMissionTimeMetric(
       date.from?.toISOString() || new Date().toISOString(),
@@ -572,33 +572,50 @@ const MetricDetails = () => {
   });
 
   const chartDataFromApi = useMemo(() => {
-    if (!metricData?.chartPointGroups) {
+    if (!metricData?.chartPointGroups || metricData.chartPointGroups.length === 0) {
+      console.log('No chart point groups available, returning empty array');
       return [];
     }
 
-    const allDates = new Set<string>();
-    metricData.chartPointGroups.forEach(group => {
-      group.points.forEach(point => {
-        allDates.add(point.date);
-      });
-    });
-
-    return Array.from(allDates).map(date => {
-      const dataPoint: Record<string, any> = {
-        date: format(parseISO(date), 'MMM dd')
-      };
-
+    try {
+      const allDates = new Set<string>();
       metricData.chartPointGroups.forEach(group => {
-        const point = group.points.find(p => p.date === date);
-        dataPoint[group.missionType] = point?.value || 0;
+        if (group.points && Array.isArray(group.points)) {
+          group.points.forEach(point => {
+            if (point && point.date) {
+              allDates.add(point.date);
+            }
+          });
+        }
       });
 
-      return dataPoint;
-    }).sort((a, b) => {
-      const dateA = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === a.date) || '');
-      const dateB = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === b.date) || '');
-      return dateA.getTime() - dateB.getTime();
-    });
+      if (allDates.size === 0) {
+        console.log('No valid dates found in chart data');
+        return [];
+      }
+
+      return Array.from(allDates).map(date => {
+        const dataPoint: Record<string, any> = {
+          date: format(parseISO(date), 'MMM dd')
+        };
+
+        metricData.chartPointGroups.forEach(group => {
+          if (group.points && Array.isArray(group.points)) {
+            const point = group.points.find(p => p && p.date === date);
+            dataPoint[group.missionType] = point?.value || 0;
+          }
+        });
+
+        return dataPoint;
+      }).sort((a, b) => {
+        const dateA = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === a.date) || '');
+        const dateB = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === b.date) || '');
+        return dateA.getTime() - dateB.getTime();
+      });
+    } catch (error) {
+      console.error('Error processing chart data:', error);
+      return [];
+    }
   }, [metricData]);
 
   return (
@@ -659,48 +676,62 @@ const MetricDetails = () => {
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className={`${isMobile ? 'h-[221px]' : 'h-[292px]'}`}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart 
-                    data={chartDataFromApi}
-                    margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                    <XAxis 
-                      dataKey="date" 
-                      stroke="rgba(255,255,255,0.5)"
-                      tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                    />
-                    <YAxis 
-                      stroke="rgba(255,255,255,0.5)"
-                      tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                      width={40}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(1, 45, 90, 0.75)', 
-                        border: 'none',
-                        borderRadius: '4px',
-                        color: 'white' 
-                      }}
-                    />
-                    <Legend 
-                      wrapperStyle={{ 
-                        color: 'white',
-                        fontSize: isMobile ? '10px' : '12px'
-                      }}
-                    />
-                    {metricData?.chartPointGroups.map((group, index) => (
-                      <Line
-                        key={group.missionType}
-                        type="monotone"
-                        dataKey={group.missionType}
-                        stroke={index === 0 ? "#4CAF50" : "#2196F3"}
-                        strokeWidth={2}
-                        name={group.missionType}
+                {isMetricDataLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-white">Loading chart data...</p>
+                  </div>
+                ) : metricDataError ? (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-white">Error loading chart data. Using fallback.</p>
+                  </div>
+                ) : chartDataFromApi.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart 
+                      data={chartDataFromApi}
+                      margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="rgba(255,255,255,0.5)"
+                        tick={{ fill: 'rgba(255,255,255,0.5)' }}
                       />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
+                      <YAxis 
+                        stroke="rgba(255,255,255,0.5)"
+                        tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                        width={40}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(1, 45, 90, 0.75)', 
+                          border: 'none',
+                          borderRadius: '4px',
+                          color: 'white' 
+                        }}
+                      />
+                      <Legend 
+                        wrapperStyle={{ 
+                          color: 'white',
+                          fontSize: isMobile ? '10px' : '12px'
+                        }}
+                      />
+                      {metricData?.chartPointGroups?.map((group, index) => (
+                        <Line
+                          key={group.missionType}
+                          type="monotone"
+                          dataKey={group.missionType}
+                          stroke={index === 0 ? "#4CAF50" : "#2196F3"}
+                          strokeWidth={2}
+                          name={group.missionType}
+                        />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-white">No chart data available.</p>
+                  </div>
+                )}
               </div>
             </div>
             

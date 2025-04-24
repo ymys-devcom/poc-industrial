@@ -1,5 +1,7 @@
+
 import { MetricsApiResponse } from "@/types/metricsApi";
 import { format, subDays } from "date-fns";
+import { toast } from "@/components/ui/use-toast";
 
 // Mock data with the same structure as the API would return
 const generateMockData = (dateFrom: string, dateTo: string, pointsAmount: number): MetricsApiResponse => {
@@ -72,7 +74,7 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
       throw new Error('Invalid data format: missing chart point groups');
     }
     
-    if (!data.chartPointGroups[0]?.points || data.chartPointGroups[0].points.length === 0) {
+    if (!data.chartPointGroups[0]?.points || !Array.isArray(data.chartPointGroups[0].points) || data.chartPointGroups[0].points.length === 0) {
       console.warn('Invalid data format: no points in the first chart group');
       throw new Error('Invalid data format: no points in the first chart group');
     }
