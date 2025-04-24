@@ -1,21 +1,18 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
 import { MetricCard } from "@/components/MetricCard";
 import { Footer } from "@/components/Footer";
-import { mockHospitals } from "@/utils/mockDataGenerator";
+import { generateMockDataForRange, getMockRobotTypes, mockHospitals, type MockData } from "@/utils/mockDataGenerator";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useQuery } from "@tanstack/react-query";
-import { fetchMissionTimeMetrics } from "@/services/metricsApi";
-import { format } from "date-fns";
 
 const Index = () => {
   const isMobile = useIsMobile();
   const [selectedHospital, setSelectedHospital] = useState(mockHospitals[0]);
   const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
   const [dateRange, setDateRange] = useState("Last 7 Days");
+  const [mockData, setMockData] = useState(generateMockDataForRange("Last 7 Days"));
   const [date, setDate] = useState<{
     from: Date | undefined;
     to: Date | undefined;
@@ -23,27 +20,13 @@ const Index = () => {
     from: undefined,
     to: undefined,
   });
-
+  const [visibleMetrics, setVisibleMetrics] = useState<string[]>(["all"]);
   const navigate = useNavigate();
-
-  const { data: metricsData, isLoading } = useQuery({
-    queryKey: ['missionTimeMetrics', date.from, date.to, dateRange],
-    queryFn: async () => {
-      const from = date.from || new Date();
-      const to = date.to || new Date();
-      const daysDiff = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24));
-      return fetchMissionTimeMetrics(
-        format(from, 'yyyy-MM-dd'),
-        format(to, 'yyyy-MM-dd'),
-        daysDiff + 1
-      );
-    },
-    enabled: !!(date.from && date.to)
-  });
 
   const handleHospitalChange = (hospital: string) => {
     setSelectedHospital(hospital);
     setSelectedRobotTypes(["All"]);
+    setMockData(generateMockDataForRange(dateRange));
   };
 
   const handleRobotTypeChange = (robotType: string) => {
@@ -72,18 +55,21 @@ const Index = () => {
   const handleDateRangeChange = (range: string) => {
     setDateRange(range);
     setDate({ from: undefined, to: undefined });
+    setMockData(generateMockDataForRange(range));
   };
 
   const handleCustomDateChange = (range: { from: Date | undefined; to: Date | undefined }) => {
     setDate(range);
     if (range.from && range.to) {
       setDateRange("Custom");
+      setMockData(generateMockDataForRange("Custom", range));
     }
   };
 
   const handleMetricClick = (metricId: string) => {
     const params = new URLSearchParams();
     params.append('facility', selectedHospital);
+    
     params.append('dateRange', dateRange);
     
     if (date.from) {
@@ -101,27 +87,131 @@ const Index = () => {
     navigate(`/metrics/${metricId}?${params.toString()}`);
   };
 
+  const handleMetricToggle = (metricId: string) => {
+    setVisibleMetrics((prev) => {
+      if (metricId === "all") {
+        return ["all"];
+      }
+      
+      const withoutAll = prev.filter(id => id !== "all");
+      
+      const newSelection = prev.includes(metricId)
+        ? withoutAll.filter(id => id !== metricId)
+        : [...withoutAll, metricId];
+      
+      if (newSelection.length === 0) {
+        return ["all"];
+      }
+      
+      return newSelection;
+    });
+  };
+
+  const aggregateData = () => {
+    if (selectedRobotTypes.length === 0) {
+      return { metrics: [] };
+    }
+
+    const hospitals = selectedHospital === "All"
+      ? mockHospitals.filter(h => h !== "All")
+      : [selectedHospital];
+
+    const robotTypes = selectedRobotTypes.includes("All")
+      ? getMockRobotTypes(hospitals[0]).filter(type => type !== "All")
+      : selectedRobotTypes;
+
+    const firstHospitalData = mockData[hospitals[0]]?.[robotTypes[0]];
+    if (!firstHospitalData) return { metrics: [] };
+
+    return {
+      metrics: firstHospitalData.metrics.map((metric) => {
+        const aggregatedHourlyData = metric.hourlyData.map((hourData) => {
+          let totalValue = 0;
+          let count = 0;
+
+          hospitals.forEach(hospital => {
+            robotTypes.forEach(robotType => {
+              const value = mockData[hospital]?.[robotType]?.metrics
+                .find(m => m.id === metric.id)
+                ?.hourlyData.find(h => h.hour === hourData.hour)?.value;
+              
+              if (typeof value === 'number') {
+                totalValue += value;
+                count++;
+              }
+            });
+          });
+
+          const average = count > 0 ? totalValue / count : 0;
+          return {
+            ...hourData,
+            value: metric.id === "error-rate" ? Math.min(average, 5) : Math.min(average, 100),
+          };
+        });
+
+        let totalCurrentValue = 0;
+        let valueCount = 0;
+
+        if (metric.id === "mission-time") {
+          const sum = aggregatedHourlyData.reduce((acc, curr) => acc + curr.value, 0);
+          totalCurrentValue = sum;
+          valueCount = 1;
+        } else {
+          hospitals.forEach(hospital => {
+            robotTypes.forEach(robotType => {
+              const robotMetric = mockData[hospital]?.[robotType]?.metrics.find(m => m.id === metric.id);
+              if (robotMetric) {
+                const value = Number(robotMetric.value.replace(/[^0-9.]/g, ""));
+                if (!isNaN(value)) {
+                  totalCurrentValue += value;
+                  valueCount++;
+                }
+              }
+            });
+          });
+        }
+
+        const averageCurrentValue = valueCount > 0 ? totalCurrentValue / valueCount : 0;
+
+        let valueString;
+        if (metric.id === "miles-saved") {
+          valueString = `${Math.round(averageCurrentValue)}m`;
+        } else if (metric.value.includes("%")) {
+          valueString = `${Math.round(averageCurrentValue)}%`;
+        } else if (metric.id === "completed-missions") {
+          valueString = `${Math.round(averageCurrentValue)}/h`;
+        } else if (metric.id === "mission-time") {
+          valueString = `${Math.round(averageCurrentValue)}h`;
+        } else if (metric.id === "hours-saved") {
+          valueString = `${Math.round(averageCurrentValue)}h`;
+        } else {
+          valueString = `${Math.round(averageCurrentValue)}`;
+        }
+
+        return {
+          ...metric,
+          value: valueString,
+          hourlyData: aggregatedHourlyData,
+        };
+      }),
+    };
+  };
+
+  const currentData = aggregateData();
+  
+  const filteredMetrics = visibleMetrics.includes("all") 
+    ? currentData.metrics 
+    : currentData.metrics.filter(metric => visibleMetrics.includes(metric.id));
+
   const metricOptions = [
     { id: "all", label: "All Metrics" },
+    { id: "utilization", label: "Utilization" },
     { id: "mission-time", label: "Mission Time" },
+    { id: "miles-saved", label: "Miles Saved" },
+    { id: "hours-saved", label: "Hours Saved" },
+    { id: "completed-missions", label: "Completed Missions" },
+    { id: "error-rate", label: "Error Rate" },
   ];
-
-  const missionTimeData = metricsData ? {
-    id: "mission-time",
-    label: "Mission Time",
-    value: `${Math.round(metricsData.overall)}h`,
-    hourlyData: metricsData.chartPointGroups[0].points.map(point => ({
-      hour: format(new Date(point.date), 'MM/dd'),
-      value: point.value
-    })),
-    missionTypes: metricsData.valuesByMissionTypes.map(mt => ({
-      name: mt.type,
-      value: mt.value,
-      miniChartData: metricsData.chartPointGroups
-        .find(group => group.missionType === mt.type)?.points
-        .map(point => ({ value: point.value })) || []
-    }))
-  } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)] flex flex-col overflow-hidden">
@@ -137,20 +227,20 @@ const Index = () => {
           onRemoveRobotType={removeRobotType}
           onDateRangeChange={handleDateRangeChange}
           onCustomDateChange={handleCustomDateChange}
-          visibleMetrics={["mission-time"]}
-          onMetricToggle={() => {}}
+          visibleMetrics={visibleMetrics}
+          onMetricToggle={handleMetricToggle}
           metricOptions={metricOptions}
           isMobile={isMobile}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-3 md:gap-6 mt-6">
-          {missionTimeData && !isLoading && (
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mt-6">
+          {filteredMetrics.filter(metric => metric.id !== "downtime").map((metric) => (
             <MetricCard
-              key={missionTimeData.id}
-              metric={missionTimeData}
+              key={metric.id}
+              metric={metric}
               onMetricClick={handleMetricClick}
               selectedRobotTypes={selectedRobotTypes}
             />
-          )}
+          ))}
         </div>
       </main>
       <Footer />
