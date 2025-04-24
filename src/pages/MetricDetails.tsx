@@ -10,6 +10,8 @@ import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/ut
 import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes, parseISO } from "date-fns";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DataTable, RobotData } from "@/components/ui/data-table";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMissionTimeMetric } from "@/services/metricsApi";
 
 interface MetricValue {
   base: number;
@@ -559,6 +561,46 @@ const MetricDetails = () => {
 
   const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, selectedHospital, robotMetrics]);
 
+  const { data: metricData } = useQuery({
+    queryKey: ['missionTime', date.from, date.to],
+    queryFn: () => fetchMissionTimeMetric(
+      date.from?.toISOString() || new Date().toISOString(),
+      date.to?.toISOString() || new Date().toISOString(),
+      8
+    ),
+    enabled: metricId === 'mission-time'
+  });
+
+  const chartDataFromApi = useMemo(() => {
+    if (!metricData?.chartPointGroups) {
+      return [];
+    }
+
+    const allDates = new Set<string>();
+    metricData.chartPointGroups.forEach(group => {
+      group.points.forEach(point => {
+        allDates.add(point.date);
+      });
+    });
+
+    return Array.from(allDates).map(date => {
+      const dataPoint: Record<string, any> = {
+        date: format(parseISO(date), 'MMM dd')
+      };
+
+      metricData.chartPointGroups.forEach(group => {
+        const point = group.points.find(p => p.date === date);
+        dataPoint[group.missionType] = point?.value || 0;
+      });
+
+      return dataPoint;
+    }).sort((a, b) => {
+      const dateA = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === a.date) || '');
+      const dateB = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === b.date) || '');
+      return dateA.getTime() - dateB.getTime();
+    });
+  }, [metricData]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
@@ -619,7 +661,7 @@ const MetricDetails = () => {
               <div className={`${isMobile ? 'h-[221px]' : 'h-[292px]'}`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart 
-                    data={chartData}
+                    data={chartDataFromApi}
                     margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -632,7 +674,6 @@ const MetricDetails = () => {
                       stroke="rgba(255,255,255,0.5)"
                       tick={{ fill: 'rgba(255,255,255,0.5)' }}
                       width={40}
-                      tickFormatter={formatYAxisValue}
                     />
                     <Tooltip 
                       contentStyle={{ 
@@ -641,17 +682,6 @@ const MetricDetails = () => {
                         borderRadius: '4px',
                         color: 'white' 
                       }}
-                      formatter={(value: any, name: string) => {
-                        let formattedValue = value;
-                        if (value >= 1000) {
-                          formattedValue = `${(value / 1000).toFixed(1)}k`;
-                        }
-                        
-                        return [Math.round(value).toString(), name];
-                      }}
-                      labelFormatter={(label) => {
-                        return `Date: ${label}`;
-                      }}
                     />
                     <Legend 
                       wrapperStyle={{ 
@@ -659,17 +689,15 @@ const MetricDetails = () => {
                         fontSize: isMobile ? '10px' : '12px'
                       }}
                     />
-                    {availableRobotTypes
-                      .filter(type => selectedRobotTypes.includes("All") || selectedRobotTypes.includes(type))
-                      .map((type, index) => (
-                        <Line 
-                          key={type}
-                          type="monotone" 
-                          dataKey={type} 
-                          stroke={type === "All" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : index === 3 ? "#FFC107" : "#E91E63"} 
-                          strokeWidth={2}
-                          name={type}
-                        />
+                    {metricData?.chartPointGroups.map((group, index) => (
+                      <Line
+                        key={group.missionType}
+                        type="monotone"
+                        dataKey={group.missionType}
+                        stroke={index === 0 ? "#4CAF50" : "#2196F3"}
+                        strokeWidth={2}
+                        name={group.missionType}
+                      />
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
