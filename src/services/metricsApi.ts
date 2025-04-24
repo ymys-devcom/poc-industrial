@@ -1,6 +1,5 @@
-
 import { MetricsApiResponse } from "@/types/metricsApi";
-import { format, subDays } from "date-fns";
+import { format, subDays, differenceInDays } from "date-fns";
 import { toast } from "@/components/ui/use-toast";
 
 // Mock data with the same structure as the API would return
@@ -49,12 +48,15 @@ const generateMockData = (dateFrom: string, dateTo: string, pointsAmount: number
   };
 };
 
-export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, pointsAmount: number) => {
-  const url = `https://cr-metrics-api.devcom.com/Metrics/getDetailedInfo?missionTypes=2&missionTypes=3&metricType=1&dateFrom=${dateFrom}&dateTo=${dateTo}&pointsAmount=${pointsAmount}`;
+export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, pointsAmount?: number) => {
+  // Calculate the number of days between the dates, adding 1 to include both start and end dates
+  const numberOfDays = Math.max(differenceInDays(new Date(dateTo), new Date(dateFrom)) + 1, 1);
+  
+  const url = `https://cr-metrics-api.devcom.com/Metrics/getDetailedInfo?missionTypes=2&missionTypes=3&metricType=1&dateFrom=${dateFrom}&dateTo=${dateTo}&pointsAmount=${numberOfDays}`;
   
   try {
     console.log('Fetching data from:', url);
-    console.log(`Date range: ${dateFrom} to ${dateTo} with ${pointsAmount} points`);
+    console.log(`Date range: ${dateFrom} to ${dateTo} with ${numberOfDays} points`);
     
     const response = await fetch(url, {
       method: 'GET',
@@ -89,6 +91,6 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     console.error('Error fetching mission time metric:', error);
     
     // Return mock data in case of error for better UX
-    return generateMockData(dateFrom, dateTo, pointsAmount);
+    return generateMockData(dateFrom, dateTo, numberOfDays);
   }
 };
