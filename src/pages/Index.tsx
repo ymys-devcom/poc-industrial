@@ -110,6 +110,7 @@ const Index = () => {
     id: "mission-time",
     label: "Mission Time",
     value: `${Math.round(metricsData.overall)}h`,
+    trend: 0, // Adding the missing trend property
     hourlyData: metricsData.chartPointGroups[0].points.map(point => ({
       hour: format(new Date(point.date), 'MM/dd'),
       value: point.value
