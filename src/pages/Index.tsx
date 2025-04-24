@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -10,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { fetchMissionTimeMetric } from "@/services/metricsApi";
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
+import { toast } from "@/components/ui/use-toast";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -26,7 +26,7 @@ const Index = () => {
 
   const navigate = useNavigate();
 
-  const { data: missionTimeData, isLoading } = useQuery({
+  const { data: missionTimeData, isLoading, error } = useQuery({
     queryKey: ['missionTime', date.from, date.to],
     queryFn: async () => {
       if (!date.from || !date.to) return null;
@@ -36,9 +36,20 @@ const Index = () => {
       const daysDiff = Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24));
       const pointsAmount = daysDiff + 1;
       
+      console.log(`Fetching mission time data from ${dateFrom} to ${dateTo} with ${pointsAmount} points`);
       const response = await fetchMissionTimeMetric(dateFrom, dateTo, pointsAmount);
       
       // Calculate trend based on the first chart point group's data
+      if (!response.chartPointGroups?.length || !response.chartPointGroups[0]?.points?.length) {
+        console.error('Invalid chart data received:', response);
+        toast({
+          title: "Data format error",
+          description: "Received mission time data is in invalid format",
+          variant: "destructive",
+        });
+        return null;
+      }
+      
       const firstGroup = response.chartPointGroups[0];
       const points = firstGroup?.points || [];
       const firstValue = points[0]?.value || 0;
@@ -65,7 +76,9 @@ const Index = () => {
         }))
       };
     },
-    enabled: !!date.from && !!date.to
+    enabled: !!date.from && !!date.to,
+    retry: 1,
+    staleTime: 5 * 60 * 1000 // 5 minutes
   });
 
   const handleHospitalChange = (hospital: string) => {
@@ -152,19 +165,6 @@ const Index = () => {
     navigate(`/metrics/${metricId}?${params.toString()}`);
   };
 
-  // Commented out other metrics for future use
-  /*
-  const metricOptions = [
-    { id: "all", label: "All Metrics" },
-    { id: "utilization", label: "Utilization" },
-    { id: "mission-time", label: "Mission Time" },
-    { id: "miles-saved", label: "Miles Saved" },
-    { id: "hours-saved", label: "Hours Saved" },
-    { id: "completed-missions", label: "Completed Missions" },
-    { id: "error-rate", label: "Error Rate" },
-  ];
-  */
-
   const metricOptions = [
     { id: "all", label: "All Metrics" },
     { id: "mission-time", label: "Mission Time" },
@@ -194,16 +194,24 @@ const Index = () => {
         />
         <div className="grid grid-cols-1 gap-3 md:gap-6 mt-6">
           {isLoading ? (
-            <div className="text-white">Loading mission time data...</div>
-          ) : missionTimeData ? (
+            <div className="text-white p-4 text-center rounded-md bg-mayo-card backdrop-blur-md border-white/10">
+              Loading mission time data...
+            </div>
+          ) : error ? (
+            <div className="text-white p-4 text-center rounded-md bg-mayo-card backdrop-blur-md border-white/10">
+              Error loading mission time data. Please try again.
+            </div>
+          ) : !missionTimeData ? (
+            <div className="text-white p-4 text-center rounded-md bg-mayo-card backdrop-blur-md border-white/10">
+              No mission time data available
+            </div>
+          ) : (
             <MetricCard
               key={missionTimeData.id}
               metric={missionTimeData}
               onMetricClick={handleMetricClick}
               selectedRobotTypes={selectedRobotTypes}
             />
-          ) : (
-            <div className="text-white">No mission time data available</div>
           )}
         </div>
       </main>
@@ -213,4 +221,3 @@ const Index = () => {
 };
 
 export default Index;
-
