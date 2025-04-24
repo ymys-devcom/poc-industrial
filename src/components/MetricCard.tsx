@@ -84,10 +84,10 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
     return value;
   };
 
-  // Use the actual metric data provided through props
-  // This ensures we're using data from API not mock data
-  const missionTypes = metric.missionTypes || [];
-  const showDetailedView = true;
+  // Ensure we check if missionTypes exists before using it
+  // This change fixes the TypeScript error
+  const missionTypes = (metric as any).missionTypes || [];
+  const showDetailedView = missionTypes.length > 0;
 
   return (
     <Card

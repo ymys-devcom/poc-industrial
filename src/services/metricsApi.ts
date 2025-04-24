@@ -15,6 +15,12 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     
     const data = await response.json() as MetricsApiResponse;
     console.log('Received mission time data:', data);
+    
+    // Validate the data structure
+    if (!data.chartPointGroups || data.chartPointGroups.length === 0) {
+      throw new Error('Invalid data format: missing chart point groups');
+    }
+    
     return data;
   } catch (error) {
     console.error('Error fetching mission time metric:', error);

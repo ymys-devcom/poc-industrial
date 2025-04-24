@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardFilters } from "@/components/DashboardFilters";
@@ -26,57 +27,61 @@ const Index = () => {
 
   const navigate = useNavigate();
 
+  // Make sure we have valid dates before querying
+  const isValidDateRange = date.from instanceof Date && date.to instanceof Date;
+
   const { data: missionTimeData, isLoading, error } = useQuery({
-    queryKey: ['missionTime', date.from, date.to],
+    queryKey: ['missionTime', date.from?.toISOString(), date.to?.toISOString()],
     queryFn: async () => {
-      if (!date.from || !date.to) return null;
+      if (!isValidDateRange) return null;
       
-      const dateFrom = format(date.from, 'yyyy-MM-dd');
-      const dateTo = format(date.to, 'yyyy-MM-dd');
-      const daysDiff = Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24));
-      const pointsAmount = daysDiff + 1;
+      const dateFrom = format(date.from as Date, 'yyyy-MM-dd');
+      const dateTo = format(date.to as Date, 'yyyy-MM-dd');
+      const daysDiff = Math.ceil(((date.to as Date).getTime() - (date.from as Date).getTime()) / (1000 * 60 * 60 * 24));
+      const pointsAmount = Math.max(daysDiff + 1, 1); // Ensure at least 1 point
       
       console.log(`Fetching mission time data from ${dateFrom} to ${dateTo} with ${pointsAmount} points`);
-      const response = await fetchMissionTimeMetric(dateFrom, dateTo, pointsAmount);
-      
-      // Calculate trend based on the first chart point group's data
-      if (!response.chartPointGroups?.length || !response.chartPointGroups[0]?.points?.length) {
-        console.error('Invalid chart data received:', response);
-        toast({
-          title: "Data format error",
-          description: "Received mission time data is in invalid format",
-          variant: "destructive",
-        });
+      try {
+        const response = await fetchMissionTimeMetric(dateFrom, dateTo, pointsAmount);
+        
+        // Calculate trend based on the first chart point group's data
+        const firstGroup = response.chartPointGroups[0];
+        
+        if (!firstGroup?.points?.length) {
+          console.warn('No points data in the first chart group');
+          return null;
+        }
+        
+        const points = firstGroup.points;
+        const firstValue = points[0]?.value || 0;
+        const lastValue = points[points.length - 1]?.value || 0;
+        const trend = firstValue < lastValue ? "up" as const : firstValue > lastValue ? "down" as const : "stable" as const;
+        
+        return {
+          id: "mission-time",
+          label: response.name,
+          value: `${response.overall.toFixed(2)}${response.unit}`,
+          trend,
+          hourlyData: response.chartPointGroups[0].points.map(point => ({
+            hour: format(new Date(point.date), 'MM/dd'),
+            value: point.value
+          })),
+          missionTypes: response.valuesByMissionTypes.map(type => ({
+            name: type.type,
+            value: type.value,
+            miniChartData: response.chartPointGroups
+              .find(group => group.missionType === type.type)?.points
+              .map(point => ({
+                value: point.value
+              })) || []
+          }))
+        };
+      } catch (error) {
+        console.error('Error processing mission time data:', error);
         return null;
       }
-      
-      const firstGroup = response.chartPointGroups[0];
-      const points = firstGroup?.points || [];
-      const firstValue = points[0]?.value || 0;
-      const lastValue = points[points.length - 1]?.value || 0;
-      const trend = firstValue < lastValue ? "up" as const : firstValue > lastValue ? "down" as const : "stable" as const;
-      
-      return {
-        id: "mission-time",
-        label: response.name,
-        value: `${response.overall.toFixed(2)}${response.unit}`,
-        trend,
-        hourlyData: response.chartPointGroups[0].points.map(point => ({
-          hour: format(new Date(point.date), 'MM/dd'),
-          value: point.value
-        })),
-        missionTypes: response.valuesByMissionTypes.map(type => ({
-          name: type.type,
-          value: type.value,
-          miniChartData: response.chartPointGroups
-            .find(group => group.missionType === type.type)?.points
-            .map(point => ({
-              value: point.value
-            })) || []
-        }))
-      };
     },
-    enabled: !!date.from && !!date.to,
+    enabled: isValidDateRange,
     retry: 1,
     staleTime: 5 * 60 * 1000 // 5 minutes
   });
@@ -186,10 +191,7 @@ const Index = () => {
           onCustomDateChange={handleCustomDateChange}
           visibleMetrics={["mission-time"]}
           onMetricToggle={() => {}}
-          metricOptions={[
-            { id: "all", label: "All Metrics" },
-            { id: "mission-time", label: "Mission Time" },
-          ]}
+          metricOptions={metricOptions}
           isMobile={isMobile}
         />
         <div className="grid grid-cols-1 gap-3 md:gap-6 mt-6">
