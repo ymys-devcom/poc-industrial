@@ -1,3 +1,4 @@
+
 import { MetricsApiResponse } from "@/types/metricsApi";
 import { format, subDays, differenceInDays } from "date-fns";
 import { toast } from "@/components/ui/use-toast";
@@ -49,14 +50,21 @@ const generateMockData = (dateFrom: string, dateTo: string, pointsAmount: number
 };
 
 export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, pointsAmount?: number) => {
-  // Calculate the number of days between the dates, adding 1 to include both start and end dates
-  const numberOfDays = Math.max(differenceInDays(new Date(dateTo), new Date(dateFrom)) + 1, 1);
+  // Calculate the number of points based on date range:
+  // For standard ranges: Last 7 Days = 8 points, Last 30 Days = 31 points, etc.
+  let numberOfPoints: number;
   
-  const url = `https://cr-metrics-api.devcom.com/Metrics/getDetailedInfo?missionTypes=2&missionTypes=3&metricType=1&dateFrom=${dateFrom}&dateTo=${dateTo}&pointsAmount=${numberOfDays}`;
+  // First calculate the number of days between the dates
+  const dateDiff = differenceInDays(new Date(dateTo), new Date(dateFrom));
+  
+  // Add 1 to include both the start and end dates
+  numberOfPoints = dateDiff + 1;
+  
+  const url = `https://cr-metrics-api.devcom.com/Metrics/getDetailedInfo?missionTypes=2&missionTypes=3&metricType=1&dateFrom=${dateFrom}&dateTo=${dateTo}&pointsAmount=${numberOfPoints}`;
   
   try {
     console.log('Fetching data from:', url);
-    console.log(`Date range: ${dateFrom} to ${dateTo} with ${numberOfDays} points`);
+    console.log(`Date range: ${dateFrom} to ${dateTo} with ${numberOfPoints} points`);
     
     const response = await fetch(url, {
       method: 'GET',
@@ -91,6 +99,6 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     console.error('Error fetching mission time metric:', error);
     
     // Return mock data in case of error for better UX
-    return generateMockData(dateFrom, dateTo, numberOfDays);
+    return generateMockData(dateFrom, dateTo, numberOfPoints);
   }
 };

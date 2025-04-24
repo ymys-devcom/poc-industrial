@@ -277,6 +277,9 @@ const MetricDetails = () => {
         case "Last 90 Days":
           startDate = subDays(now, 90);
           break;
+        case "Last 180 Days":
+          startDate = subDays(now, 180);
+          break;
         default:
           startDate = subDays(now, 7);
       }
@@ -563,11 +566,42 @@ const MetricDetails = () => {
 
   const { data: metricData, isLoading: isMetricDataLoading, error: metricDataError } = useQuery({
     queryKey: ['missionTime', date.from, date.to],
-    queryFn: () => fetchMissionTimeMetric(
-      date.from?.toISOString() || new Date().toISOString(),
-      date.to?.toISOString() || new Date().toISOString(),
-      8
-    ),
+    queryFn: () => {
+      let fromDate: Date, toDate: Date;
+      
+      if (date.from && date.to) {
+        fromDate = date.from;
+        toDate = date.to;
+      } else {
+        const now = new Date();
+        toDate = now;
+        
+        switch (dateRange) {
+          case "Today":
+            fromDate = now;
+            break;
+          case "Last 7 Days":
+            fromDate = subDays(now, 7);
+            break;
+          case "Last 30 Days":
+            fromDate = subDays(now, 30);
+            break;
+          case "Last 90 Days":
+            fromDate = subDays(now, 90);
+            break;
+          case "Last 180 Days":
+            fromDate = subDays(now, 180);
+            break;
+          default:
+            fromDate = subDays(now, 7);
+        }
+      }
+      
+      return fetchMissionTimeMetric(
+        fromDate.toISOString(),
+        toDate.toISOString()
+      );
+    },
     enabled: metricId === 'mission-time'
   });
 
