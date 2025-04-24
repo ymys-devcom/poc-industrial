@@ -614,30 +614,6 @@ const MetricDetails = () => {
               )}
             </div>
 
-          <div className="flex flex-row flex-wrap gap-3 mb-8">
-            {robotMetrics.map((stat) => (
-              <div 
-                key={stat.type} 
-                className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-[calc(50%-0.375rem)]"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
-                  <span className="text-base font-semibold text-gray-400">{stat.total}</span>
-                </div>
-                <div className="border-t border-white/10 pt-2">
-                  <p className="text-white/60 text-xs">
-                    {currentMetricDetails.isAccumulative ? "Total" : "Average"}
-                  </p>
-                  <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All" ? "#FF9143" : "#FFFFFF" }}>
-                    {stat.isPercentage 
-                      ? `${Math.round(stat.metricValue)}%` 
-                      : Math.round(stat.metricValue)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className={`${isMobile ? 'h-[221px]' : 'h-[292px]'}`}>
