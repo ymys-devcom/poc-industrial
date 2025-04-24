@@ -38,21 +38,30 @@ const Index = () => {
       
       const response = await fetchMissionTimeMetric(dateFrom, dateTo, pointsAmount);
       
+      // Calculate trend based on the first chart point group's data
+      const firstGroup = response.chartPointGroups[0];
+      const points = firstGroup?.points || [];
+      const firstValue = points[0]?.value || 0;
+      const lastValue = points[points.length - 1]?.value || 0;
+      const trend = firstValue < lastValue ? "up" as const : firstValue > lastValue ? "down" as const : "stable" as const;
+      
       return {
         id: "mission-time",
         label: response.name,
         value: `${response.overall.toFixed(2)}${response.unit}`,
-        trend: "up",
+        trend,
         hourlyData: response.chartPointGroups[0].points.map(point => ({
-          hour: format(new Date(point.date), 'HH:mm'),
+          hour: format(new Date(point.date), 'MM/dd'),
           value: point.value
         })),
         missionTypes: response.valuesByMissionTypes.map(type => ({
           name: type.type,
           value: type.value,
-          miniChartData: Array(25).fill(0).map(() => ({
-            value: Math.floor(Math.random() * 20) + 1
-          }))
+          miniChartData: response.chartPointGroups
+            .find(group => group.missionType === type.type)?.points
+            .map(point => ({
+              value: point.value
+            })) || []
         }))
       };
     },
@@ -177,7 +186,10 @@ const Index = () => {
           onCustomDateChange={handleCustomDateChange}
           visibleMetrics={["mission-time"]}
           onMetricToggle={() => {}}
-          metricOptions={metricOptions}
+          metricOptions={[
+            { id: "all", label: "All Metrics" },
+            { id: "mission-time", label: "Mission Time" },
+          ]}
           isMobile={isMobile}
         />
         <div className="grid grid-cols-1 gap-3 md:gap-6 mt-6">
@@ -201,3 +213,4 @@ const Index = () => {
 };
 
 export default Index;
+
