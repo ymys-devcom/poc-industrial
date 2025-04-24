@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMissionTimeMetrics } from "@/services/metricsApi";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -26,19 +27,30 @@ const Index = () => {
 
   const navigate = useNavigate();
 
+  // Default to 7 days ago if no date is selected
+  const defaultFromDate = new Date();
+  defaultFromDate.setDate(defaultFromDate.getDate() - 7);
+  
+  const effectiveFromDate = date.from || defaultFromDate;
+  const effectiveToDate = date.to || new Date();
+
   const { data: metricsData, isLoading } = useQuery({
-    queryKey: ['missionTimeMetrics', date.from, date.to, dateRange],
+    queryKey: ['missionTimeMetrics', effectiveFromDate, effectiveToDate, dateRange],
     queryFn: async () => {
-      const from = date.from || new Date();
-      const to = date.to || new Date();
-      const daysDiff = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24));
-      return fetchMissionTimeMetrics(
-        format(from, 'yyyy-MM-dd'),
-        format(to, 'yyyy-MM-dd'),
-        daysDiff + 1
-      );
+      try {
+        const daysDiff = Math.ceil((effectiveToDate.getTime() - effectiveFromDate.getTime()) / (1000 * 60 * 60 * 24));
+        return fetchMissionTimeMetrics(
+          format(effectiveFromDate, 'yyyy-MM-dd'),
+          format(effectiveToDate, 'yyyy-MM-dd'),
+          daysDiff + 1
+        );
+      } catch (error) {
+        toast.error("Failed to fetch metrics data");
+        console.error("Error fetching metrics:", error);
+        throw error;
+      }
     },
-    enabled: !!(date.from && date.to)
+    enabled: true // Always run the query, using default dates if needed
   });
 
   const handleHospitalChange = (hospital: string) => {
@@ -71,7 +83,35 @@ const Index = () => {
 
   const handleDateRangeChange = (range: string) => {
     setDateRange(range);
-    setDate({ from: undefined, to: undefined });
+    
+    // Reset custom date range if a preset is selected
+    if (range !== "Custom") {
+      let from = new Date();
+      const to = new Date();
+      
+      switch (range) {
+        case "Last 7 Days":
+          from = new Date();
+          from.setDate(from.getDate() - 7);
+          break;
+        case "Last 14 Days":
+          from = new Date();
+          from.setDate(from.getDate() - 14);
+          break;
+        case "Last 30 Days":
+          from = new Date();
+          from.setDate(from.getDate() - 30);
+          break;
+        case "Last 90 Days":
+          from = new Date();
+          from.setDate(from.getDate() - 90);
+          break;
+        default:
+          from = undefined;
+      }
+      
+      setDate({ from, to });
+    }
   };
 
   const handleCustomDateChange = (range: { from: Date | undefined; to: Date | undefined }) => {
@@ -110,7 +150,7 @@ const Index = () => {
     id: "mission-time",
     label: "Mission Time",
     value: `${Math.round(metricsData.overall)}h`,
-    trend: 0, // Adding the missing trend property
+    trend: "stable" as "up" | "down" | "stable", // Fixed type issue
     hourlyData: metricsData.chartPointGroups[0].points.map(point => ({
       hour: format(new Date(point.date), 'MM/dd'),
       value: point.value
@@ -144,13 +184,23 @@ const Index = () => {
           isMobile={isMobile}
         />
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-3 md:gap-6 mt-6">
-          {missionTimeData && !isLoading && (
+          {isLoading && (
+            <div className="flex justify-center items-center h-40 text-white">
+              Loading mission time data...
+            </div>
+          )}
+          {!isLoading && missionTimeData && (
             <MetricCard
               key={missionTimeData.id}
               metric={missionTimeData}
               onMetricClick={handleMetricClick}
               selectedRobotTypes={selectedRobotTypes}
             />
+          )}
+          {!isLoading && !missionTimeData && (
+            <div className="flex justify-center items-center h-40 text-white">
+              No mission time data available
+            </div>
           )}
         </div>
       </main>
