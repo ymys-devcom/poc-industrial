@@ -25,7 +25,6 @@ const Index = () => {
 
   const navigate = useNavigate();
 
-  // Make sure we have valid dates before querying
   const isValidDateRange = date.from instanceof Date && 
                            date.to instanceof Date && 
                            isValid(date.from) && 
@@ -42,11 +41,9 @@ const Index = () => {
       const dateFrom = format(date.from as Date, 'yyyy-MM-dd');
       const dateTo = format(date.to as Date, 'yyyy-MM-dd');
       
-      // Calculate days difference, ensuring at least 1
       let daysDiff = Math.ceil(((date.to as Date).getTime() - (date.from as Date).getTime()) / (1000 * 60 * 60 * 24));
       daysDiff = Math.max(daysDiff, 1);
       
-      // Ensure we have at least 2 points for chart display
       const pointsAmount = Math.max(daysDiff, 2);
       
       console.log(`Fetching mission time data from ${dateFrom} to ${dateTo} with ${pointsAmount} points`);
@@ -59,7 +56,6 @@ const Index = () => {
           return null;
         }
         
-        // Calculate trend based on the first chart point group's data
         const firstGroup = response.chartPointGroups[0];
         
         if (!firstGroup?.points?.length) {
@@ -70,9 +66,8 @@ const Index = () => {
         const points = firstGroup.points;
         const firstValue = points[0]?.value || 0;
         const lastValue = points[points.length - 1]?.value || 0;
-        const trend = firstValue < lastValue ? "up" : firstValue > lastValue ? "down" : "stable";
+        const trend: "up" | "down" | "stable" = firstValue < lastValue ? "up" : firstValue > lastValue ? "down" : "stable";
         
-        // Format data for the MetricCard component
         return {
           id: "mission-time",
           label: response.name,

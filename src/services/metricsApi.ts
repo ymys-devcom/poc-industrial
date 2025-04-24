@@ -1,4 +1,3 @@
-
 import { MetricsApiResponse } from "@/types/metricsApi";
 import { toast } from "@/components/ui/use-toast";
 import { format, subDays } from "date-fns";
@@ -56,7 +55,6 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     console.log('Fetching data from:', url);
     console.log(`Date range: ${dateFrom} to ${dateTo} with ${pointsAmount} points`);
     
-    // Attempt to fetch from API
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -70,14 +68,19 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     console.log('Received mission time data:', data);
     
     // Validate the data structure
-    if (!data.chartPointGroups || data.chartPointGroups.length === 0) {
-      console.warn('Invalid data format: missing chart point groups');
+    if (!data.chartPointGroups || !Array.isArray(data.chartPointGroups) || data.chartPointGroups.length === 0) {
+      console.warn('Invalid data format: missing or empty chart point groups');
       throw new Error('Invalid data format: missing chart point groups');
     }
     
     if (!data.chartPointGroups[0]?.points || data.chartPointGroups[0].points.length === 0) {
       console.warn('Invalid data format: no points in the first chart group');
       throw new Error('Invalid data format: no points in the first chart group');
+    }
+    
+    if (!data.valuesByMissionTypes || !Array.isArray(data.valuesByMissionTypes) || data.valuesByMissionTypes.length === 0) {
+      console.warn('Invalid data format: missing or empty valuesByMissionTypes');
+      throw new Error('Invalid data format: missing valuesByMissionTypes');
     }
     
     return data;
