@@ -1,3 +1,4 @@
+
 import { MetricsApiResponse } from "@/types/metricsApi";
 import { toast } from "@/components/ui/use-toast";
 import { format, subDays } from "date-fns";
@@ -86,11 +87,15 @@ export const fetchMissionTimeMetric = async (dateFrom: string, dateTo: string, p
     return data;
   } catch (error) {
     console.error('Error fetching mission time metric:', error);
-    toast({
-      title: "Using demo data",
-      description: "Unable to fetch live data. Displaying demonstration data.",
-      variant: "default",
-    });
+    
+    // Only show toast when we actually fall back to mock data
+    if (error instanceof Error && error.message.includes('Failed to fetch')) {
+      toast({
+        title: "Using demo data",
+        description: "Unable to fetch live data. Displaying demonstration data.",
+        variant: "default",
+      });
+    }
     
     // Return mock data in case of error for better UX
     return generateMockData(dateFrom, dateTo, pointsAmount);
