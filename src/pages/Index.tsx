@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -205,7 +206,7 @@ const Index = () => {
           metricOptions={metricOptions}
           isMobile={isMobile}
         />
-        <div className="grid grid-cols-1 gap-3 md:gap-6 mt-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-6`}>
           {isLoading ? (
             <div className="text-white p-4 text-center rounded-md bg-mayo-card backdrop-blur-md border-white/10">
               Loading mission time data...
