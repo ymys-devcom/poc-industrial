@@ -11,6 +11,7 @@ import {
 import { MetricData } from "@/utils/mockDataGenerator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getMockRobotTypes } from "@/utils/mockDataGenerator";
 
 interface MetricCardProps {
   metric: MetricData;
@@ -62,6 +63,83 @@ const getMetricColor = (metricId: string) => {
   }
 };
 
+const getMetricBaseValue = (metricId: string, robotType: string) => {
+  const baseValues = {
+    "utilization": {
+      "Injection Mold": 45,
+      "Thermoform": 40,
+      "RM Delivery": 35,
+      "WIP Transport": 35,
+      "All Bots": 50
+    },
+    "mission-time": {
+      "Injection Mold": 2.4,
+      "Thermoform": 2.7,
+      "RM Delivery": 2.85,
+      "WIP Transport": 2.85,
+      "All Bots": 2.5
+    },
+    "miles-saved": {
+      "Injection Mold": 125,
+      "Thermoform": 110,
+      "RM Delivery": 95,
+      "WIP Transport": 95,
+      "All Bots": 120
+    },
+    "hours-saved": {
+      "Injection Mold": 85,
+      "Thermoform": 75,
+      "RM Delivery": 65,
+      "WIP Transport": 65,
+      "All Bots": 80
+    },
+    "completed-missions": {
+      "Injection Mold": 6,
+      "Thermoform": 5,
+      "RM Delivery": 4,
+      "WIP Transport": 4,
+      "All Bots": 5
+    },
+    "error-rate": {
+      "Injection Mold": 2.5,
+      "Thermoform": 3.5,
+      "RM Delivery": 4,
+      "WIP Transport": 4,
+      "All Bots": 3
+    }
+  };
+  
+  return baseValues[metricId as keyof typeof baseValues]?.[robotType] || 0;
+};
+
+const getMissionTypeData = (metricId: string, selectedRobotTypes: string[]) => {
+  const generateMiniChartData = () => {
+    return Array.from({ length: 25 }, (_, i) => ({
+      value: Math.floor(Math.random() * 20) + 1
+    }));
+  };
+  
+  let robotTypesToDisplay: string[];
+  
+  if (selectedRobotTypes.includes("All")) {
+    robotTypesToDisplay = ["Injection Mold", "Thermoform", "RM Delivery", "WIP Transport"];
+  } else {
+    robotTypesToDisplay = [...selectedRobotTypes];
+  }
+  
+  return robotTypesToDisplay.map(type => {
+    const baseValue = getMetricBaseValue(metricId, type);
+    const randomVariation = (Math.random() * 0.1) - 0.05;
+    let value = Math.round(baseValue * (1 + randomVariation));
+    
+    return {
+      name: type,
+      value: value,
+      miniChartData: generateMiniChartData()
+    };
+  });
+};
+
 export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: MetricCardProps) => {
   const yAxisFormatter = getYAxisFormatter(metric.id);
   const maxValue = getMaxValueForMetric(metric);
@@ -84,10 +162,8 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
     return value;
   };
 
-  // Ensure we check if missionTypes exists before using it
-  // This change fixes the TypeScript error
-  const missionTypes = (metric as any).missionTypes || [];
-  const showDetailedView = missionTypes.length > 0;
+  const missionTypes = getMissionTypeData(metric.id, selectedRobotTypes);
+  const showDetailedView = true;
 
   return (
     <Card
@@ -197,3 +273,4 @@ export const MetricCard = ({ metric, onMetricClick, selectedRobotTypes }: Metric
     </Card>
   );
 };
+

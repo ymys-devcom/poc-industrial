@@ -7,11 +7,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { generateMockDataForRange, getMockRobotTypes, mockHospitals } from "@/utils/mockDataGenerator";
-import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes, parseISO } from "date-fns";
+import { differenceInDays, eachDayOfInterval, format, addDays, subDays, setHours, setMinutes } from "date-fns";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DataTable, RobotData } from "@/components/ui/data-table";
-import { useQuery } from "@tanstack/react-query";
-import { fetchMissionTimeMetric } from "@/services/metricsApi";
 
 interface MetricValue {
   base: number;
@@ -35,30 +33,20 @@ const MetricDetails = () => {
   const isMobile = useIsMobile();
   
   const queryParams = new URLSearchParams(location.search);
-  const hospitalFromUrl = queryParams.get('facility');
-  const dateRangeFromUrl = queryParams.get('dateRange');
-  const dateFromStr = queryParams.get('dateFrom');
-  const dateToStr = queryParams.get('dateTo');
-  const robotTypesFromUrl = queryParams.getAll('robotType');
+  const hospitalFromUrl = queryParams.get('hospital');
   
   const [selectedHospital, setSelectedHospital] = useState(
     hospitalFromUrl || mockHospitals[0]
   );
   
-  const [selectedRobotTypes, setSelectedRobotTypes] = useState(
-    robotTypesFromUrl.length > 0 ? robotTypesFromUrl : ["All"]
-  );
-  
-  const [dateRange, setDateRange] = useState(
-    dateRangeFromUrl || "Last 7 Days"
-  );
-  
+  const [selectedRobotTypes, setSelectedRobotTypes] = useState(["All"]);
+  const [dateRange, setDateRange] = useState("Last 7 Days");
   const [date, setDate] = useState<{
     from: Date | undefined;
     to: Date | undefined;
   }>({
-    from: dateFromStr ? parseISO(dateFromStr) : undefined,
-    to: dateToStr ? parseISO(dateToStr) : undefined,
+    from: undefined,
+    to: undefined,
   });
 
   useEffect(() => {
@@ -70,93 +58,6 @@ const MetricDetails = () => {
       navigate("/");
     }
   }, [hospitalFromUrl, metricId, navigate]);
-
-  const handleDateRangeChange = (range: string) => {
-    setDateRange(range);
-    setDate({ from: undefined, to: undefined });
-    
-    const params = new URLSearchParams(location.search);
-    params.set('dateRange', range);
-    params.delete('dateFrom');
-    params.delete('dateTo');
-    navigate(`/metrics/${metricId}?${params.toString()}`);
-  };
-
-  const handleCustomDateChange = (range: { from: Date | undefined; to: Date | undefined }) => {
-    setDate(range);
-    
-    if (range.from && range.to) {
-      setDateRange("Custom");
-      
-      const params = new URLSearchParams(location.search);
-      params.set('dateRange', 'Custom');
-      
-      if (range.from) {
-        params.set('dateFrom', range.from.toISOString());
-      } else {
-        params.delete('dateFrom');
-      }
-      
-      if (range.to) {
-        params.set('dateTo', range.to.toISOString());
-      } else {
-        params.delete('dateTo');
-      }
-      
-      navigate(`/metrics/${metricId}?${params.toString()}`);
-    }
-  };
-
-  const handleHospitalChange = (hospital: string) => {
-    setSelectedHospital(hospital);
-    
-    const params = new URLSearchParams(location.search);
-    params.set('facility', hospital);
-    navigate(`/metrics/${metricId}?${params.toString()}`);
-  };
-
-  const handleRobotTypeChange = (robotType: string) => {
-    let newRobotTypes: string[];
-    
-    if (robotType === "All") {
-      newRobotTypes = ["All"];
-    } else {
-      const currentTypes = selectedRobotTypes.filter(t => t !== "All");
-      if (currentTypes.includes(robotType)) {
-        newRobotTypes = currentTypes.filter(t => t !== robotType);
-        if (newRobotTypes.length === 0) {
-          newRobotTypes = ["All"];
-        }
-      } else {
-        newRobotTypes = [...currentTypes, robotType];
-      }
-    }
-    
-    setSelectedRobotTypes(newRobotTypes);
-    
-    const params = new URLSearchParams(location.search);
-    params.delete('robotType');
-    newRobotTypes.forEach(type => {
-      params.append('robotType', type);
-    });
-    
-    navigate(`/metrics/${metricId}?${params.toString()}`);
-  };
-
-  const removeRobotType = (robotType: string) => {
-    if (robotType === "All") return;
-    
-    const newRobotTypes = selectedRobotTypes.filter(t => t !== robotType);
-    setSelectedRobotTypes(newRobotTypes.length > 0 ? newRobotTypes : ["All"]);
-    
-    const params = new URLSearchParams(location.search);
-    params.delete('robotType');
-    (newRobotTypes.length > 0 ? newRobotTypes : ["All"]).forEach(type => {
-      params.append('robotType', type);
-    });
-    
-    navigate(`/metrics/${metricId}?${params.toString()}`);
-  };
 
   const getMetricDetails = (id: string) => {
     const metrics: Record<string, { title: string, isPercentage: boolean, isAccumulative: boolean }> = {
@@ -276,9 +177,6 @@ const MetricDetails = () => {
           break;
         case "Last 90 Days":
           startDate = subDays(now, 90);
-          break;
-        case "Last 180 Days":
-          startDate = subDays(now, 180);
           break;
         default:
           startDate = subDays(now, 7);
@@ -564,94 +462,6 @@ const MetricDetails = () => {
 
   const robotData = useMemo(() => generateRobotData(), [metricId, selectedRobotTypes, selectedHospital, robotMetrics]);
 
-  const { data: metricData, isLoading: isMetricDataLoading, error: metricDataError } = useQuery({
-    queryKey: ['missionTime', date.from, date.to, dateRange],
-    queryFn: () => {
-      let fromDate: Date, toDate: Date;
-      
-      if (date.from && date.to) {
-        fromDate = date.from;
-        toDate = date.to;
-      } else {
-        const now = new Date();
-        toDate = now;
-        
-        switch (dateRange) {
-          case "Today":
-            fromDate = now;
-            break;
-          case "Last 7 Days":
-            fromDate = subDays(now, 7);
-            break;
-          case "Last 30 Days":
-            fromDate = subDays(now, 30);
-            break;
-          case "Last 90 Days":
-            fromDate = subDays(now, 90);
-            break;
-          case "Last 180 Days":
-            fromDate = subDays(now, 180);
-            break;
-          default:
-            fromDate = subDays(now, 7);
-        }
-      }
-      
-      const dateFrom = format(fromDate, 'yyyy-MM-dd');
-      const dateTo = format(toDate, 'yyyy-MM-dd');
-      
-      return fetchMissionTimeMetric(dateFrom, dateTo);
-    },
-    enabled: metricId === 'mission-time'
-  });
-
-  const chartDataFromApi = useMemo(() => {
-    if (!metricData?.chartPointGroups || metricData.chartPointGroups.length === 0) {
-      console.log('No chart point groups available, returning empty array');
-      return [];
-    }
-
-    try {
-      const allDates = new Set<string>();
-      metricData.chartPointGroups.forEach(group => {
-        if (group.points && Array.isArray(group.points)) {
-          group.points.forEach(point => {
-            if (point && point.date) {
-              allDates.add(point.date);
-            }
-          });
-        }
-      });
-
-      if (allDates.size === 0) {
-        console.log('No valid dates found in chart data');
-        return [];
-      }
-
-      return Array.from(allDates).map(date => {
-        const dataPoint: Record<string, any> = {
-          date: format(parseISO(date), 'MMM dd')
-        };
-
-        metricData.chartPointGroups.forEach(group => {
-          if (group.points && Array.isArray(group.points)) {
-            const point = group.points.find(p => p && p.date === date);
-            dataPoint[group.missionType] = point?.value || 0;
-          }
-        });
-
-        return dataPoint;
-      }).sort((a, b) => {
-        const dateA = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === a.date) || '');
-        const dateB = parseISO(Array.from(allDates).find(d => format(parseISO(d), 'MMM dd') === b.date) || '');
-        return dateA.getTime() - dateB.getTime();
-      });
-    } catch (error) {
-      console.error('Error processing chart data:', error);
-      return [];
-    }
-  }, [metricData]);
-
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1F3366] to-[rgba(31,51,102,0.5)]">
       <DashboardHeader />
@@ -675,11 +485,23 @@ const MetricDetails = () => {
           selectedRobotTypes={selectedRobotTypes}
           dateRange={dateRange}
           date={date}
-          onHospitalChange={handleHospitalChange}
-          onRobotTypeChange={handleRobotTypeChange}
-          onRemoveRobotType={removeRobotType}
-          onDateRangeChange={handleDateRangeChange}
-          onCustomDateChange={handleCustomDateChange}
+          onHospitalChange={setSelectedHospital}
+          onRobotTypeChange={(type) => {
+            if (type === "All") {
+              setSelectedRobotTypes(["All"]);
+            } else {
+              const newTypes = selectedRobotTypes.includes(type)
+                ? selectedRobotTypes.filter(t => t !== type)
+                : [...selectedRobotTypes.filter(t => t !== "All"), type];
+              setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
+            }
+          }}
+          onRemoveRobotType={(type) => {
+            const newTypes = selectedRobotTypes.filter(t => t !== type);
+            setSelectedRobotTypes(newTypes.length ? newTypes : ["All"]);
+          }}
+          onDateRangeChange={setDateRange}
+          onCustomDateChange={setDate}
         />
 
         {!isMobile && (
@@ -707,65 +529,89 @@ const MetricDetails = () => {
               )}
             </div>
 
+          <div className="flex flex-row flex-wrap gap-3 mb-8">
+            {robotMetrics.map((stat) => (
+              <div 
+                key={stat.type} 
+                className="bg-mayo-card backdrop-blur-md border-white/10 p-3 rounded-lg max-w-[180px] w-[calc(50%-0.375rem)]"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-semibold text-white truncate" title={stat.type}>{stat.type}</h3>
+                  <span className="text-base font-semibold text-gray-400">{stat.total}</span>
+                </div>
+                <div className="border-t border-white/10 pt-2">
+                  <p className="text-white/60 text-xs">
+                    {currentMetricDetails.isAccumulative ? "Total" : "Average"}
+                  </p>
+                  <p className="text-2xl md:text-3xl font-bold" style={{ color: stat.type === "All" ? "#FF9143" : "#FFFFFF" }}>
+                    {stat.isPercentage 
+                      ? `${Math.round(stat.metricValue)}%` 
+                      : Math.round(stat.metricValue)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
             <div className="bg-mayo-card backdrop-blur-md border-white/10 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Performance Over Time</h3>
               <div className={`${isMobile ? 'h-[221px]' : 'h-[292px]'}`}>
-                {isMetricDataLoading ? (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-white">Loading chart data...</p>
-                  </div>
-                ) : metricDataError ? (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-white">Error loading chart data. Using fallback.</p>
-                  </div>
-                ) : chartDataFromApi.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart 
-                      data={chartDataFromApi}
-                      margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis 
-                        dataKey="date" 
-                        stroke="rgba(255,255,255,0.5)"
-                        tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                      />
-                      <YAxis 
-                        stroke="rgba(255,255,255,0.5)"
-                        tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                        width={40}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'rgba(1, 45, 90, 0.75)', 
-                          border: 'none',
-                          borderRadius: '4px',
-                          color: 'white' 
-                        }}
-                      />
-                      <Legend 
-                        wrapperStyle={{ 
-                          color: 'white',
-                          fontSize: isMobile ? '10px' : '12px'
-                        }}
-                      />
-                      {metricData?.chartPointGroups?.map((group, index) => (
-                        <Line
-                          key={group.missionType}
-                          type="monotone"
-                          dataKey={group.missionType}
-                          stroke={index === 0 ? "#4CAF50" : "#2196F3"}
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart 
+                    data={chartData}
+                    margin={{ left: 0, right: 10, top: 10, bottom: 10 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="rgba(255,255,255,0.5)"
+                      tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                    />
+                    <YAxis 
+                      stroke="rgba(255,255,255,0.5)"
+                      tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                      width={40}
+                      tickFormatter={formatYAxisValue}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(1, 45, 90, 0.75)', 
+                        border: 'none',
+                        borderRadius: '4px',
+                        color: 'white' 
+                      }}
+                      formatter={(value: any, name: string) => {
+                        let formattedValue = value;
+                        if (value >= 1000) {
+                          formattedValue = `${(value / 1000).toFixed(1)}k`;
+                        }
+                        
+                        return [Math.round(value).toString(), name];
+                      }}
+                      labelFormatter={(label) => {
+                        return `Date: ${label}`;
+                      }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ 
+                        color: 'white',
+                        fontSize: isMobile ? '10px' : '12px'
+                      }}
+                    />
+                    {availableRobotTypes
+                      .filter(type => selectedRobotTypes.includes("All") || selectedRobotTypes.includes(type))
+                      .map((type, index) => (
+                        <Line 
+                          key={type}
+                          type="monotone" 
+                          dataKey={type} 
+                          stroke={type === "All" ? "#FF9143" : index === 1 ? "#4CAF50" : index === 2 ? "#2196F3" : index === 3 ? "#FFC107" : "#E91E63"} 
                           strokeWidth={2}
-                          name={group.missionType}
+                          name={type}
                         />
-                      ))}
-                    </LineChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-white">No chart data available.</p>
-                  </div>
-                )}
+                    ))}
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </div>
             

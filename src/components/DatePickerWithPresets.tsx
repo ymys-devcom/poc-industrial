@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface DatePickerWithPresetsProps {
   date: {
@@ -34,7 +34,6 @@ export function DatePickerWithPresets({
   isMobile = false,
 }: DatePickerWithPresetsProps) {
   const [open, setOpen] = useState(false);
-  const [isCustomRange, setIsCustomRange] = useState(false);
 
   const presets = [
     { label: "Today", value: "Today" },
@@ -44,21 +43,8 @@ export function DatePickerWithPresets({
     { label: "Last 180 Days", value: "Last 180 Days" },
   ];
 
-  // Determine if the current selection is a preset or custom date range
-  useEffect(() => {
-    const isPreset = presets.some(preset => preset.value === dateRange);
-    setIsCustomRange(!isPreset && (date.from !== undefined || date.to !== undefined));
-  }, [dateRange, date, presets]);
-
-  // Format the date range for display
-  const formatDisplayText = () => {
-    if (date.from && date.to) {
-      return `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`;
-    } else if (date.from) {
-      return format(date.from, "LLL dd, y");
-    }
-    return dateRange || "Pick a date range";
-  };
+  // Check if a preset is selected or if it's a custom date range
+  const isPresetSelected = dateRange && presets.some(preset => preset.value === dateRange);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -67,20 +53,30 @@ export function DatePickerWithPresets({
           variant="outline" 
           className={cn(
             "flex justify-start text-left bg-[#526189] text-white border-white hover:bg-[#3E4F7C] hover:text-white cursor-pointer overflow-hidden text-xs px-2 py-1",
-            isCustomRange || !dateRange ? "!w-[255px]" : "!w-[140px]",
+            isPresetSelected ? "w-[140px]" : "w-[255px]",
             className
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
           <div className="flex-1 overflow-hidden">
             <span className="block truncate w-full">
-              {formatDisplayText()}
+              {date.from ? (
+                date.to ? (
+                  <>
+                    {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                  </>
+                ) : (
+                  format(date.from, "LLL dd, y")
+                )
+              ) : (
+                dateRange || "Pick a date range"
+              )}
             </span>
           </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-auto p-0 bg-[#526189] text-white z-50" 
+        className="w-auto p-0 bg-[#526189] text-white" 
         align={align}
         side={isMobile ? "bottom" : "bottom"}
       >
@@ -90,20 +86,7 @@ export function DatePickerWithPresets({
             mode="range"
             defaultMonth={date.from}
             selected={{ from: date.from, to: date.to }}
-            onSelect={(newDate) => {
-              // Fix for the type error - ensure we're passing the correct type
-              onCustomDateChange({
-                from: newDate?.from,
-                to: newDate?.to
-              });
-              
-              // Set isCustomRange to true only if both from and to dates are selected
-              if (newDate?.from && newDate?.to) {
-                setIsCustomRange(true);
-                // Close the popover when a complete range is selected
-                setTimeout(() => setOpen(false), 300);
-              }
-            }}
+            onSelect={onCustomDateChange}
             numberOfMonths={1}
             className="text-white [&_.rdp-day]:text-white [&_.rdp-day_button:hover]:bg-[#253a60]/70 [&_.rdp-day_button:focus]:bg-[#253a60]/70"
           />
@@ -115,7 +98,6 @@ export function DatePickerWithPresets({
                     key={preset.value}
                     onClick={() => {
                       onDateRangeChange(preset.value);
-                      setIsCustomRange(false);
                       setOpen(false);
                     }}
                     variant={dateRange === preset.value ? "secondary" : "outline"}
